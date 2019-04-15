@@ -14,7 +14,7 @@ void quick_sort(unsigned int * feld, size_t len);
 void heap_sort(unsigned int * feld, size_t len);
 void sink(unsigned int * feld, size_t k, size_t len);
 void merge_sort(unsigned int * feld, size_t len);
-void merge(unsigned int * feld1, size_t n1, unsigned int * feld2, size_t n2);
+unsigned int * merge(unsigned int * feld1, size_t n1, unsigned int * feld2, size_t n2);
 int main()
 {
     size_t len = 10;
@@ -153,11 +153,47 @@ void merge_sort(unsigned int * feld, size_t len)
     size_t i = 0;
     size_t j = len-1;
     size_t middle = (i+j)/2;
-    merge_sort(feld,middle);
+    merge_sort(feld,middle+1);
     merge_sort(feld + middle + 1, len - middle - 1);
-
+    unsigned int * newfeld = merge(feld,middle+1,feld + middle + 1,len - middle - 1);
+    for(i = 0; i < len; i++)
+    {
+        feld[i] = newfeld[i];
+    }
+    delete [] newfeld;
 }
-void merge(unsigned int * feld1, size_t n1, unsigned int * feld2, size_t n2)
+unsigned int * merge(unsigned int * sfeld1, size_t n1, unsigned int * sfeld2, size_t n2)
 {
-    
+    unsigned int * newfeld = new unsigned int[n1 + n2];
+    size_t i = 0, j = 0, k = 0;
+    while( i < n1 || j < n2)
+    {
+        if(i >= n1)
+        {
+            newfeld[k] = sfeld2[j];
+            j++;
+            k++;
+            continue;
+        }
+        if(j >= n2)
+        {
+            newfeld[k] = sfeld1[i];
+            i++;
+            k++;
+            continue;
+        }
+        if(sfeld1[i] < sfeld2[j] && i < n1)
+        {
+            newfeld[k] = sfeld1[i];
+            i++;
+        }
+        else if(sfeld2[j] < sfeld1[i] && j < n2)
+        {
+            newfeld[k] = sfeld2[j];
+            j++;
+        }
+        k++;
+
+    }
+    return newfeld;
 }
