@@ -18,9 +18,9 @@ unsigned int * merge(unsigned int * feld1, size_t n1, unsigned int * feld2, size
 void display(unsigned int * feld, size_t n1);
 int main()
 {
-    size_t len = 100;
+    size_t len = 3;
     unsigned int * feld = new unsigned int[len];
-    int beispiel = 3;
+    int beispiel = 2;
     start(beispiel,len,feld);
     cout << "Before sorting\n";
     display(feld,len);
@@ -47,7 +47,7 @@ void bubble_sort(unsigned int *& feld, size_t len)
 {
     int i,j;
     int length = (int) len;
-    for(i = 0; i < len-1; i++)
+    for(i = 0; i < length-1; i++)
     {
         for(j = len-1; j > i; j--)
         {
@@ -81,7 +81,7 @@ void insertion_sort(unsigned int *& feld, size_t len)
     size_t i,j;
     for(i = 1; i < len; i++)
     {
-        int v = feld[i];
+        unsigned int v = feld[i];
         for(j = i-1;j >= 0; j--)
         {
             if(v < feld[j])
@@ -138,21 +138,57 @@ void quick_sort(unsigned int * feld, size_t len)
 void heap_sort(unsigned int * feld, size_t len)
 {
     size_t i;
-    for(i = len/2; i>=0; i--)
+    if(len >= 3)
     {
-        sink(feld,i,len);
+        for(i = len/2 - 1; i>=0; i--)  // len/2-1 in case of unsigned 
+        {
+            sink(feld,i,len);
+            if(i == 0)
+            {
+                break; // since for i = 0, i-- will be very large due to the fact that
+                // i is unsigned
+            }
+        }
+        // for debug usage
+        // cout << "the array after primary heap building.\n";
+        // display(feld,len); 
     }
+    else
+    {
+        // len == 1 or 0
+        sink(feld,0,len);
+    }
+    
     for(i = len-1; i >=0; i--)
     {
         tausche(feld,0,i);
-        sink(feld,0,len-1);
+        // for debug usage
+        // cout << "The "<< i << "-th element exchanged" << endl;
+        // display(feld,len);
+        sink(feld,0,i); // not sink(feld,0,len-1) or the heap building will continue forever
+        // for debug usage
+        // cout << "sink operation performed: \n";
+        // display(feld,len);
+        if(i == 0)
+        {
+            break; // the same as the above loop 
+        }
     }
 }
 void sink(unsigned int * feld, size_t k, size_t len)
 {
+    // Creating maximum heap, that is the father is no less equal
+    // than the son --> the largest element of the array is 
+    // at the root of the tree
     size_t son;
+    // for debug usage
+    // cout << "In the sink function: \n";
+    // display(feld,len);
+    // cout << "the len: " << len << endl;
     while(1)
     {
+        // for debug usage
+        // cout << "The k: " << k << endl;
         if(2*k+1 >= len) return;
         if(2*k+2 >= len) son = 2*k+1;
         else
@@ -170,6 +206,10 @@ void sink(unsigned int * feld, size_t k, size_t len)
         if(feld[son] > feld[k])
         {
             tausche(feld,k,son);
+            k = son; // no forgetting this statement, else running continuously
+            // for debug usage
+            // cout << "After exchange of the father and son\n";
+            // display(feld,len);
         }
         else
         {
@@ -183,15 +223,28 @@ void merge_sort(unsigned int * feld, size_t len)
     if(len <= 1)
         return;
     size_t i = 0;
-    size_t j = len-1;
-    size_t middle = (i+j)/2;
-    merge_sort(feld,middle+1);
-    merge_sort(feld + middle + 1, len - middle - 1);
-    unsigned int * newfeld = merge(feld,middle+1,feld + middle + 1,len - middle - 1);
+    //size_t j = len-1;
+    size_t middle = len/2;
+    // for debug usage
+    // cout << "In merge sort: the len " << len << endl;
+    // cout << " The whole array\n";
+    // display(feld,len);
+    merge_sort(feld,middle);
+    // for debug usage
+    // cout << "after sorting the first half\n";
+    // display(feld,middle);
+    merge_sort(feld + middle, len - middle);
+    // for debug usage
+    // cout << "after sorting the rest\n";
+    // display(feld+middle,len-middle);
+    unsigned int * newfeld = merge(feld,middle,feld + middle,len - middle);
     for(i = 0; i < len; i++)
     {
         feld[i] = newfeld[i];
     }
+    // for debug usage
+    // cout << "After merging\n";
+    // display(feld,len);
     delete [] newfeld;
 }
 unsigned int * merge(unsigned int * sfeld1, size_t n1, unsigned int * sfeld2, size_t n2)
@@ -214,18 +267,19 @@ unsigned int * merge(unsigned int * sfeld1, size_t n1, unsigned int * sfeld2, si
             k++;
             continue;
         }
-        if(sfeld1[i] < sfeld2[j] && i < n1)
+        if(i < n1 && sfeld1[i] <= sfeld2[j])  // using <= in case  the two elements are equal if strict less than
+                                            // since the else if also excludes the case of equality, no new element will be 
+                                            // copied and the loop just continues forever since k++ performs unlimited times
         {
             newfeld[k] = sfeld1[i];
             i++;
         }
-        else if(sfeld2[j] < sfeld1[i] && j < n2)
+        else if(j < n2 && sfeld2[j] < sfeld1[i])
         {
             newfeld[k] = sfeld2[j];
             j++;
         }
         k++;
-
     }
     return newfeld;
 }
