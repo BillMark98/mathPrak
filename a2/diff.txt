@@ -1,0 +1,41 @@
+diff --git a/.gitignore b/.gitignore
+new file mode 100644
+index 0000000..d99efa9
+--- /dev/null
++++ b/.gitignore
+@@ -0,0 +1,32 @@
+{+# Prerequisites+}
+{+*.d+}
+
+{+# Compiled Object files+}
+{+*.slo+}
+{+*.lo+}
+{+*.o+}
+{+*.obj+}
+
+{+# Precompiled Headers+}
+{+*.gch+}
+{+*.pch+}
+
+{+# Compiled Dynamic libraries+}
+{+*.so+}
+{+*.dylib+}
+{+*.dll+}
+
+{+# Fortran module files+}
+{+*.mod+}
+{+*.smod+}
+
+{+# Compiled Static libraries+}
+{+*.lai+}
+{+*.la+}
+{+*.a+}
+{+*.lib+}
+
+{+# Executables+}
+{+*.exe+}
+{+*.out+}
+{+*.app+}
+diff --git a/.vscode/ipch/c99fdd39531ed48b/meina1.ipch b/.vscode/ipch/c99fdd39531ed48b/meina1.ipch
+index 441faa4..ddcbd2d 100644
+Binary files a/.vscode/ipch/c99fdd39531ed48b/meina1.ipch and b/.vscode/ipch/c99fdd39531ed48b/meina1.ipch differ
