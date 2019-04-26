@@ -31,6 +31,8 @@
 *.out
 *.app
 
+*.txt
+
 hello
 
 output
