@@ -24,7 +24,7 @@ int main()
 {
     size_t len = 200;
     unsigned int * feld = new unsigned int[len];
-    int beispiel = 5;
+    int beispiel = 2;
     start(beispiel,len,feld);
     cout << "Before sorting\n";
     display(feld,len);
