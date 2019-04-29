@@ -1,48 +1,3487 @@
-Feld 2: Zufaellige Folge gewuenschter Laenge
-Before sorting
-  1651   661  1800   444  1263   178   132   207   596   553
-   550  1258  1977  1076  1515   218   120   963   537    83
-   787   508  1829  1972   571  1982  1686   733  1570   275
-   140  1113   640    12  1034  1065   160   441  1419   621
-   925   157   229   638   610   758  1391   177   486   118
-  1656  1999   345  1302   362   348  1917     9  1392  1300
-   663   587   837   907   509   160   528  1697   420  1890
-  1234  1412    45   730  1684   351   925  1619   301  1982
-  1788   210   104  1300  1125   285  1731  1279  1455  1000
-  1518   292    90   301  1147   958  1638  1510    32  1604
-   317   983  1202  1886  1981   785   856   585  1484  1967
-  1564   610  1553   146   103  1642  1812  1648  1875   440
-   240  1230  1180   172   588   821  1321   430  1441   316
-   667   496  1566   505   517   601   774   381  1231    78
-   382   785    79   124   534  1905  1283   684   625    65
-  1878   976  1702   663   848  1180  1049  1954  1626  1837
-   359  1772   648   406  1564   491  1221   598   179  1814
-  1075  1557  1486  1371  1206   632   574   631   593   918
-  1936   403   650    28   273  1865  1109  1990   359  1428
-   951   968  1791  1846   435  1105  1804    15  1877   735
+   702   175   181   330   376   859   730   812   777   216
+   924    53   310   193   529    83   429   860   658   237
+   881   548   946   236   289   229   246   623   532   224
+   203   911   187   612   262    13   422   170   194   598
+   964   344   823   350   423   258   106   226   878   304
+   257   713   327   603   977  1000   834   759   954   338
+    42   984   537   754   437   654   506   328   403   841
+   831   775    22   976   989   931   234   480   167   356
+   677    93   799   782   610   599   435   685   940   442
+   830   889   141   475   360   506   341   997   575   830
 
-After sorting
-     9    12    15    28    32    45    65    78    79    83
-    90   103   104   118   120   124   132   140   146   157
-   160   160   172   177   178   179   207   210   218   229
-   240   273   275   285   292   301   301   316   317   345
-   348   351   359   359   362   381   382   403   406   420
-   430   435   440   441   444   486   491   496   505   508
-   509   517   528   534   537   550   553   571   574   585
-   587   588   593   596   598   601   610   610   621   625
-   631   632   638   640   648   650   661   663   663   667
-   684   730   733   735   758   774   785   785   787   821
-   837   848   856   907   918   925   925   951   958   963
-   968   976   983  1000  1034  1049  1065  1075  1076  1105
-  1109  1113  1125  1147  1180  1180  1202  1206  1221  1230
-  1231  1234  1258  1263  1279  1283  1300  1300  1302  1321
-  1371  1391  1392  1412  1419  1428  1441  1455  1484  1486
-  1510  1515  1518  1553  1557  1564  1564  1566  1570  1604
-  1619  1626  1638  1642  1648  1651  1656  1684  1686  1697
-  1702  1731  1772  1788  1791  1800  1804  1812  1814  1829
-  1837  1846  1865  1875  1877  1878  1886  1890  1905  1917
-  1936  1954  1967  1972  1977  1981  1982  1982  1990  1999
+the merge function successfully called
+the array 1:
+   175
+the array 2:
+   181
+In the merge function
+The size n1: 1	 n2: 1
+sum : 2
+hello
+hello2
+hello in while
+After the while loop, i: 1	 j: 0
 
-Pruefe Feld... in Ordnung! Erfolgreich sortiert. 
-0 Vertauschungen benoetigt.
-Der Algorithmus benoetigte 0.02 s.
+hello in while
+the merge function successfully called
+the array 1:
+   702
+the array 2:
+   175   181
+In the merge function
+The size n1: 1	 n2: 2
+sum : 3
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+After the while loop, i: 0	 j: 2
+   175
+hello in while
+the merge function successfully called
+the array 1:
+   376
+the array 2:
+   859
+In the merge function
+The size n1: 1	 n2: 1
+sum : 2
+hello
+hello2
+hello in while
+After the while loop, i: 1	 j: 0
+
+hello in while
+the merge function successfully called
+the array 1:
+   330
+the array 2:
+   376   859
+In the merge function
+The size n1: 1	 n2: 2
+sum : 3
+hello
+hello2
+hello in while
+After the while loop, i: 1	 j: 0
+
+hello in while
+hello in while
+the merge function successfully called
+the array 1:
+   175   181   702
+the array 2:
+   330   376   859
+In the merge function
+The size n1: 3	 n2: 3
+sum : 6
+hello
+hello2
+hello in while
+After the while loop, i: 1	 j: 0
+
+hello in while
+After the while loop, i: 2	 j: 0
+   175
+hello in while
+After the while loop, i: 2	 j: 1
+   175   181
+hello in while
+After the while loop, i: 2	 j: 2
+   175   181   330
+hello in while
+After the while loop, i: 3	 j: 2
+   175   181   330   376
+hello in while
+the merge function successfully called
+the array 1:
+   812
+the array 2:
+   777
+In the merge function
+The size n1: 1	 n2: 1
+sum : 2
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+the merge function successfully called
+the array 1:
+   730
+the array 2:
+   777   812
+In the merge function
+The size n1: 1	 n2: 2
+sum : 3
+hello
+hello2
+hello in while
+After the while loop, i: 1	 j: 0
+
+hello in while
+hello in while
+the merge function successfully called
+the array 1:
+   924
+the array 2:
+    53
+In the merge function
+The size n1: 1	 n2: 1
+sum : 2
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+the merge function successfully called
+the array 1:
+   216
+the array 2:
+    53   924
+In the merge function
+The size n1: 1	 n2: 2
+sum : 3
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+After the while loop, i: 1	 j: 1
+    53
+hello in while
+the merge function successfully called
+the array 1:
+   730   777   812
+the array 2:
+    53   216   924
+In the merge function
+The size n1: 3	 n2: 3
+sum : 6
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+After the while loop, i: 0	 j: 2
+    53
+hello in while
+After the while loop, i: 1	 j: 2
+    53   216
+hello in while
+After the while loop, i: 2	 j: 2
+    53   216   730
+hello in while
+After the while loop, i: 3	 j: 2
+    53   216   730   777
+hello in while
+the merge function successfully called
+the array 1:
+   175   181   330   376   702   859
+the array 2:
+    53   216   730   777   812   924
+In the merge function
+The size n1: 6	 n2: 6
+sum : 12
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+After the while loop, i: 1	 j: 1
+    53
+hello in while
+After the while loop, i: 2	 j: 1
+    53   175
+hello in while
+After the while loop, i: 2	 j: 2
+    53   175   181
+hello in while
+After the while loop, i: 3	 j: 2
+    53   175   181   216
+hello in while
+After the while loop, i: 4	 j: 2
+    53   175   181   216   330
+hello in while
+After the while loop, i: 5	 j: 2
+    53   175   181   216   330   376
+hello in while
+After the while loop, i: 5	 j: 3
+    53   175   181   216   330   376   702
+hello in while
+After the while loop, i: 5	 j: 4
+    53   175   181   216   330   376   702   730
+hello in while
+After the while loop, i: 5	 j: 5
+    53   175   181   216   330   376   702   730   777
+hello in while
+After the while loop, i: 6	 j: 5
+    53   175   181   216   330   376   702   730   777   812
+
+hello in while
+the merge function successfully called
+the array 1:
+   193
+the array 2:
+   529
+In the merge function
+The size n1: 1	 n2: 1
+sum : 2
+hello
+hello2
+hello in while
+After the while loop, i: 1	 j: 0
+
+hello in while
+the merge function successfully called
+the array 1:
+   310
+the array 2:
+   193   529
+In the merge function
+The size n1: 1	 n2: 2
+sum : 3
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+After the while loop, i: 1	 j: 1
+   193
+hello in while
+the merge function successfully called
+the array 1:
+   429
+the array 2:
+   860
+In the merge function
+The size n1: 1	 n2: 1
+sum : 2
+hello
+hello2
+hello in while
+After the while loop, i: 1	 j: 0
+
+hello in while
+the merge function successfully called
+the array 1:
+    83
+the array 2:
+   429   860
+In the merge function
+The size n1: 1	 n2: 2
+sum : 3
+hello
+hello2
+hello in while
+After the while loop, i: 1	 j: 0
+
+hello in while
+hello in while
+the merge function successfully called
+the array 1:
+   193   310   529
+the array 2:
+    83   429   860
+In the merge function
+The size n1: 3	 n2: 3
+sum : 6
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+After the while loop, i: 1	 j: 1
+    83
+hello in while
+After the while loop, i: 2	 j: 1
+    83   193
+hello in while
+After the while loop, i: 2	 j: 2
+    83   193   310
+hello in while
+After the while loop, i: 3	 j: 2
+    83   193   310   429
+hello in while
+the merge function successfully called
+the array 1:
+   237
+the array 2:
+   881
+In the merge function
+The size n1: 1	 n2: 1
+sum : 2
+hello
+hello2
+hello in while
+After the while loop, i: 1	 j: 0
+
+hello in while
+the merge function successfully called
+the array 1:
+   658
+the array 2:
+   237   881
+In the merge function
+The size n1: 1	 n2: 2
+sum : 3
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+After the while loop, i: 1	 j: 1
+   237
+hello in while
+the merge function successfully called
+the array 1:
+   548
+the array 2:
+   946
+In the merge function
+The size n1: 1	 n2: 1
+sum : 2
+hello
+hello2
+hello in while
+After the while loop, i: 1	 j: 0
+
+hello in while
+the merge function successfully called
+the array 1:
+   236
+the array 2:
+   289
+In the merge function
+The size n1: 1	 n2: 1
+sum : 2
+hello
+hello2
+hello in while
+After the while loop, i: 1	 j: 0
+
+hello in while
+the merge function successfully called
+the array 1:
+   548   946
+the array 2:
+   236   289
+In the merge function
+The size n1: 2	 n2: 2
+sum : 4
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+After the while loop, i: 0	 j: 2
+   236
+hello in while
+hello in while
+the merge function successfully called
+the array 1:
+   237   658   881
+the array 2:
+   236   289   548   946
+In the merge function
+The size n1: 3	 n2: 4
+sum : 7
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+After the while loop, i: 1	 j: 1
+   236
+hello in while
+After the while loop, i: 1	 j: 2
+   236   237
+hello in while
+After the while loop, i: 1	 j: 3
+   236   237   289
+hello in while
+After the while loop, i: 2	 j: 3
+   236   237   289   548
+hello in while
+After the while loop, i: 3	 j: 3
+   236   237   289   548   658
+hello in while
+the merge function successfully called
+the array 1:
+    83   193   310   429   529   860
+the array 2:
+   236   237   289   548   658   881   946
+In the merge function
+The size n1: 6	 n2: 7
+sum : 13
+hello
+hello2
+hello in while
+After the while loop, i: 1	 j: 0
+
+hello in while
+After the while loop, i: 2	 j: 0
+    83
+hello in while
+After the while loop, i: 2	 j: 1
+    83   193
+hello in while
+After the while loop, i: 2	 j: 2
+    83   193   236
+hello in while
+After the while loop, i: 2	 j: 3
+    83   193   236   237
+hello in while
+After the while loop, i: 3	 j: 3
+    83   193   236   237   289
+hello in while
+After the while loop, i: 4	 j: 3
+    83   193   236   237   289   310
+hello in while
+After the while loop, i: 5	 j: 3
+    83   193   236   237   289   310   429
+hello in while
+After the while loop, i: 5	 j: 4
+    83   193   236   237   289   310   429   529
+hello in while
+After the while loop, i: 5	 j: 5
+    83   193   236   237   289   310   429   529   548
+hello in while
+After the while loop, i: 6	 j: 5
+    83   193   236   237   289   310   429   529   548   658
+
+hello in while
+hello in while
+the merge function successfully called
+the array 1:
+    53   175   181   216   330   376   702   730   777   812
+   859   924
+the array 2:
+    83   193   236   237   289   310   429   529   548   658
+   860   881   946
+In the merge function
+The size n1: 12	 n2: 13
+sum : 25
+hello
+hello2
+hello in while
+After the while loop, i: 1	 j: 0
+
+hello in while
+After the while loop, i: 1	 j: 1
+    53
+hello in while
+After the while loop, i: 2	 j: 1
+    53    83
+hello in while
+After the while loop, i: 3	 j: 1
+    53    83   175
+hello in while
+After the while loop, i: 3	 j: 2
+    53    83   175   181
+hello in while
+After the while loop, i: 4	 j: 2
+    53    83   175   181   193
+hello in while
+After the while loop, i: 4	 j: 3
+    53    83   175   181   193   216
+hello in while
+After the while loop, i: 4	 j: 4
+    53    83   175   181   193   216   236
+hello in while
+After the while loop, i: 4	 j: 5
+    53    83   175   181   193   216   236   237
+hello in while
+After the while loop, i: 4	 j: 6
+    53    83   175   181   193   216   236   237   289
+hello in while
+After the while loop, i: 5	 j: 6
+    53    83   175   181   193   216   236   237   289   310
+
+hello in while
+After the while loop, i: 6	 j: 6
+    53    83   175   181   193   216   236   237   289   310
+   330
+hello in while
+After the while loop, i: 6	 j: 7
+    53    83   175   181   193   216   236   237   289   310
+   330   376
+hello in while
+After the while loop, i: 6	 j: 8
+    53    83   175   181   193   216   236   237   289   310
+   330   376   429
+hello in while
+After the while loop, i: 6	 j: 9
+    53    83   175   181   193   216   236   237   289   310
+   330   376   429   529
+hello in while
+After the while loop, i: 6	 j: 10
+    53    83   175   181   193   216   236   237   289   310
+   330   376   429   529   548
+hello in while
+After the while loop, i: 7	 j: 10
+    53    83   175   181   193   216   236   237   289   310
+   330   376   429   529   548   658
+hello in while
+After the while loop, i: 8	 j: 10
+    53    83   175   181   193   216   236   237   289   310
+   330   376   429   529   548   658   702
+hello in while
+After the while loop, i: 9	 j: 10
+    53    83   175   181   193   216   236   237   289   310
+   330   376   429   529   548   658   702   730
+hello in while
+After the while loop, i: 10	 j: 10
+    53    83   175   181   193   216   236   237   289   310
+   330   376   429   529   548   658   702   730   777
+hello in while
+After the while loop, i: 11	 j: 10
+    53    83   175   181   193   216   236   237   289   310
+   330   376   429   529   548   658   702   730   777   812
+
+hello in while
+After the while loop, i: 11	 j: 11
+    53    83   175   181   193   216   236   237   289   310
+   330   376   429   529   548   658   702   730   777   812
+   859
+hello in while
+After the while loop, i: 11	 j: 12
+    53    83   175   181   193   216   236   237   289   310
+   330   376   429   529   548   658   702   730   777   812
+   859   860
+hello in while
+After the while loop, i: 12	 j: 12
+    53    83   175   181   193   216   236   237   289   310
+   330   376   429   529   548   658   702   730   777   812
+   859   860   881
+hello in while
+the merge function successfully called
+the array 1:
+   246
+the array 2:
+   623
+In the merge function
+The size n1: 1	 n2: 1
+sum : 2
+hello
+hello2
+hello in while
+After the while loop, i: 1	 j: 0
+
+hello in while
+the merge function successfully called
+the array 1:
+   229
+the array 2:
+   246   623
+In the merge function
+The size n1: 1	 n2: 2
+sum : 3
+hello
+hello2
+hello in while
+After the while loop, i: 1	 j: 0
+
+hello in while
+hello in while
+the merge function successfully called
+the array 1:
+   224
+the array 2:
+   203
+In the merge function
+The size n1: 1	 n2: 1
+sum : 2
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+the merge function successfully called
+the array 1:
+   532
+the array 2:
+   203   224
+In the merge function
+The size n1: 1	 n2: 2
+sum : 3
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+After the while loop, i: 0	 j: 2
+   203
+hello in while
+the merge function successfully called
+the array 1:
+   229   246   623
+the array 2:
+   203   224   532
+In the merge function
+The size n1: 3	 n2: 3
+sum : 6
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+After the while loop, i: 0	 j: 2
+   203
+hello in while
+After the while loop, i: 1	 j: 2
+   203   224
+hello in while
+After the while loop, i: 2	 j: 2
+   203   224   229
+hello in while
+After the while loop, i: 2	 j: 3
+   203   224   229   246
+hello in while
+the merge function successfully called
+the array 1:
+   187
+the array 2:
+   612
+In the merge function
+The size n1: 1	 n2: 1
+sum : 2
+hello
+hello2
+hello in while
+After the while loop, i: 1	 j: 0
+
+hello in while
+the merge function successfully called
+the array 1:
+   911
+the array 2:
+   187   612
+In the merge function
+The size n1: 1	 n2: 2
+sum : 3
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+After the while loop, i: 0	 j: 2
+   187
+hello in while
+the merge function successfully called
+the array 1:
+    13
+the array 2:
+   422
+In the merge function
+The size n1: 1	 n2: 1
+sum : 2
+hello
+hello2
+hello in while
+After the while loop, i: 1	 j: 0
+
+hello in while
+the merge function successfully called
+the array 1:
+   262
+the array 2:
+    13   422
+In the merge function
+The size n1: 1	 n2: 2
+sum : 3
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+After the while loop, i: 1	 j: 1
+    13
+hello in while
+the merge function successfully called
+the array 1:
+   187   612   911
+the array 2:
+    13   262   422
+In the merge function
+The size n1: 3	 n2: 3
+sum : 6
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+After the while loop, i: 1	 j: 1
+    13
+hello in while
+After the while loop, i: 1	 j: 2
+    13   187
+hello in while
+After the while loop, i: 1	 j: 3
+    13   187   262
+hello in while
+hello in while
+the merge function successfully called
+the array 1:
+   203   224   229   246   532   623
+the array 2:
+    13   187   262   422   612   911
+In the merge function
+The size n1: 6	 n2: 6
+sum : 12
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+After the while loop, i: 0	 j: 2
+    13
+hello in while
+After the while loop, i: 1	 j: 2
+    13   187
+hello in while
+After the while loop, i: 2	 j: 2
+    13   187   203
+hello in while
+After the while loop, i: 3	 j: 2
+    13   187   203   224
+hello in while
+After the while loop, i: 4	 j: 2
+    13   187   203   224   229
+hello in while
+After the while loop, i: 4	 j: 3
+    13   187   203   224   229   246
+hello in while
+After the while loop, i: 4	 j: 4
+    13   187   203   224   229   246   262
+hello in while
+After the while loop, i: 5	 j: 4
+    13   187   203   224   229   246   262   422
+hello in while
+After the while loop, i: 5	 j: 5
+    13   187   203   224   229   246   262   422   532
+hello in while
+After the while loop, i: 6	 j: 5
+    13   187   203   224   229   246   262   422   532   612
+
+hello in while
+the merge function successfully called
+the array 1:
+   194
+the array 2:
+   598
+In the merge function
+The size n1: 1	 n2: 1
+sum : 2
+hello
+hello2
+hello in while
+After the while loop, i: 1	 j: 0
+
+hello in while
+the merge function successfully called
+the array 1:
+   170
+the array 2:
+   194   598
+In the merge function
+The size n1: 1	 n2: 2
+sum : 3
+hello
+hello2
+hello in while
+After the while loop, i: 1	 j: 0
+
+hello in while
+hello in while
+the merge function successfully called
+the array 1:
+   344
+the array 2:
+   823
+In the merge function
+The size n1: 1	 n2: 1
+sum : 2
+hello
+hello2
+hello in while
+After the while loop, i: 1	 j: 0
+
+hello in while
+the merge function successfully called
+the array 1:
+   964
+the array 2:
+   344   823
+In the merge function
+The size n1: 1	 n2: 2
+sum : 3
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+After the while loop, i: 0	 j: 2
+   344
+hello in while
+the merge function successfully called
+the array 1:
+   170   194   598
+the array 2:
+   344   823   964
+In the merge function
+The size n1: 3	 n2: 3
+sum : 6
+hello
+hello2
+hello in while
+After the while loop, i: 1	 j: 0
+
+hello in while
+After the while loop, i: 2	 j: 0
+   170
+hello in while
+After the while loop, i: 2	 j: 1
+   170   194
+hello in while
+After the while loop, i: 3	 j: 1
+   170   194   344
+hello in while
+hello in while
+the merge function successfully called
+the array 1:
+   423
+the array 2:
+   258
+In the merge function
+The size n1: 1	 n2: 1
+sum : 2
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+the merge function successfully called
+the array 1:
+   350
+the array 2:
+   258   423
+In the merge function
+The size n1: 1	 n2: 2
+sum : 3
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+After the while loop, i: 1	 j: 1
+   258
+hello in while
+the merge function successfully called
+the array 1:
+   106
+the array 2:
+   226
+In the merge function
+The size n1: 1	 n2: 1
+sum : 2
+hello
+hello2
+hello in while
+After the while loop, i: 1	 j: 0
+
+hello in while
+the merge function successfully called
+the array 1:
+   878
+the array 2:
+   304
+In the merge function
+The size n1: 1	 n2: 1
+sum : 2
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+the merge function successfully called
+the array 1:
+   106   226
+the array 2:
+   304   878
+In the merge function
+The size n1: 2	 n2: 2
+sum : 4
+hello
+hello2
+hello in while
+After the while loop, i: 1	 j: 0
+
+hello in while
+After the while loop, i: 2	 j: 0
+   106
+hello in while
+hello in while
+the merge function successfully called
+the array 1:
+   258   350   423
+the array 2:
+   106   226   304   878
+In the merge function
+The size n1: 3	 n2: 4
+sum : 7
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+After the while loop, i: 0	 j: 2
+   106
+hello in while
+After the while loop, i: 1	 j: 2
+   106   226
+hello in while
+After the while loop, i: 1	 j: 3
+   106   226   258
+hello in while
+After the while loop, i: 2	 j: 3
+   106   226   258   304
+hello in while
+After the while loop, i: 3	 j: 3
+   106   226   258   304   350
+hello in while
+the merge function successfully called
+the array 1:
+   170   194   344   598   823   964
+the array 2:
+   106   226   258   304   350   423   878
+In the merge function
+The size n1: 6	 n2: 7
+sum : 13
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+After the while loop, i: 1	 j: 1
+   106
+hello in while
+After the while loop, i: 2	 j: 1
+   106   170
+hello in while
+After the while loop, i: 2	 j: 2
+   106   170   194
+hello in while
+After the while loop, i: 2	 j: 3
+   106   170   194   226
+hello in while
+After the while loop, i: 2	 j: 4
+   106   170   194   226   258
+hello in while
+After the while loop, i: 3	 j: 4
+   106   170   194   226   258   304
+hello in while
+After the while loop, i: 3	 j: 5
+   106   170   194   226   258   304   344
+hello in while
+After the while loop, i: 3	 j: 6
+   106   170   194   226   258   304   344   350
+hello in while
+After the while loop, i: 4	 j: 6
+   106   170   194   226   258   304   344   350   423
+hello in while
+After the while loop, i: 5	 j: 6
+   106   170   194   226   258   304   344   350   423   598
+
+hello in while
+After the while loop, i: 5	 j: 7
+   106   170   194   226   258   304   344   350   423   598
+   823
+hello in while
+the merge function successfully called
+the array 1:
+    13   187   203   224   229   246   262   422   532   612
+   623   911
+the array 2:
+   106   170   194   226   258   304   344   350   423   598
+   823   878   964
+In the merge function
+The size n1: 12	 n2: 13
+sum : 25
+hello
+hello2
+hello in while
+After the while loop, i: 1	 j: 0
+
+hello in while
+After the while loop, i: 1	 j: 1
+    13
+hello in while
+After the while loop, i: 1	 j: 2
+    13   106
+hello in while
+After the while loop, i: 2	 j: 2
+    13   106   170
+hello in while
+After the while loop, i: 2	 j: 3
+    13   106   170   187
+hello in while
+After the while loop, i: 3	 j: 3
+    13   106   170   187   194
+hello in while
+After the while loop, i: 4	 j: 3
+    13   106   170   187   194   203
+hello in while
+After the while loop, i: 4	 j: 4
+    13   106   170   187   194   203   224
+hello in while
+After the while loop, i: 5	 j: 4
+    13   106   170   187   194   203   224   226
+hello in while
+After the while loop, i: 6	 j: 4
+    13   106   170   187   194   203   224   226   229
+hello in while
+After the while loop, i: 6	 j: 5
+    13   106   170   187   194   203   224   226   229   246
+
+hello in while
+After the while loop, i: 7	 j: 5
+    13   106   170   187   194   203   224   226   229   246
+   258
+hello in while
+After the while loop, i: 7	 j: 6
+    13   106   170   187   194   203   224   226   229   246
+   258   262
+hello in while
+After the while loop, i: 7	 j: 7
+    13   106   170   187   194   203   224   226   229   246
+   258   262   304
+hello in while
+After the while loop, i: 7	 j: 8
+    13   106   170   187   194   203   224   226   229   246
+   258   262   304   344
+hello in while
+After the while loop, i: 8	 j: 8
+    13   106   170   187   194   203   224   226   229   246
+   258   262   304   344   350
+hello in while
+After the while loop, i: 8	 j: 9
+    13   106   170   187   194   203   224   226   229   246
+   258   262   304   344   350   422
+hello in while
+After the while loop, i: 9	 j: 9
+    13   106   170   187   194   203   224   226   229   246
+   258   262   304   344   350   422   423
+hello in while
+After the while loop, i: 9	 j: 10
+    13   106   170   187   194   203   224   226   229   246
+   258   262   304   344   350   422   423   532
+hello in while
+After the while loop, i: 10	 j: 10
+    13   106   170   187   194   203   224   226   229   246
+   258   262   304   344   350   422   423   532   598
+hello in while
+After the while loop, i: 11	 j: 10
+    13   106   170   187   194   203   224   226   229   246
+   258   262   304   344   350   422   423   532   598   612
+
+hello in while
+After the while loop, i: 11	 j: 11
+    13   106   170   187   194   203   224   226   229   246
+   258   262   304   344   350   422   423   532   598   612
+   623
+hello in while
+After the while loop, i: 11	 j: 12
+    13   106   170   187   194   203   224   226   229   246
+   258   262   304   344   350   422   423   532   598   612
+   623   823
+hello in while
+After the while loop, i: 12	 j: 12
+    13   106   170   187   194   203   224   226   229   246
+   258   262   304   344   350   422   423   532   598   612
+   623   823   878
+hello in while
+the merge function successfully called
+the array 1:
+    53    83   175   181   193   216   236   237   289   310
+   330   376   429   529   548   658   702   730   777   812
+   859   860   881   924   946
+the array 2:
+    13   106   170   187   194   203   224   226   229   246
+   258   262   304   344   350   422   423   532   598   612
+   623   823   878   911   964
+In the merge function
+The size n1: 25	 n2: 25
+sum : 50
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+After the while loop, i: 1	 j: 1
+    13
+hello in while
+After the while loop, i: 2	 j: 1
+    13    53
+hello in while
+After the while loop, i: 2	 j: 2
+    13    53    83
+hello in while
+After the while loop, i: 2	 j: 3
+    13    53    83   106
+hello in while
+After the while loop, i: 3	 j: 3
+    13    53    83   106   170
+hello in while
+After the while loop, i: 4	 j: 3
+    13    53    83   106   170   175
+hello in while
+After the while loop, i: 4	 j: 4
+    13    53    83   106   170   175   181
+hello in while
+After the while loop, i: 5	 j: 4
+    13    53    83   106   170   175   181   187
+hello in while
+After the while loop, i: 5	 j: 5
+    13    53    83   106   170   175   181   187   193
+hello in while
+After the while loop, i: 5	 j: 6
+    13    53    83   106   170   175   181   187   193   194
+
+hello in while
+After the while loop, i: 6	 j: 6
+    13    53    83   106   170   175   181   187   193   194
+   203
+hello in while
+After the while loop, i: 6	 j: 7
+    13    53    83   106   170   175   181   187   193   194
+   203   216
+hello in while
+After the while loop, i: 6	 j: 8
+    13    53    83   106   170   175   181   187   193   194
+   203   216   224
+hello in while
+After the while loop, i: 6	 j: 9
+    13    53    83   106   170   175   181   187   193   194
+   203   216   224   226
+hello in while
+After the while loop, i: 7	 j: 9
+    13    53    83   106   170   175   181   187   193   194
+   203   216   224   226   229
+hello in while
+After the while loop, i: 8	 j: 9
+    13    53    83   106   170   175   181   187   193   194
+   203   216   224   226   229   236
+hello in while
+After the while loop, i: 8	 j: 10
+    13    53    83   106   170   175   181   187   193   194
+   203   216   224   226   229   236   237
+hello in while
+After the while loop, i: 8	 j: 11
+    13    53    83   106   170   175   181   187   193   194
+   203   216   224   226   229   236   237   246
+hello in while
+After the while loop, i: 8	 j: 12
+    13    53    83   106   170   175   181   187   193   194
+   203   216   224   226   229   236   237   246   258
+hello in while
+After the while loop, i: 9	 j: 12
+    13    53    83   106   170   175   181   187   193   194
+   203   216   224   226   229   236   237   246   258   262
+
+hello in while
+After the while loop, i: 9	 j: 13
+    13    53    83   106   170   175   181   187   193   194
+   203   216   224   226   229   236   237   246   258   262
+   289
+hello in while
+After the while loop, i: 10	 j: 13
+    13    53    83   106   170   175   181   187   193   194
+   203   216   224   226   229   236   237   246   258   262
+   289   304
+hello in while
+After the while loop, i: 11	 j: 13
+    13    53    83   106   170   175   181   187   193   194
+   203   216   224   226   229   236   237   246   258   262
+   289   304   310
+hello in while
+After the while loop, i: 11	 j: 14
+    13    53    83   106   170   175   181   187   193   194
+   203   216   224   226   229   236   237   246   258   262
+   289   304   310   330
+hello in while
+After the while loop, i: 11	 j: 15
+    13    53    83   106   170   175   181   187   193   194
+   203   216   224   226   229   236   237   246   258   262
+   289   304   310   330   344
+hello in while
+After the while loop, i: 12	 j: 15
+    13    53    83   106   170   175   181   187   193   194
+   203   216   224   226   229   236   237   246   258   262
+   289   304   310   330   344   350
+hello in while
+After the while loop, i: 12	 j: 16
+    13    53    83   106   170   175   181   187   193   194
+   203   216   224   226   229   236   237   246   258   262
+   289   304   310   330   344   350   376
+hello in while
+After the while loop, i: 12	 j: 17
+    13    53    83   106   170   175   181   187   193   194
+   203   216   224   226   229   236   237   246   258   262
+   289   304   310   330   344   350   376   422
+hello in while
+After the while loop, i: 13	 j: 17
+    13    53    83   106   170   175   181   187   193   194
+   203   216   224   226   229   236   237   246   258   262
+   289   304   310   330   344   350   376   422   423
+hello in while
+After the while loop, i: 14	 j: 17
+    13    53    83   106   170   175   181   187   193   194
+   203   216   224   226   229   236   237   246   258   262
+   289   304   310   330   344   350   376   422   423   429
+
+hello in while
+After the while loop, i: 14	 j: 18
+    13    53    83   106   170   175   181   187   193   194
+   203   216   224   226   229   236   237   246   258   262
+   289   304   310   330   344   350   376   422   423   429
+   529
+hello in while
+After the while loop, i: 15	 j: 18
+    13    53    83   106   170   175   181   187   193   194
+   203   216   224   226   229   236   237   246   258   262
+   289   304   310   330   344   350   376   422   423   429
+   529   532
+hello in while
+After the while loop, i: 15	 j: 19
+    13    53    83   106   170   175   181   187   193   194
+   203   216   224   226   229   236   237   246   258   262
+   289   304   310   330   344   350   376   422   423   429
+   529   532   548
+hello in while
+After the while loop, i: 15	 j: 20
+    13    53    83   106   170   175   181   187   193   194
+   203   216   224   226   229   236   237   246   258   262
+   289   304   310   330   344   350   376   422   423   429
+   529   532   548   598
+hello in while
+After the while loop, i: 15	 j: 21
+    13    53    83   106   170   175   181   187   193   194
+   203   216   224   226   229   236   237   246   258   262
+   289   304   310   330   344   350   376   422   423   429
+   529   532   548   598   612
+hello in while
+After the while loop, i: 16	 j: 21
+    13    53    83   106   170   175   181   187   193   194
+   203   216   224   226   229   236   237   246   258   262
+   289   304   310   330   344   350   376   422   423   429
+   529   532   548   598   612   623
+hello in while
+After the while loop, i: 17	 j: 21
+    13    53    83   106   170   175   181   187   193   194
+   203   216   224   226   229   236   237   246   258   262
+   289   304   310   330   344   350   376   422   423   429
+   529   532   548   598   612   623   658
+hello in while
+After the while loop, i: 18	 j: 21
+    13    53    83   106   170   175   181   187   193   194
+   203   216   224   226   229   236   237   246   258   262
+   289   304   310   330   344   350   376   422   423   429
+   529   532   548   598   612   623   658   702
+hello in while
+After the while loop, i: 19	 j: 21
+    13    53    83   106   170   175   181   187   193   194
+   203   216   224   226   229   236   237   246   258   262
+   289   304   310   330   344   350   376   422   423   429
+   529   532   548   598   612   623   658   702   730
+hello in while
+After the while loop, i: 20	 j: 21
+    13    53    83   106   170   175   181   187   193   194
+   203   216   224   226   229   236   237   246   258   262
+   289   304   310   330   344   350   376   422   423   429
+   529   532   548   598   612   623   658   702   730   777
+
+hello in while
+After the while loop, i: 20	 j: 22
+    13    53    83   106   170   175   181   187   193   194
+   203   216   224   226   229   236   237   246   258   262
+   289   304   310   330   344   350   376   422   423   429
+   529   532   548   598   612   623   658   702   730   777
+   812
+hello in while
+After the while loop, i: 21	 j: 22
+    13    53    83   106   170   175   181   187   193   194
+   203   216   224   226   229   236   237   246   258   262
+   289   304   310   330   344   350   376   422   423   429
+   529   532   548   598   612   623   658   702   730   777
+   812   823
+hello in while
+After the while loop, i: 22	 j: 22
+    13    53    83   106   170   175   181   187   193   194
+   203   216   224   226   229   236   237   246   258   262
+   289   304   310   330   344   350   376   422   423   429
+   529   532   548   598   612   623   658   702   730   777
+   812   823   859
+hello in while
+After the while loop, i: 22	 j: 23
+    13    53    83   106   170   175   181   187   193   194
+   203   216   224   226   229   236   237   246   258   262
+   289   304   310   330   344   350   376   422   423   429
+   529   532   548   598   612   623   658   702   730   777
+   812   823   859   860
+hello in while
+After the while loop, i: 23	 j: 23
+    13    53    83   106   170   175   181   187   193   194
+   203   216   224   226   229   236   237   246   258   262
+   289   304   310   330   344   350   376   422   423   429
+   529   532   548   598   612   623   658   702   730   777
+   812   823   859   860   878
+hello in while
+After the while loop, i: 23	 j: 24
+    13    53    83   106   170   175   181   187   193   194
+   203   216   224   226   229   236   237   246   258   262
+   289   304   310   330   344   350   376   422   423   429
+   529   532   548   598   612   623   658   702   730   777
+   812   823   859   860   878   881
+hello in while
+After the while loop, i: 24	 j: 24
+    13    53    83   106   170   175   181   187   193   194
+   203   216   224   226   229   236   237   246   258   262
+   289   304   310   330   344   350   376   422   423   429
+   529   532   548   598   612   623   658   702   730   777
+   812   823   859   860   878   881   911
+hello in while
+After the while loop, i: 25	 j: 24
+    13    53    83   106   170   175   181   187   193   194
+   203   216   224   226   229   236   237   246   258   262
+   289   304   310   330   344   350   376   422   423   429
+   529   532   548   598   612   623   658   702   730   777
+   812   823   859   860   878   881   911   924
+hello in while
+the merge function successfully called
+the array 1:
+   713
+the array 2:
+   327
+In the merge function
+The size n1: 1	 n2: 1
+sum : 2
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+the merge function successfully called
+the array 1:
+   257
+the array 2:
+   327   713
+In the merge function
+The size n1: 1	 n2: 2
+sum : 3
+hello
+hello2
+hello in while
+After the while loop, i: 1	 j: 0
+
+hello in while
+hello in while
+the merge function successfully called
+the array 1:
+   977
+the array 2:
+  1000
+In the merge function
+The size n1: 1	 n2: 1
+sum : 2
+hello
+hello2
+hello in while
+After the while loop, i: 1	 j: 0
+
+hello in while
+the merge function successfully called
+the array 1:
+   603
+the array 2:
+   977  1000
+In the merge function
+The size n1: 1	 n2: 2
+sum : 3
+hello
+hello2
+hello in while
+After the while loop, i: 1	 j: 0
+
+hello in while
+hello in while
+the merge function successfully called
+the array 1:
+   257   327   713
+the array 2:
+   603   977  1000
+In the merge function
+The size n1: 3	 n2: 3
+sum : 6
+hello
+hello2
+hello in while
+After the while loop, i: 1	 j: 0
+
+hello in while
+After the while loop, i: 2	 j: 0
+   257
+hello in while
+After the while loop, i: 2	 j: 1
+   257   327
+hello in while
+After the while loop, i: 3	 j: 1
+   257   327   603
+hello in while
+hello in while
+the merge function successfully called
+the array 1:
+   759
+the array 2:
+   954
+In the merge function
+The size n1: 1	 n2: 1
+sum : 2
+hello
+hello2
+hello in while
+After the while loop, i: 1	 j: 0
+
+hello in while
+the merge function successfully called
+the array 1:
+   834
+the array 2:
+   759   954
+In the merge function
+The size n1: 1	 n2: 2
+sum : 3
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+After the while loop, i: 1	 j: 1
+   759
+hello in while
+the merge function successfully called
+the array 1:
+    42
+the array 2:
+   984
+In the merge function
+The size n1: 1	 n2: 1
+sum : 2
+hello
+hello2
+hello in while
+After the while loop, i: 1	 j: 0
+
+hello in while
+the merge function successfully called
+the array 1:
+   338
+the array 2:
+    42   984
+In the merge function
+The size n1: 1	 n2: 2
+sum : 3
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+After the while loop, i: 1	 j: 1
+    42
+hello in while
+the merge function successfully called
+the array 1:
+   759   834   954
+the array 2:
+    42   338   984
+In the merge function
+The size n1: 3	 n2: 3
+sum : 6
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+After the while loop, i: 0	 j: 2
+    42
+hello in while
+After the while loop, i: 1	 j: 2
+    42   338
+hello in while
+After the while loop, i: 2	 j: 2
+    42   338   759
+hello in while
+After the while loop, i: 3	 j: 2
+    42   338   759   834
+hello in while
+the merge function successfully called
+the array 1:
+   257   327   603   713   977  1000
+the array 2:
+    42   338   759   834   954   984
+In the merge function
+The size n1: 6	 n2: 6
+sum : 12
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+After the while loop, i: 1	 j: 1
+    42
+hello in while
+After the while loop, i: 2	 j: 1
+    42   257
+hello in while
+After the while loop, i: 2	 j: 2
+    42   257   327
+hello in while
+After the while loop, i: 3	 j: 2
+    42   257   327   338
+hello in while
+After the while loop, i: 4	 j: 2
+    42   257   327   338   603
+hello in while
+After the while loop, i: 4	 j: 3
+    42   257   327   338   603   713
+hello in while
+After the while loop, i: 4	 j: 4
+    42   257   327   338   603   713   759
+hello in while
+After the while loop, i: 4	 j: 5
+    42   257   327   338   603   713   759   834
+hello in while
+After the while loop, i: 5	 j: 5
+    42   257   327   338   603   713   759   834   954
+hello in while
+After the while loop, i: 5	 j: 6
+    42   257   327   338   603   713   759   834   954   977
+
+hello in while
+the merge function successfully called
+the array 1:
+   754
+the array 2:
+   437
+In the merge function
+The size n1: 1	 n2: 1
+sum : 2
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+the merge function successfully called
+the array 1:
+   537
+the array 2:
+   437   754
+In the merge function
+The size n1: 1	 n2: 2
+sum : 3
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+After the while loop, i: 1	 j: 1
+   437
+hello in while
+the merge function successfully called
+the array 1:
+   506
+the array 2:
+   328
+In the merge function
+The size n1: 1	 n2: 1
+sum : 2
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+the merge function successfully called
+the array 1:
+   654
+the array 2:
+   328   506
+In the merge function
+The size n1: 1	 n2: 2
+sum : 3
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+After the while loop, i: 0	 j: 2
+   328
+hello in while
+the merge function successfully called
+the array 1:
+   437   537   754
+the array 2:
+   328   506   654
+In the merge function
+The size n1: 3	 n2: 3
+sum : 6
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+After the while loop, i: 1	 j: 1
+   328
+hello in while
+After the while loop, i: 1	 j: 2
+   328   437
+hello in while
+After the while loop, i: 2	 j: 2
+   328   437   506
+hello in while
+After the while loop, i: 2	 j: 3
+   328   437   506   537
+hello in while
+the merge function successfully called
+the array 1:
+   841
+the array 2:
+   831
+In the merge function
+The size n1: 1	 n2: 1
+sum : 2
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+the merge function successfully called
+the array 1:
+   403
+the array 2:
+   831   841
+In the merge function
+The size n1: 1	 n2: 2
+sum : 3
+hello
+hello2
+hello in while
+After the while loop, i: 1	 j: 0
+
+hello in while
+hello in while
+the merge function successfully called
+the array 1:
+   775
+the array 2:
+    22
+In the merge function
+The size n1: 1	 n2: 1
+sum : 2
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+the merge function successfully called
+the array 1:
+   976
+the array 2:
+   989
+In the merge function
+The size n1: 1	 n2: 1
+sum : 2
+hello
+hello2
+hello in while
+After the while loop, i: 1	 j: 0
+
+hello in while
+the merge function successfully called
+the array 1:
+    22   775
+the array 2:
+   976   989
+In the merge function
+The size n1: 2	 n2: 2
+sum : 4
+hello
+hello2
+hello in while
+After the while loop, i: 1	 j: 0
+
+hello in while
+After the while loop, i: 2	 j: 0
+    22
+hello in while
+hello in while
+the merge function successfully called
+the array 1:
+   403   831   841
+the array 2:
+    22   775   976   989
+In the merge function
+The size n1: 3	 n2: 4
+sum : 7
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+After the while loop, i: 1	 j: 1
+    22
+hello in while
+After the while loop, i: 1	 j: 2
+    22   403
+hello in while
+After the while loop, i: 2	 j: 2
+    22   403   775
+hello in while
+After the while loop, i: 3	 j: 2
+    22   403   775   831
+hello in while
+hello in while
+the merge function successfully called
+the array 1:
+   328   437   506   537   654   754
+the array 2:
+    22   403   775   831   841   976   989
+In the merge function
+The size n1: 6	 n2: 7
+sum : 13
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+After the while loop, i: 1	 j: 1
+    22
+hello in while
+After the while loop, i: 1	 j: 2
+    22   328
+hello in while
+After the while loop, i: 2	 j: 2
+    22   328   403
+hello in while
+After the while loop, i: 3	 j: 2
+    22   328   403   437
+hello in while
+After the while loop, i: 4	 j: 2
+    22   328   403   437   506
+hello in while
+After the while loop, i: 5	 j: 2
+    22   328   403   437   506   537
+hello in while
+After the while loop, i: 6	 j: 2
+    22   328   403   437   506   537   654
+hello in while
+hello in while
+hello in while
+hello in while
+hello in while
+the merge function successfully called
+the array 1:
+    42   257   327   338   603   713   759   834   954   977
+   984  1000
+the array 2:
+    22   328   403   437   506   537   654   754   775   831
+   841   976   989
+In the merge function
+The size n1: 12	 n2: 13
+sum : 25
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+After the while loop, i: 1	 j: 1
+    22
+hello in while
+After the while loop, i: 2	 j: 1
+    22    42
+hello in while
+After the while loop, i: 3	 j: 1
+    22    42   257
+hello in while
+After the while loop, i: 3	 j: 2
+    22    42   257   327
+hello in while
+After the while loop, i: 4	 j: 2
+    22    42   257   327   328
+hello in while
+After the while loop, i: 4	 j: 3
+    22    42   257   327   328   338
+hello in while
+After the while loop, i: 4	 j: 4
+    22    42   257   327   328   338   403
+hello in while
+After the while loop, i: 4	 j: 5
+    22    42   257   327   328   338   403   437
+hello in while
+After the while loop, i: 4	 j: 6
+    22    42   257   327   328   338   403   437   506
+hello in while
+After the while loop, i: 5	 j: 6
+    22    42   257   327   328   338   403   437   506   537
+
+hello in while
+After the while loop, i: 5	 j: 7
+    22    42   257   327   328   338   403   437   506   537
+   603
+hello in while
+After the while loop, i: 6	 j: 7
+    22    42   257   327   328   338   403   437   506   537
+   603   654
+hello in while
+After the while loop, i: 6	 j: 8
+    22    42   257   327   328   338   403   437   506   537
+   603   654   713
+hello in while
+After the while loop, i: 7	 j: 8
+    22    42   257   327   328   338   403   437   506   537
+   603   654   713   754
+hello in while
+After the while loop, i: 7	 j: 9
+    22    42   257   327   328   338   403   437   506   537
+   603   654   713   754   759
+hello in while
+After the while loop, i: 7	 j: 10
+    22    42   257   327   328   338   403   437   506   537
+   603   654   713   754   759   775
+hello in while
+After the while loop, i: 8	 j: 10
+    22    42   257   327   328   338   403   437   506   537
+   603   654   713   754   759   775   831
+hello in while
+After the while loop, i: 8	 j: 11
+    22    42   257   327   328   338   403   437   506   537
+   603   654   713   754   759   775   831   834
+hello in while
+After the while loop, i: 9	 j: 11
+    22    42   257   327   328   338   403   437   506   537
+   603   654   713   754   759   775   831   834   841
+hello in while
+After the while loop, i: 9	 j: 12
+    22    42   257   327   328   338   403   437   506   537
+   603   654   713   754   759   775   831   834   841   954
+
+hello in while
+After the while loop, i: 10	 j: 12
+    22    42   257   327   328   338   403   437   506   537
+   603   654   713   754   759   775   831   834   841   954
+   976
+hello in while
+After the while loop, i: 11	 j: 12
+    22    42   257   327   328   338   403   437   506   537
+   603   654   713   754   759   775   831   834   841   954
+   976   977
+hello in while
+After the while loop, i: 11	 j: 13
+    22    42   257   327   328   338   403   437   506   537
+   603   654   713   754   759   775   831   834   841   954
+   976   977   984
+hello in while
+the merge function successfully called
+the array 1:
+   234
+the array 2:
+   480
+In the merge function
+The size n1: 1	 n2: 1
+sum : 2
+hello
+hello2
+hello in while
+After the while loop, i: 1	 j: 0
+
+hello in while
+the merge function successfully called
+the array 1:
+   931
+the array 2:
+   234   480
+In the merge function
+The size n1: 1	 n2: 2
+sum : 3
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+After the while loop, i: 0	 j: 2
+   234
+hello in while
+the merge function successfully called
+the array 1:
+   356
+the array 2:
+   677
+In the merge function
+The size n1: 1	 n2: 1
+sum : 2
+hello
+hello2
+hello in while
+After the while loop, i: 1	 j: 0
+
+hello in while
+the merge function successfully called
+the array 1:
+   167
+the array 2:
+   356   677
+In the merge function
+The size n1: 1	 n2: 2
+sum : 3
+hello
+hello2
+hello in while
+After the while loop, i: 1	 j: 0
+
+hello in while
+hello in while
+the merge function successfully called
+the array 1:
+   234   480   931
+the array 2:
+   167   356   677
+In the merge function
+The size n1: 3	 n2: 3
+sum : 6
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+After the while loop, i: 1	 j: 1
+   167
+hello in while
+After the while loop, i: 1	 j: 2
+   167   234
+hello in while
+After the while loop, i: 2	 j: 2
+   167   234   356
+hello in while
+After the while loop, i: 2	 j: 3
+   167   234   356   480
+hello in while
+the merge function successfully called
+the array 1:
+   799
+the array 2:
+   782
+In the merge function
+The size n1: 1	 n2: 1
+sum : 2
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+the merge function successfully called
+the array 1:
+    93
+the array 2:
+   782   799
+In the merge function
+The size n1: 1	 n2: 2
+sum : 3
+hello
+hello2
+hello in while
+After the while loop, i: 1	 j: 0
+
+hello in while
+hello in while
+the merge function successfully called
+the array 1:
+   599
+the array 2:
+   435
+In the merge function
+The size n1: 1	 n2: 1
+sum : 2
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+the merge function successfully called
+the array 1:
+   610
+the array 2:
+   435   599
+In the merge function
+The size n1: 1	 n2: 2
+sum : 3
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+After the while loop, i: 0	 j: 2
+   435
+hello in while
+the merge function successfully called
+the array 1:
+    93   782   799
+the array 2:
+   435   599   610
+In the merge function
+The size n1: 3	 n2: 3
+sum : 6
+hello
+hello2
+hello in while
+After the while loop, i: 1	 j: 0
+
+hello in while
+After the while loop, i: 1	 j: 1
+    93
+hello in while
+After the while loop, i: 1	 j: 2
+    93   435
+hello in while
+After the while loop, i: 1	 j: 3
+    93   435   599
+hello in while
+hello in while
+the merge function successfully called
+the array 1:
+   167   234   356   480   677   931
+the array 2:
+    93   435   599   610   782   799
+In the merge function
+The size n1: 6	 n2: 6
+sum : 12
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+After the while loop, i: 1	 j: 1
+    93
+hello in while
+After the while loop, i: 2	 j: 1
+    93   167
+hello in while
+After the while loop, i: 3	 j: 1
+    93   167   234
+hello in while
+After the while loop, i: 3	 j: 2
+    93   167   234   356
+hello in while
+After the while loop, i: 4	 j: 2
+    93   167   234   356   435
+hello in while
+After the while loop, i: 4	 j: 3
+    93   167   234   356   435   480
+hello in while
+After the while loop, i: 4	 j: 4
+    93   167   234   356   435   480   599
+hello in while
+After the while loop, i: 5	 j: 4
+    93   167   234   356   435   480   599   610
+hello in while
+After the while loop, i: 5	 j: 5
+    93   167   234   356   435   480   599   610   677
+hello in while
+After the while loop, i: 5	 j: 6
+    93   167   234   356   435   480   599   610   677   782
+
+hello in while
+the merge function successfully called
+the array 1:
+   940
+the array 2:
+   442
+In the merge function
+The size n1: 1	 n2: 1
+sum : 2
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+the merge function successfully called
+the array 1:
+   685
+the array 2:
+   442   940
+In the merge function
+The size n1: 1	 n2: 2
+sum : 3
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+After the while loop, i: 1	 j: 1
+   442
+hello in while
+the merge function successfully called
+the array 1:
+   889
+the array 2:
+   141
+In the merge function
+The size n1: 1	 n2: 1
+sum : 2
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+the merge function successfully called
+the array 1:
+   830
+the array 2:
+   141   889
+In the merge function
+The size n1: 1	 n2: 2
+sum : 3
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+After the while loop, i: 1	 j: 1
+   141
+hello in while
+the merge function successfully called
+the array 1:
+   442   685   940
+the array 2:
+   141   830   889
+In the merge function
+The size n1: 3	 n2: 3
+sum : 6
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+After the while loop, i: 1	 j: 1
+   141
+hello in while
+After the while loop, i: 2	 j: 1
+   141   442
+hello in while
+After the while loop, i: 2	 j: 2
+   141   442   685
+hello in while
+After the while loop, i: 2	 j: 3
+   141   442   685   830
+hello in while
+the merge function successfully called
+the array 1:
+   360
+the array 2:
+   506
+In the merge function
+The size n1: 1	 n2: 1
+sum : 2
+hello
+hello2
+hello in while
+After the while loop, i: 1	 j: 0
+
+hello in while
+the merge function successfully called
+the array 1:
+   475
+the array 2:
+   360   506
+In the merge function
+The size n1: 1	 n2: 2
+sum : 3
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+After the while loop, i: 1	 j: 1
+   360
+hello in while
+the merge function successfully called
+the array 1:
+   341
+the array 2:
+   997
+In the merge function
+The size n1: 1	 n2: 1
+sum : 2
+hello
+hello2
+hello in while
+After the while loop, i: 1	 j: 0
+
+hello in while
+the merge function successfully called
+the array 1:
+   575
+the array 2:
+   830
+In the merge function
+The size n1: 1	 n2: 1
+sum : 2
+hello
+hello2
+hello in while
+After the while loop, i: 1	 j: 0
+
+hello in while
+the merge function successfully called
+the array 1:
+   341   997
+the array 2:
+   575   830
+In the merge function
+The size n1: 2	 n2: 2
+sum : 4
+hello
+hello2
+hello in while
+After the while loop, i: 1	 j: 0
+
+hello in while
+After the while loop, i: 1	 j: 1
+   341
+hello in while
+After the while loop, i: 1	 j: 2
+   341   575
+hello in while
+the merge function successfully called
+the array 1:
+   360   475   506
+the array 2:
+   341   575   830   997
+In the merge function
+The size n1: 3	 n2: 4
+sum : 7
+hello
+hello2
+hello in while
+After the while loop, i: 0	 j: 1
+
+hello in while
+After the while loop, i: 1	 j: 1
+   341
+hello in while
+After the while loop, i: 2	 j: 1
+   341   360
+hello in while
+After the while loop, i: 3	 j: 1
+   341   360   475
+hello in while
+hello in while
+hello in while
+the merge function successfully called
+the array 1:
+   141   442   685   830   889   940
+the array 2:
+   341   360   475   506   575   830   997
+In the merge function
+The size n1: 6	 n2: 7
+sum : 13
+hello
+hello2
+hello in while
+After the while loop, i: 1	 j: 0
+
+hello in while
+After the while loop, i: 1	 j: 1
+   141
+hello in while
+After the while loop, i: 1	 j: 2
+   141   341
+hello in while
+After the while loop, i: 2	 j: 2
+   141   341   360
+hello in while
+After the while loop, i: 2	 j: 3
+   141   341   360   442
+hello in while
+After the while loop, i: 2	 j: 4
+   141   341   360   442   475
+hello in while
+After the while loop, i: 2	 j: 5
+   141   341   360   442   475   506
+hello in while
+After the while loop, i: 3	 j: 5
+   141   341   360   442   475   506   575
+hello in while
+After the while loop, i: 4	 j: 5
+   141   341   360   442   475   506   575   685
+hello in while
+After the while loop, i: 4	 j: 6
+   141   341   360   442   475   506   575   685   830
+hello in while
+After the while loop, i: 5	 j: 6
+   141   341   360   442   475   506   575   685   830   830
+
+hello in while
+After the while loop, i: 6	 j: 6
+   141   341   360   442   475   506   575   685   830   830
+   889
+hello in while
+the merge function successfully called
+the array 1:
+    93   167   234   356   435   480   599   610   677   782
+   799   931
+the array 2:
+   141   341   360   442   475   506   575   685   830   830
+   889   940   997
+In the merge function
+The size n1: 12	 n2: 13
+sum : 25
+hello
+hello2
+hello in while
+After the while loop, i: 1	 j: 0
+
+hello in while
+After the while loop, i: 1	 j: 1
+    93
+hello in while
+After the while loop, i: 2	 j: 1
+    93   141
+hello in while
+After the while loop, i: 3	 j: 1
+    93   141   167
+hello in while
+After the while loop, i: 3	 j: 2
+    93   141   167   234
+hello in while
+After the while loop, i: 4	 j: 2
+    93   141   167   234   341
+hello in while
+After the while loop, i: 4	 j: 3
+    93   141   167   234   341   356
+hello in while
+After the while loop, i: 5	 j: 3
+    93   141   167   234   341   356   360
+hello in while
+After the while loop, i: 5	 j: 4
+    93   141   167   234   341   356   360   435
+hello in while
+After the while loop, i: 5	 j: 5
+    93   141   167   234   341   356   360   435   442
+hello in while
+After the while loop, i: 6	 j: 5
+    93   141   167   234   341   356   360   435   442   475
+
+hello in while
+After the while loop, i: 6	 j: 6
+    93   141   167   234   341   356   360   435   442   475
+   480
+hello in while
+After the while loop, i: 6	 j: 7
+    93   141   167   234   341   356   360   435   442   475
+   480   506
+hello in while
+After the while loop, i: 7	 j: 7
+    93   141   167   234   341   356   360   435   442   475
+   480   506   575
+hello in while
+After the while loop, i: 8	 j: 7
+    93   141   167   234   341   356   360   435   442   475
+   480   506   575   599
+hello in while
+After the while loop, i: 9	 j: 7
+    93   141   167   234   341   356   360   435   442   475
+   480   506   575   599   610
+hello in while
+After the while loop, i: 9	 j: 8
+    93   141   167   234   341   356   360   435   442   475
+   480   506   575   599   610   677
+hello in while
+After the while loop, i: 10	 j: 8
+    93   141   167   234   341   356   360   435   442   475
+   480   506   575   599   610   677   685
+hello in while
+After the while loop, i: 11	 j: 8
+    93   141   167   234   341   356   360   435   442   475
+   480   506   575   599   610   677   685   782
+hello in while
+After the while loop, i: 11	 j: 9
+    93   141   167   234   341   356   360   435   442   475
+   480   506   575   599   610   677   685   782   799
+hello in while
+After the while loop, i: 11	 j: 10
+    93   141   167   234   341   356   360   435   442   475
+   480   506   575   599   610   677   685   782   799   830
+
+hello in while
+After the while loop, i: 11	 j: 11
+    93   141   167   234   341   356   360   435   442   475
+   480   506   575   599   610   677   685   782   799   830
+   830
+hello in while
+After the while loop, i: 12	 j: 11
+    93   141   167   234   341   356   360   435   442   475
+   480   506   575   599   610   677   685   782   799   830
+   830   889
+hello in while
+hello in while
+the merge function successfully called
+the array 1:
+    22    42   257   327   328   338   403   437   506   537
+   603   654   713   754   759   775   831   834   841   954
+   976   977   984   989  1000
+the array 2:
+    93   141   167   234   341   356   360   435   442   475
+   480   506   575   599   610   677   685   782   799   830
+   830   889   931   940   997
+In the merge function
+The size n1: 25	 n2: 25
+sum : 50
+hello
+hello2
+hello in while
+After the while loop, i: 1	 j: 0
+
+hello in while
+After the while loop, i: 2	 j: 0
+    22
+hello in while
+After the while loop, i: 2	 j: 1
+    22    42
+hello in while
+After the while loop, i: 2	 j: 2
+    22    42    93
+hello in while
+After the while loop, i: 2	 j: 3
+    22    42    93   141
+hello in while
+After the while loop, i: 2	 j: 4
+    22    42    93   141   167
+hello in while
+After the while loop, i: 3	 j: 4
+    22    42    93   141   167   234
+hello in while
+After the while loop, i: 4	 j: 4
+    22    42    93   141   167   234   257
+hello in while
+After the while loop, i: 5	 j: 4
+    22    42    93   141   167   234   257   327
+hello in while
+After the while loop, i: 6	 j: 4
+    22    42    93   141   167   234   257   327   328
+hello in while
+After the while loop, i: 6	 j: 5
+    22    42    93   141   167   234   257   327   328   338
+
+hello in while
+After the while loop, i: 6	 j: 6
+    22    42    93   141   167   234   257   327   328   338
+   341
+hello in while
+After the while loop, i: 6	 j: 7
+    22    42    93   141   167   234   257   327   328   338
+   341   356
+hello in while
+After the while loop, i: 7	 j: 7
+    22    42    93   141   167   234   257   327   328   338
+   341   356   360
+hello in while
+After the while loop, i: 7	 j: 8
+    22    42    93   141   167   234   257   327   328   338
+   341   356   360   403
+hello in while
+After the while loop, i: 8	 j: 8
+    22    42    93   141   167   234   257   327   328   338
+   341   356   360   403   435
+hello in while
+After the while loop, i: 8	 j: 9
+    22    42    93   141   167   234   257   327   328   338
+   341   356   360   403   435   437
+hello in while
+After the while loop, i: 8	 j: 10
+    22    42    93   141   167   234   257   327   328   338
+   341   356   360   403   435   437   442
+hello in while
+After the while loop, i: 8	 j: 11
+    22    42    93   141   167   234   257   327   328   338
+   341   356   360   403   435   437   442   475
+hello in while
+After the while loop, i: 9	 j: 11
+    22    42    93   141   167   234   257   327   328   338
+   341   356   360   403   435   437   442   475   480
+hello in while
+After the while loop, i: 9	 j: 12
+    22    42    93   141   167   234   257   327   328   338
+   341   356   360   403   435   437   442   475   480   506
+
+hello in while
+After the while loop, i: 10	 j: 12
+    22    42    93   141   167   234   257   327   328   338
+   341   356   360   403   435   437   442   475   480   506
+   506
+hello in while
+After the while loop, i: 10	 j: 13
+    22    42    93   141   167   234   257   327   328   338
+   341   356   360   403   435   437   442   475   480   506
+   506   537
+hello in while
+After the while loop, i: 10	 j: 14
+    22    42    93   141   167   234   257   327   328   338
+   341   356   360   403   435   437   442   475   480   506
+   506   537   575
+hello in while
+After the while loop, i: 11	 j: 14
+    22    42    93   141   167   234   257   327   328   338
+   341   356   360   403   435   437   442   475   480   506
+   506   537   575   599
+hello in while
+After the while loop, i: 11	 j: 15
+    22    42    93   141   167   234   257   327   328   338
+   341   356   360   403   435   437   442   475   480   506
+   506   537   575   599   603
+hello in while
+After the while loop, i: 12	 j: 15
+    22    42    93   141   167   234   257   327   328   338
+   341   356   360   403   435   437   442   475   480   506
+   506   537   575   599   603   610
+hello in while
+After the while loop, i: 12	 j: 16
+    22    42    93   141   167   234   257   327   328   338
+   341   356   360   403   435   437   442   475   480   506
+   506   537   575   599   603   610   654
+hello in while
+After the while loop, i: 12	 j: 17
+    22    42    93   141   167   234   257   327   328   338
+   341   356   360   403   435   437   442   475   480   506
+   506   537   575   599   603   610   654   677
+hello in while
+After the while loop, i: 13	 j: 17
+    22    42    93   141   167   234   257   327   328   338
+   341   356   360   403   435   437   442   475   480   506
+   506   537   575   599   603   610   654   677   685
+hello in while
+After the while loop, i: 14	 j: 17
+    22    42    93   141   167   234   257   327   328   338
+   341   356   360   403   435   437   442   475   480   506
+   506   537   575   599   603   610   654   677   685   713
+
+hello in while
+After the while loop, i: 15	 j: 17
+    22    42    93   141   167   234   257   327   328   338
+   341   356   360   403   435   437   442   475   480   506
+   506   537   575   599   603   610   654   677   685   713
+   754
+hello in while
+After the while loop, i: 16	 j: 17
+    22    42    93   141   167   234   257   327   328   338
+   341   356   360   403   435   437   442   475   480   506
+   506   537   575   599   603   610   654   677   685   713
+   754   759
+hello in while
+After the while loop, i: 16	 j: 18
+    22    42    93   141   167   234   257   327   328   338
+   341   356   360   403   435   437   442   475   480   506
+   506   537   575   599   603   610   654   677   685   713
+   754   759   775
+hello in while
+After the while loop, i: 16	 j: 19
+    22    42    93   141   167   234   257   327   328   338
+   341   356   360   403   435   437   442   475   480   506
+   506   537   575   599   603   610   654   677   685   713
+   754   759   775   782
+hello in while
+After the while loop, i: 16	 j: 20
+    22    42    93   141   167   234   257   327   328   338
+   341   356   360   403   435   437   442   475   480   506
+   506   537   575   599   603   610   654   677   685   713
+   754   759   775   782   799
+hello in while
+After the while loop, i: 16	 j: 21
+    22    42    93   141   167   234   257   327   328   338
+   341   356   360   403   435   437   442   475   480   506
+   506   537   575   599   603   610   654   677   685   713
+   754   759   775   782   799   830
+hello in while
+After the while loop, i: 17	 j: 21
+    22    42    93   141   167   234   257   327   328   338
+   341   356   360   403   435   437   442   475   480   506
+   506   537   575   599   603   610   654   677   685   713
+   754   759   775   782   799   830   830
+hello in while
+After the while loop, i: 18	 j: 21
+    22    42    93   141   167   234   257   327   328   338
+   341   356   360   403   435   437   442   475   480   506
+   506   537   575   599   603   610   654   677   685   713
+   754   759   775   782   799   830   830   831
+hello in while
+After the while loop, i: 19	 j: 21
+    22    42    93   141   167   234   257   327   328   338
+   341   356   360   403   435   437   442   475   480   506
+   506   537   575   599   603   610   654   677   685   713
+   754   759   775   782   799   830   830   831   834
+hello in while
+After the while loop, i: 19	 j: 22
+    22    42    93   141   167   234   257   327   328   338
+   341   356   360   403   435   437   442   475   480   506
+   506   537   575   599   603   610   654   677   685   713
+   754   759   775   782   799   830   830   831   834   841
+
+hello in while
+After the while loop, i: 19	 j: 23
+    22    42    93   141   167   234   257   327   328   338
+   341   356   360   403   435   437   442   475   480   506
+   506   537   575   599   603   610   654   677   685   713
+   754   759   775   782   799   830   830   831   834   841
+   889
+hello in while
+After the while loop, i: 19	 j: 24
+    22    42    93   141   167   234   257   327   328   338
+   341   356   360   403   435   437   442   475   480   506
+   506   537   575   599   603   610   654   677   685   713
+   754   759   775   782   799   830   830   831   834   841
+   889   931
+hello in while
+After the while loop, i: 20	 j: 24
+    22    42    93   141   167   234   257   327   328   338
+   341   356   360   403   435   437   442   475   480   506
+   506   537   575   599   603   610   654   677   685   713
+   754   759   775   782   799   830   830   831   834   841
+   889   931   940
+hello in while
+After the while loop, i: 21	 j: 24
+    22    42    93   141   167   234   257   327   328   338
+   341   356   360   403   435   437   442   475   480   506
+   506   537   575   599   603   610   654   677   685   713
+   754   759   775   782   799   830   830   831   834   841
+   889   931   940   954
+hello in while
+After the while loop, i: 22	 j: 24
+    22    42    93   141   167   234   257   327   328   338
+   341   356   360   403   435   437   442   475   480   506
+   506   537   575   599   603   610   654   677   685   713
+   754   759   775   782   799   830   830   831   834   841
+   889   931   940   954   976
+hello in while
+After the while loop, i: 23	 j: 24
+    22    42    93   141   167   234   257   327   328   338
+   341   356   360   403   435   437   442   475   480   506
+   506   537   575   599   603   610   654   677   685   713
+   754   759   775   782   799   830   830   831   834   841
+   889   931   940   954   976   977
+hello in while
+After the while loop, i: 24	 j: 24
+    22    42    93   141   167   234   257   327   328   338
+   341   356   360   403   435   437   442   475   480   506
+   506   537   575   599   603   610   654   677   685   713
+   754   759   775   782   799   830   830   831   834   841
+   889   931   940   954   976   977   984
+hello in while
+After the while loop, i: 24	 j: 25
+    22    42    93   141   167   234   257   327   328   338
+   341   356   360   403   435   437   442   475   480   506
+   506   537   575   599   603   610   654   677   685   713
+   754   759   775   782   799   830   830   831   834   841
+   889   931   940   954   976   977   984   989
+hello in while
+the merge function successfully called
+the array 1:
+    13    53    83   106   170   175   181   187   193   194
+   203   216   224   226   229   236   237   246   258   262
+   289   304   310   330   344   350   376   422   423   429
+   529   532   548   598   612   623   658   702   730   777
+   812   823   859   860   878   881   911   924   946   964
+
+the array 2:
+    22    42    93   141   167   234   257   327   328   338
+   341   356   360   403   435   437   442   475   480   506
+   506   537   575   599   603   610   654   677   685   713
+   754   759   775   782   799   830   830   831   834   841
+   889   931   940   954   976   977   984   989   997  1000
+
+In the merge function
+The size n1: 50	 n2: 50
+sum : 100
+hello
+hello2
+hello in while
+After the while loop, i: 1	 j: 0
+
+hello in while
+After the while loop, i: 1	 j: 1
+    13
+hello in while
+After the while loop, i: 1	 j: 2
+    13    22
+hello in while
+After the while loop, i: 2	 j: 2
+    13    22    42
+hello in while
+After the while loop, i: 3	 j: 2
+    13    22    42    53
+hello in while
+After the while loop, i: 3	 j: 3
+    13    22    42    53    83
+hello in while
+After the while loop, i: 4	 j: 3
+    13    22    42    53    83    93
+hello in while
+After the while loop, i: 4	 j: 4
+    13    22    42    53    83    93   106
+hello in while
+After the while loop, i: 4	 j: 5
+    13    22    42    53    83    93   106   141
+hello in while
+After the while loop, i: 5	 j: 5
+    13    22    42    53    83    93   106   141   167
+hello in while
+After the while loop, i: 6	 j: 5
+    13    22    42    53    83    93   106   141   167   170
+
+hello in while
+After the while loop, i: 7	 j: 5
+    13    22    42    53    83    93   106   141   167   170
+   175
+hello in while
+After the while loop, i: 8	 j: 5
+    13    22    42    53    83    93   106   141   167   170
+   175   181
+hello in while
+After the while loop, i: 9	 j: 5
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187
+hello in while
+After the while loop, i: 10	 j: 5
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193
+hello in while
+After the while loop, i: 11	 j: 5
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194
+hello in while
+After the while loop, i: 12	 j: 5
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203
+hello in while
+After the while loop, i: 13	 j: 5
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216
+hello in while
+After the while loop, i: 14	 j: 5
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224
+hello in while
+After the while loop, i: 15	 j: 5
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226
+hello in while
+After the while loop, i: 15	 j: 6
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+
+hello in while
+After the while loop, i: 16	 j: 6
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234
+hello in while
+After the while loop, i: 17	 j: 6
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236
+hello in while
+After the while loop, i: 18	 j: 6
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237
+hello in while
+After the while loop, i: 18	 j: 7
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246
+hello in while
+After the while loop, i: 19	 j: 7
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257
+hello in while
+After the while loop, i: 20	 j: 7
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258
+hello in while
+After the while loop, i: 21	 j: 7
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262
+hello in while
+After the while loop, i: 22	 j: 7
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289
+hello in while
+After the while loop, i: 23	 j: 7
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304
+hello in while
+After the while loop, i: 23	 j: 8
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+
+hello in while
+After the while loop, i: 23	 j: 9
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327
+hello in while
+After the while loop, i: 24	 j: 9
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328
+hello in while
+After the while loop, i: 24	 j: 10
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330
+hello in while
+After the while loop, i: 24	 j: 11
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338
+hello in while
+After the while loop, i: 25	 j: 11
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341
+hello in while
+After the while loop, i: 26	 j: 11
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344
+hello in while
+After the while loop, i: 26	 j: 12
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350
+hello in while
+After the while loop, i: 26	 j: 13
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356
+hello in while
+After the while loop, i: 27	 j: 13
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360
+hello in while
+After the while loop, i: 27	 j: 14
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+
+hello in while
+After the while loop, i: 28	 j: 14
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403
+hello in while
+After the while loop, i: 29	 j: 14
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422
+hello in while
+After the while loop, i: 30	 j: 14
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423
+hello in while
+After the while loop, i: 30	 j: 15
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429
+hello in while
+After the while loop, i: 30	 j: 16
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435
+hello in while
+After the while loop, i: 30	 j: 17
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437
+hello in while
+After the while loop, i: 30	 j: 18
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437   442
+hello in while
+After the while loop, i: 30	 j: 19
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437   442   475
+hello in while
+After the while loop, i: 30	 j: 20
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437   442   475   480
+hello in while
+After the while loop, i: 30	 j: 21
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437   442   475   480   506
+
+hello in while
+After the while loop, i: 31	 j: 21
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437   442   475   480   506
+   506
+hello in while
+After the while loop, i: 32	 j: 21
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437   442   475   480   506
+   506   529
+hello in while
+After the while loop, i: 32	 j: 22
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437   442   475   480   506
+   506   529   532
+hello in while
+After the while loop, i: 33	 j: 22
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437   442   475   480   506
+   506   529   532   537
+hello in while
+After the while loop, i: 33	 j: 23
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437   442   475   480   506
+   506   529   532   537   548
+hello in while
+After the while loop, i: 34	 j: 23
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437   442   475   480   506
+   506   529   532   537   548   575
+hello in while
+After the while loop, i: 34	 j: 24
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437   442   475   480   506
+   506   529   532   537   548   575   598
+hello in while
+After the while loop, i: 34	 j: 25
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437   442   475   480   506
+   506   529   532   537   548   575   598   599
+hello in while
+After the while loop, i: 34	 j: 26
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437   442   475   480   506
+   506   529   532   537   548   575   598   599   603
+hello in while
+After the while loop, i: 35	 j: 26
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437   442   475   480   506
+   506   529   532   537   548   575   598   599   603   610
+
+hello in while
+After the while loop, i: 36	 j: 26
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437   442   475   480   506
+   506   529   532   537   548   575   598   599   603   610
+   612
+hello in while
+After the while loop, i: 36	 j: 27
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437   442   475   480   506
+   506   529   532   537   548   575   598   599   603   610
+   612   623
+hello in while
+After the while loop, i: 37	 j: 27
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437   442   475   480   506
+   506   529   532   537   548   575   598   599   603   610
+   612   623   654
+hello in while
+After the while loop, i: 37	 j: 28
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437   442   475   480   506
+   506   529   532   537   548   575   598   599   603   610
+   612   623   654   658
+hello in while
+After the while loop, i: 37	 j: 29
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437   442   475   480   506
+   506   529   532   537   548   575   598   599   603   610
+   612   623   654   658   677
+hello in while
+After the while loop, i: 38	 j: 29
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437   442   475   480   506
+   506   529   532   537   548   575   598   599   603   610
+   612   623   654   658   677   685
+hello in while
+After the while loop, i: 38	 j: 30
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437   442   475   480   506
+   506   529   532   537   548   575   598   599   603   610
+   612   623   654   658   677   685   702
+hello in while
+After the while loop, i: 39	 j: 30
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437   442   475   480   506
+   506   529   532   537   548   575   598   599   603   610
+   612   623   654   658   677   685   702   713
+hello in while
+After the while loop, i: 39	 j: 31
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437   442   475   480   506
+   506   529   532   537   548   575   598   599   603   610
+   612   623   654   658   677   685   702   713   730
+hello in while
+After the while loop, i: 39	 j: 32
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437   442   475   480   506
+   506   529   532   537   548   575   598   599   603   610
+   612   623   654   658   677   685   702   713   730   754
+
+hello in while
+After the while loop, i: 39	 j: 33
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437   442   475   480   506
+   506   529   532   537   548   575   598   599   603   610
+   612   623   654   658   677   685   702   713   730   754
+   759
+hello in while
+After the while loop, i: 40	 j: 33
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437   442   475   480   506
+   506   529   532   537   548   575   598   599   603   610
+   612   623   654   658   677   685   702   713   730   754
+   759   775
+hello in while
+After the while loop, i: 40	 j: 34
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437   442   475   480   506
+   506   529   532   537   548   575   598   599   603   610
+   612   623   654   658   677   685   702   713   730   754
+   759   775   777
+hello in while
+After the while loop, i: 40	 j: 35
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437   442   475   480   506
+   506   529   532   537   548   575   598   599   603   610
+   612   623   654   658   677   685   702   713   730   754
+   759   775   777   782
+hello in while
+After the while loop, i: 41	 j: 35
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437   442   475   480   506
+   506   529   532   537   548   575   598   599   603   610
+   612   623   654   658   677   685   702   713   730   754
+   759   775   777   782   799
+hello in while
+After the while loop, i: 42	 j: 35
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437   442   475   480   506
+   506   529   532   537   548   575   598   599   603   610
+   612   623   654   658   677   685   702   713   730   754
+   759   775   777   782   799   812
+hello in while
+After the while loop, i: 42	 j: 36
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437   442   475   480   506
+   506   529   532   537   548   575   598   599   603   610
+   612   623   654   658   677   685   702   713   730   754
+   759   775   777   782   799   812   823
+hello in while
+After the while loop, i: 42	 j: 37
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437   442   475   480   506
+   506   529   532   537   548   575   598   599   603   610
+   612   623   654   658   677   685   702   713   730   754
+   759   775   777   782   799   812   823   830
+hello in while
+After the while loop, i: 42	 j: 38
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437   442   475   480   506
+   506   529   532   537   548   575   598   599   603   610
+   612   623   654   658   677   685   702   713   730   754
+   759   775   777   782   799   812   823   830   830
+hello in while
+After the while loop, i: 42	 j: 39
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437   442   475   480   506
+   506   529   532   537   548   575   598   599   603   610
+   612   623   654   658   677   685   702   713   730   754
+   759   775   777   782   799   812   823   830   830   831
+
+hello in while
+After the while loop, i: 42	 j: 40
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437   442   475   480   506
+   506   529   532   537   548   575   598   599   603   610
+   612   623   654   658   677   685   702   713   730   754
+   759   775   777   782   799   812   823   830   830   831
+   834
+hello in while
+After the while loop, i: 43	 j: 40
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437   442   475   480   506
+   506   529   532   537   548   575   598   599   603   610
+   612   623   654   658   677   685   702   713   730   754
+   759   775   777   782   799   812   823   830   830   831
+   834   841
+hello in while
+After the while loop, i: 44	 j: 40
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437   442   475   480   506
+   506   529   532   537   548   575   598   599   603   610
+   612   623   654   658   677   685   702   713   730   754
+   759   775   777   782   799   812   823   830   830   831
+   834   841   859
+hello in while
+After the while loop, i: 45	 j: 40
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437   442   475   480   506
+   506   529   532   537   548   575   598   599   603   610
+   612   623   654   658   677   685   702   713   730   754
+   759   775   777   782   799   812   823   830   830   831
+   834   841   859   860
+hello in while
+After the while loop, i: 46	 j: 40
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437   442   475   480   506
+   506   529   532   537   548   575   598   599   603   610
+   612   623   654   658   677   685   702   713   730   754
+   759   775   777   782   799   812   823   830   830   831
+   834   841   859   860   878
+hello in while
+After the while loop, i: 46	 j: 41
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437   442   475   480   506
+   506   529   532   537   548   575   598   599   603   610
+   612   623   654   658   677   685   702   713   730   754
+   759   775   777   782   799   812   823   830   830   831
+   834   841   859   860   878   881
+hello in while
+After the while loop, i: 47	 j: 41
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437   442   475   480   506
+   506   529   532   537   548   575   598   599   603   610
+   612   623   654   658   677   685   702   713   730   754
+   759   775   777   782   799   812   823   830   830   831
+   834   841   859   860   878   881   889
+hello in while
+After the while loop, i: 48	 j: 41
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437   442   475   480   506
+   506   529   532   537   548   575   598   599   603   610
+   612   623   654   658   677   685   702   713   730   754
+   759   775   777   782   799   812   823   830   830   831
+   834   841   859   860   878   881   889   911
+hello in while
+After the while loop, i: 48	 j: 42
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437   442   475   480   506
+   506   529   532   537   548   575   598   599   603   610
+   612   623   654   658   677   685   702   713   730   754
+   759   775   777   782   799   812   823   830   830   831
+   834   841   859   860   878   881   889   911   924
+hello in while
+After the while loop, i: 48	 j: 43
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437   442   475   480   506
+   506   529   532   537   548   575   598   599   603   610
+   612   623   654   658   677   685   702   713   730   754
+   759   775   777   782   799   812   823   830   830   831
+   834   841   859   860   878   881   889   911   924   931
+
+hello in while
+After the while loop, i: 49	 j: 43
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437   442   475   480   506
+   506   529   532   537   548   575   598   599   603   610
+   612   623   654   658   677   685   702   713   730   754
+   759   775   777   782   799   812   823   830   830   831
+   834   841   859   860   878   881   889   911   924   931
+   940
+hello in while
+After the while loop, i: 49	 j: 44
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437   442   475   480   506
+   506   529   532   537   548   575   598   599   603   610
+   612   623   654   658   677   685   702   713   730   754
+   759   775   777   782   799   812   823   830   830   831
+   834   841   859   860   878   881   889   911   924   931
+   940   946
+hello in while
+After the while loop, i: 50	 j: 44
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437   442   475   480   506
+   506   529   532   537   548   575   598   599   603   610
+   612   623   654   658   677   685   702   713   730   754
+   759   775   777   782   799   812   823   830   830   831
+   834   841   859   860   878   881   889   911   924   931
+   940   946   954
+hello in while
+hello in while
+hello in while
+hello in while
+hello in while
+hello in while
+    13    22    42    53    83    93   106   141   167   170
+   175   181   187   193   194   203   216   224   226   229
+   234   236   237   246   257   258   262   289   304   310
+   327   328   330   338   341   344   350   356   360   376
+   403   422   423   429   435   437   442   475   480   506
+   506   529   532   537   548   575   598   599   603   610
+   612   623   654   658   677   685   702   713   730   754
+   759   775   777   782   799   812   823   830   830   831
+   834   841   859   860   878   881   889   911   924   931
+   940   946   954   964   976   977   984   989   997  1000
+
+     0     7
+the merge function successfully called
+the array 1:
+     0
+the array 2:
+     7
+In the merge function
+The size n1: 1	 n2: 1
+sum : 2
+hello
+hello2
+hello in while
+After the while loop, i: 1	 j: 0
+
+hello in while
+     0     7
+     2     0    13
+the merge function successfully called
+the array 1:
+     0
+the array 2:
+    13
+In the merge function
+The size n1: 1	 n2: 1
+sum : 2
+hello

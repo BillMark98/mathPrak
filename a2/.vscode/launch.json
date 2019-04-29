@@ -1,0 +1,22 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "C++ Launch (GDBSERVER)",
+            "type": "cppdbg",
+            "request": "launch",
+            "miDebuggerServerAddress": "localhost:2000",
+            "preLaunchTask": "start-gdbserver",
+            "miDebuggerPath": "/usr/local/bin/gdb",
+            "targetArchitecture": "x64",
+            "program": "${workspaceRoot}/sorting",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceRoot}",
+            "sourceFileMap": {
+                "/code": "${workspaceRoot}"
+            },
+            "environment": []
+        }
+    ]
+}

@@ -23,93 +23,93 @@ void sink(unsigned int * feld, size_t k, size_t len);
 void merge_sort(unsigned int * feld, size_t len);
 unsigned int * merge(unsigned int * feld1, size_t n1, unsigned int * feld2, size_t n2);
 void display(unsigned int * feld, size_t n1);
-void display(unsigned int * feld, size_t n1, ostream & out);
+void display(unsigned int * feld, size_t n1, ofstream & out);
 typedef void (*sort_func)(unsigned int * feld, size_t len);
 
-ostream& outFile = cout;
+ofstream outFile;
 
 int main()
 {
-    // sort_func sort_f;
-    // cout << "welcome, please enter size of the array\n";
-    // size_t len;
-    // outFile.open("result.txt");
-    // if(!outFile.is_open())
-    // {
-    //     cout << "File error\n";
-    //     exit(1);
-    // }
-    // while(cin >> len)
-    // {
+    sort_func sort_f;
+    cout << "welcome, please enter size of the array\n";
+    size_t len;
+    outFile.open("result.txt");
+    if(!outFile.is_open())
+    {
+        cout << "File error\n";
+        exit(1);
+    }
+    while(cin >> len)
+    {
         
-    //     cout << "Beispiel number: ";
-    //     int beispiel;
-    //     if(!(cin >> beispiel))
-    //         break;
-    //     cout << "choose sorting algo:\n";
-    //     cout << "1 bubble   2 selection    3 insertion\n";
-    //     cout << "4 quicksort        5 quicksort modified\n";
-    //     cout << "6 heapsort         7 mergesort\n";
-    //     int num;
-    //     if(!(cin >> num))
-    //         break;
-    //     while(num > 7 || num < 1)
-    //     {
-    //         while(cin.get() != '\n')
-    //             continue;
-    //         cout << "fault number please choose again.\n";
-    //         cout << "1 bubble   2 selection    3 insertion\n";
-    //         cout << "4 quicksort        5 quicksort modified\n";
-    //         cout << "6 heapsort         7 mergesort\n";
-    //         cin >> num;
-    //     }
-    //     switch(num)
-    //     {
-    //         case 1 :    sort_f = bubble_sort;
-    //                     break;
-    //         case 2 :    sort_f = selection_sort;
-    //                     break;
-    //         case 3 :    sort_f = insertion_sort;
-    //                     break;
-    //         case 4 :    sort_f = quick_sort;
-    //                     break;
-    //         case 5 :    sort_f = quick_sort_mid3;
-    //                     break;
-    //         case 6 :    sort_f = heap_sort;
-    //                     break;
-    //         case 7 :    sort_f = merge_sort;
-    //                     break;
-    //         default:    cout << "wrong number\n";
-    //                     continue;
-    //     }     
-    //     unsigned int * feld = new unsigned int[len];
-    //     start(beispiel,len,feld);
-    //     cout << "Before sorting\n";
-    //     display(feld,len,outFile);
-    //     cout << "After sorting\n";
-    //     sort_f(feld,len);
-    //     display(feld,len,outFile);
-    //     ergebnis(feld);
-    //     delete [] feld;
-    //     cout << "please enter array lenth:";
-    // }
+        cout << "Beispiel number: ";
+        int beispiel;
+        if(!(cin >> beispiel))
+            break;
+        cout << "choose sorting algo:\n";
+        cout << "1 bubble   2 selection    3 insertion\n";
+        cout << "4 quicksort        5 quicksort modified\n";
+        cout << "6 heapsort         7 mergesort\n";
+        int num;
+        if(!(cin >> num))
+            break;
+        while(num > 7 || num < 1)
+        {
+            while(cin.get() != '\n')
+                continue;
+            cout << "fault number please choose again.\n";
+            cout << "1 bubble   2 selection    3 insertion\n";
+            cout << "4 quicksort        5 quicksort modified\n";
+            cout << "6 heapsort         7 mergesort\n";
+            cin >> num;
+        }
+        switch(num)
+        {
+            case 1 :    sort_f = bubble_sort;
+                        break;
+            case 2 :    sort_f = selection_sort;
+                        break;
+            case 3 :    sort_f = insertion_sort;
+                        break;
+            case 4 :    sort_f = quick_sort;
+                        break;
+            case 5 :    sort_f = quick_sort_mid3;
+                        break;
+            case 6 :    sort_f = heap_sort;
+                        break;
+            case 7 :    sort_f = merge_sort;
+                        break;
+            default:    cout << "wrong number\n";
+                        continue;
+        }     
+        unsigned int * feld = new unsigned int[len];
+        start(beispiel,len,feld);
+        cout << "Before sorting\n";
+        display(feld,len,outFile);
+        cout << "After sorting\n";
+        sort_f(feld,len);
+        display(feld,len,outFile);
+        ergebnis(feld);
+        delete [] feld;
+        cout << "please enter array lenth:";
+    }
     
-    // outFile.close();
+    outFile.close();
 
-    size_t len = 200;
-    unsigned int * feld = new unsigned int[len];
-    int beispiel = 3;
-    start(beispiel,len,feld);
-    cout << "Before sorting\n";
-    display(feld,len);
+    // size_t len = 200;
+    // unsigned int * feld = new unsigned int[len];
+    // int beispiel = 2;
+    // start(beispiel,len,feld);
+    // cout << "Before sorting\n";
+    // display(feld,len);
     
-    quick_sort_mid3(feld,len);
-    cout << "After sorting\n";
-    display(feld,len);
-    ergebnis(feld);
+    // merge_sort(feld,len);
+    // cout << "After sorting\n";
+    // display(feld,len);
+    // ergebnis(feld);
 
 
-    delete [] feld;
+    // delete [] feld;
 }
 void display(unsigned int * feld, size_t n1)
 {
@@ -123,7 +123,7 @@ void display(unsigned int * feld, size_t n1)
     }
     cout << endl;
 }
-void display(unsigned int * feld, size_t n1, ostream & out)
+void display(unsigned int * feld, size_t n1, ofstream & out)
 {
     size_t i;
     for(i = 0; i < n1; i++)
@@ -634,11 +634,14 @@ unsigned int * merge(unsigned int * sfeld1, size_t n1, unsigned int * sfeld2, si
     outFile << "In the merge function\n";
     outFile << "The size n1: " << n1 << "\t n2: " << n2 << endl;
     size_t sum = n1 + n2;
+    outFile << "sum : " << sum << endl;
+    outFile << "hello" << endl;
     unsigned int * newfeld = new unsigned int[sum];
+    outFile << "hello2" << endl;
     size_t i = 0, j = 0, k = 0;
-    
     while( i < n1 || j < n2)
     {
+        outFile << "hello in while\n";
         if(i >= n1)
         {
             newfeld[k] = sfeld2[j];
@@ -667,8 +670,8 @@ unsigned int * merge(unsigned int * sfeld1, size_t n1, unsigned int * sfeld2, si
             j++;
         }
         k++;
-        // outFile << "After the while loop, i: " << i << "\t j: " << j << endl;
-        // display(newfeld,k-1,outFile);
+        outFile << "After the while loop, i: " << i << "\t j: " << j << endl;
+        display(newfeld,k-1,outFile);
 
     }
     return newfeld;
