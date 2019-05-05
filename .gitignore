@@ -33,8 +33,13 @@
 
 *.txt
 
+*.ipch
+.vscode
+
 hello
 
 output
 
 sorting
+
+main
