@@ -21,46 +21,75 @@ Sparse_Matrix::Sparse_Matrix  (const Sparse_Matrix& m1)          // Kopierkonstr
 
     void    Sparse_Matrix::put(size_t i, size_t j, double x)   // Matrixelement schreiben
     {
-        if( i <= 0 || j <= 0 || i > Zeil || j > Spalt)
+        // cout << "put function called\n";
+        if( i < 0 || j < 0 || i >= Zeil || j >= Spalt)  // index begins with 0
         {
-            MatFehler("Illegal index to read matrix data");
+            MatFehler("Illegal index to read matrix data in put");
         }
-        if(abs(x) >= EPSILON)
+        key pos(i,j);
+        hashmap::const_iterator iter = Mat.find(pos);
+        if(x != 0)
         {
-            key pos(i,j);
             Mat[pos] = x;
         }
+        else if(iter != Mat.end()) // set 0 so will erase the value
+        {
+            Mat.erase(iter);
+        }
+        
     }
     double & Sparse_Matrix::operator() (size_t i,size_t j)
     {
-        if( i <= 0 || j <= 0 || i > Zeil || j > Spalt)
+        if( i < 0 || j < 0 || i >= Zeil || j >= Spalt)
         {
-            MatFehler("Illegal index to read matrix data");
+            MatFehler("Illegal index to read matrix data in double & op()");
         }
         key pos(i,j);
         return Mat[pos];
     }
     double  Sparse_Matrix::operator () (size_t ze, size_t sp) const
     {
-        if( ze <= 0 || sp <= 0 || ze > Zeil || sp > Spalt)
+        // cout << "the double () const called\n";
+        if( ze < 0 || sp < 0 || ze >= Zeil || sp >= Spalt)
         {
-            MatFehler("Illegal index to read matrix data");
+            MatFehler("Illegal index to read matrix data in double op()");
         }
+        
         key pos(ze,sp);
-        return Mat.at(pos);
+        hashmap::const_iterator iter = Mat.find(pos);
+        if(iter != Mat.end())
+        {
+            return iter -> second;
+        }
+        else
+        {
+            // cout << "should be zero\n";
+            return 0; // no value specified ,default 0
+        }
+        
     }
     double  Sparse_Matrix::get(size_t ze, size_t sp) const
     {
-        if( ze <= 0 || sp <= 0 || ze > Zeil || sp > Spalt)
+        // cout << "The get function called\n";
+        if( ze < 0 || sp < 0 || ze >= Zeil || sp >= Spalt)
         {
-            MatFehler("Illegal index to read matrix data");
+            MatFehler("Illegal index to read matrix data in get()");
         }
         key pos(ze,sp);
-        return Mat.at(pos);
+        hashmap::const_iterator iter = Mat.find(pos);
+        if(iter != Mat.end())
+        {
+            return iter -> second;
+        }
+        else
+        {
+            return 0; // no value specified ,default 0
+        }
     }
 
     Sparse_Matrix& Sparse_Matrix::operator =  (const Sparse_Matrix& m1)   // Zuweisung
     {
+        // cout << "The operator=(const SM&) called\n";
         Zeil = m1.Zeil;
         Spalt = m1.Spalt;
         Mat = m1.Mat;
@@ -68,15 +97,16 @@ Sparse_Matrix::Sparse_Matrix  (const Sparse_Matrix& m1)          // Kopierkonstr
     }
     Sparse_Matrix& Sparse_Matrix::operator += (const Sparse_Matrix& m1)   // Zuweisungen mit arithm. Operation
     {
+        // cout << "The operator+=(const SM&) called\n";
         if(m1.Zeil != Zeil || m1.Spalt != Spalt)
         {
             MatFehler("Size mismatch by addition of matrix");
         }
         hashmap::const_iterator iter1;
         hashmap::const_iterator iter2;
-        for(size_t i = 1; i <= Zeil; i++)
+        for(size_t i = 0; i < Zeil; i++)
         {
-            for(size_t j = 1; j <= Spalt; j++)
+            for(size_t j = 0; j < Spalt; j++)
             {
                 key pos(i,j);
                 iter1 = Mat.find(pos);
@@ -112,15 +142,16 @@ Sparse_Matrix::Sparse_Matrix  (const Sparse_Matrix& m1)          // Kopierkonstr
 
     Sparse_Matrix& Sparse_Matrix::operator -= (const Sparse_Matrix& m1)
     {
+        // cout << "The operator -= (const SM&) called\n";
         if(m1.Zeil != Zeil || m1.Spalt != Spalt)
         {
             MatFehler("Size mismatch by addition of matrix");
         }
         hashmap::const_iterator iter1;
         hashmap::const_iterator iter2;
-        for(size_t i = 1; i <= Zeil; i++)
+        for(size_t i = 0; i < Zeil; i++)
         {
-            for(size_t j = 1; j <= Spalt; j++)
+            for(size_t j = 0; j < Spalt; j++)
             {
                 key pos(i,j);
                 iter1 = Mat.find(pos);
@@ -162,12 +193,12 @@ Sparse_Matrix::Sparse_Matrix  (const Sparse_Matrix& m1)          // Kopierkonstr
         hashmap::const_iterator iter1;
         hashmap::const_iterator iter2;
         Sparse_Matrix product(Zeil,m1.Spalt);
-        for(size_t i = 1; i <= Zeil; i++)
+        for(size_t i = 0; i < Zeil; i++)
         {
-            for(size_t j = 1; j <= m1.Spalt; j++)
+            for(size_t j = 0; j < m1.Spalt; j++)
             {
                 double sum = 0;
-                for(size_t k = 1; k <= Spalt; k++)
+                for(size_t k = 0; k < Spalt; k++)
                 {
                     key pos1(i,k);
                     key pos2(k,j);
@@ -189,7 +220,7 @@ Sparse_Matrix::Sparse_Matrix  (const Sparse_Matrix& m1)          // Kopierkonstr
     }
     Sparse_Matrix& Sparse_Matrix::operator *= (double c)
     {
-        if(Zeil <= 0 || Spalt <= 0)
+        if(Zeil < 0 || Spalt < 0)
         {
             MatFehler("Multiplication of a null matrix with const");
         }
@@ -199,9 +230,9 @@ Sparse_Matrix::Sparse_Matrix  (const Sparse_Matrix& m1)          // Kopierkonstr
             Mat.erase(Mat.begin(),Mat.end());
             return (*this);
         }
-        for(size_t i = 1; i <= Zeil; i++)
+        for(size_t i = 0; i < Zeil; i++)
         {
-            for(size_t j = 1; j <= Spalt; j++)
+            for(size_t j = 0; j < Spalt; j++)
             {
                 key pos(i,j);
                 iter = Mat.find(pos);
@@ -215,7 +246,7 @@ Sparse_Matrix::Sparse_Matrix  (const Sparse_Matrix& m1)          // Kopierkonstr
     }
     Sparse_Matrix& Sparse_Matrix::operator /= (double c)
     {
-        if(Zeil <= 0 || Spalt <= 0)
+        if(Zeil < 0 || Spalt < 0)
         {
             MatFehler("Multiplication of a null matrix with const");
         }
@@ -224,9 +255,9 @@ Sparse_Matrix::Sparse_Matrix  (const Sparse_Matrix& m1)          // Kopierkonstr
             MatFehler("Division of zero in matrix division by const");
         }
         hashmap::const_iterator iter;
-        for(size_t i = 1; i <= Zeil; i++)
+        for(size_t i = 0; i < Zeil; i++)
         {
-            for(size_t j = 1; j <= Spalt; j++)
+            for(size_t j = 0; j < Spalt; j++)
             {
                 key pos(i,j);
                 iter = Mat.find(pos);
@@ -292,9 +323,9 @@ Sparse_Matrix::Sparse_Matrix  (const Sparse_Matrix& m1)          // Kopierkonstr
       Sparse_Matrix sumMatrix(ze,sp);
       hashmap::const_iterator iter1;
       hashmap::const_iterator iter2;
-      for(size_t i = 1; i <= ze; i++)
+      for(size_t i = 0; i < ze; i++)
       {
-          for(size_t j = 1; j<= sp; j++)
+          for(size_t j = 0; j< sp; j++)
           {
               iter1 = m1.Mat.find(key(i,j));
               iter2 = m2.Mat.find(key(i,j));
@@ -329,9 +360,9 @@ Sparse_Matrix::Sparse_Matrix  (const Sparse_Matrix& m1)          // Kopierkonstr
       Sparse_Matrix subMatrix(ze,sp);
       hashmap::const_iterator iter1;
       hashmap::const_iterator iter2;
-      for(size_t i = 1; i <= ze; i++)
+      for(size_t i = 0; i < ze; i++)
       {
-          for(size_t j = 1; j<= sp; j++)
+          for(size_t j = 0; j< sp; j++)
           {
               iter1 = m1.Mat.find(key(i,j));
               iter2 = m2.Mat.find(key(i,j));
@@ -361,9 +392,9 @@ Sparse_Matrix::Sparse_Matrix  (const Sparse_Matrix& m1)          // Kopierkonstr
       size_t sp = m1.Spalt;
       Sparse_Matrix negMatrix(ze,sp);
       hashmap::const_iterator iter;
-      for(size_t i = 1; i <= ze; i++)
+      for(size_t i = 0; i < ze; i++)
       {
-          for(size_t j = 1; j <= sp; j++)
+          for(size_t j = 0; j < sp; j++)
           {
               iter = m1.Mat.find(key(i,j));
               if(iter != m1.Mat.end())
@@ -389,9 +420,9 @@ Sparse_Matrix::Sparse_Matrix  (const Sparse_Matrix& m1)          // Kopierkonstr
             return prodMatrix; // prodMatrix is a null matrix;
         }
         hashmap::const_iterator iter;
-        for(size_t i = 1; i <= ze; i++)
+        for(size_t i = 0; i < ze; i++)
         {
-            for(size_t j = 1; j <= sp; j++)
+            for(size_t j = 0; j < sp; j++)
             {
                 iter = m1.Mat.find(key(i,j));
                 if(iter != m1.Mat.end())
@@ -409,10 +440,10 @@ Sparse_Matrix::Sparse_Matrix  (const Sparse_Matrix& m1)          // Kopierkonstr
   }
     Sparse_Matrix   operator /  (const Sparse_Matrix& m1, double c)
   {
-      if(abs(c) <= EPSILON)
-      {
-         Sparse_Matrix::MatFehler("Matrix divide zero in friend");
-      }
+    //   if(abs(c) <= EPSILON)
+    //   {
+    //      Sparse_Matrix::MatFehler("Matrix divide zero in friend");
+    //   }
       return (1/c * m1);
   }
 
@@ -432,9 +463,9 @@ Sparse_Matrix::Sparse_Matrix  (const Sparse_Matrix& m1)          // Kopierkonstr
     std::istream& operator >> (std::istream& is, Sparse_Matrix& m1)            // Eingabe
     {
         std::cout << std::setiosflags(std::ios::right);
-        for (size_t i = 1; i <= m1.Zeil; i++)
+        for (size_t i = 0; i < m1.Zeil; i++)
         {
-            for(size_t j = 1; j <= m1.Spalt; j++)
+            for(size_t j = 0; j < m1.Spalt; j++)
             {
                 std::cout << "\n(" << std::setw(4) << i << " , " << j << ") ";
                 is >> m1(i,j);
@@ -461,9 +492,9 @@ Sparse_Matrix::Sparse_Matrix  (const Sparse_Matrix& m1)          // Kopierkonstr
     //       os << iter -> second << "\t";
     //   }
         hashmap::const_iterator iter;
-        for(size_t i = 1; i <= mat.Zeil; i++)
+        for(size_t i = 0; i < mat.Zeil; i++)
         {
-            for(size_t j = 1; j <= mat.Spalt; j++)
+            for(size_t j = 0; j < mat.Spalt; j++)
             {
                 os.width(5);
                 // can't do that terminate called after throwing an instance of 'std::out_of_range'
@@ -495,18 +526,18 @@ Sparse_Matrix::Sparse_Matrix  (const Sparse_Matrix& m1)          // Kopierkonstr
         size_t ze = m1.Zeil;      
         Vektor vresult(ze);
         hashmap::const_iterator iter;
-        for(size_t i = 1; i <= ze; i++)
+        for(size_t i = 0; i < ze; i++)
         {
             double sum = 0;
-            for(size_t k = 1; k <= m1.Spalt; k++)
+            for(size_t k = 0; k < m1.Spalt; k++)
             {
                 iter = m1.Mat.find(key(i,k));
                 if(iter != m1.Mat.end())
                 {
-                    sum += (iter -> second) * v1(k-1); // vector index begins with 0
+                    sum += (iter -> second) * v1(k); // vector index begins with 0
                 }
             }  
-            vresult(i-1) = sum;
+            vresult(i) = sum;
         }
         return vresult;
   }
@@ -520,18 +551,18 @@ Sparse_Matrix::Sparse_Matrix  (const Sparse_Matrix& m1)          // Kopierkonstr
         size_t sp = m1.Spalt;    
         Vektor vresult(ze);
         hashmap::const_iterator iter;
-        for(size_t i = 1; i <= sp; i++)
+        for(size_t i = 0; i < sp; i++)
         {
             double sum = 0;
-            for(size_t k = 1; k <= ze; k++)
+            for(size_t k = 0; k < ze; k++)
             {
                 iter = m1.Mat.find(key(k,i));
                 if(iter != m1.Mat.end())
                 {
-                    sum += (iter -> second) * v1(k-1); // vector index begins with 0
+                    sum += (iter -> second) * v1(k); // vector index begins with 0
                 }
             } 
-            vresult(i-1) = sum;
+            vresult(i) = sum;
         }
         return vresult;
     }

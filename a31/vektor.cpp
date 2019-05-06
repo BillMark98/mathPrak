@@ -371,10 +371,10 @@ Vektor operator * (const Vektor &x, double c)
 
 Vektor operator / (const Vektor &x, double c)
 {
-  if(abs(c) < EPSILON)
-  {
-    Vektor::VekFehler("Division over 0");
-  }
+  // if(abs(c) < EPSILON)
+  // {
+  //   Vektor::VekFehler("Division over 0 in scalar division");
+  // }
   double dsize = x._dimen;
   Vektor vect = Vektor(dsize);
   for(size_t i = 0; i < dsize; i++)
@@ -399,7 +399,7 @@ Vektor operator / (const Vektor &x, const Vektor &d)
     double temp = d(i);
     if( temp < EPSILON)
     {
-      Vektor::VekFehler("Division over 0");
+      Vektor::VekFehler("Division over 0 during vector division");
     }
     vect(i) = x(i) / temp;
   }
