@@ -42,6 +42,7 @@ Vektor::Vektor (size_t l)
 // ----- Destruktor -----
 
 Vektor::~Vektor () {
+  cout << "Vektor destruct called\n";
   if(Vek != NULL)
   {
     delete [] Vek;
@@ -102,7 +103,7 @@ double Vektor::operator () (size_t i) const
 
 // ----- Zuweisungsoperator "=" ----
 
-Vektor& Vektor::operator = (const Vektor &x)
+Vektor& Vektor::operator = (const Vektor &x) // case when *this == x
 {
   if (_dimen!=x._dimen) {
     delete []Vek;

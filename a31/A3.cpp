@@ -51,7 +51,24 @@ int main()
 
     Sparse_Matrix A;
     Vektor b;
-
+    Vektor x0;
+    double eps;
+    int Bsp = 2;
+    int maxiter;
+    // int Bsp, Sparse_Matrix &A, Vektor &x0, Vektor &b, double &tol, int &maxiter
+    Start(Bsp,A,x0,b,eps,maxiter);
+    try{
+    int result = gsv(A,b,x0,maxiter,eps);
+    Ergebnis(x0,result,0);
+    }
+    catch(...)
+    {
+        cout << "exception called\n";
+        b.~Vektor();
+        x0.~Vektor();
+    }
+    // void Ergebnis ( Vektor &x, int Iterationen, int Methode );
+    
 
 
     return 0;
@@ -62,6 +79,60 @@ int gsv(Sparse_Matrix & A, const Vektor &b, Vektor &x0, const int k_max, double 
     if(A.Zeilen() != A.Spalten() || A.Spalten() != b.Dimen())
     {
         cout << "Size mismatch in gsv, can't do the calculation\n";
-        exit(1);
+        return -1;
     }
+    // A = AL + D + AR
+    size_t Asize = A.Zeilen();
+    Vektor d(Asize);
+    cout << "The size :" << Asize << endl;
+    for(size_t i = 0; i < Asize; i++)
+    {
+        cout << "creating d\n";
+        d(i) = A(i,i);
+        if(d(i) <= EPSILON)
+        {
+            cout << "small value on the diagonal at " << i << endl;
+        }
+    }
+    Sparse_Matrix AL(Asize,Asize);
+    Sparse_Matrix AR(Asize,Asize);
+    for(size_t i = 1; i < Asize; i++) // i begins at the second row
+    {
+        cout << "creating AL\n";
+        for(size_t j = 0; j < i; j++) // j < i
+        {
+            double value = A(i,j);
+            AL.put(i,j,value);
+        }
+    }
+    for(size_t i = 0; i < Asize; i++) 
+    {
+        cout << "creating AR\n";
+        for(size_t j = i+1; j < Asize; j++)  // j > i
+        {
+            double value = A(i,j);
+            AR.put(i,j,value);
+        }
+    }
+    
+    Sparse_Matrix ALR  = AL + AR;
+    cout << "the matrix all created\n";
+    int count = 0;
+    Vektor diff = A * x0 - b;;
+    while(count <= k_max && diff.Norm2() > eps)
+    {
+        Vektor x_temp = (b - ALR * x0)/d;
+        x0 = x_temp;
+        diff = A * x0 - b;
+        count++;
+    }
+    if(count <= k_max)
+    {
+        return count;
+    }
+    else
+    {
+        return 0;
+    }
+    
 }
