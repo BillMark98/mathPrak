@@ -53,13 +53,13 @@ int main()
     Vektor b;
     Vektor x0;
     double eps;
-    int Bsp = 2;
+    int Bsp = 3;
     int maxiter;
     // int Bsp, Sparse_Matrix &A, Vektor &x0, Vektor &b, double &tol, int &maxiter
     Start(Bsp,A,x0,b,eps,maxiter);
     try{
-    int result = gsv(A,b,x0,maxiter,eps);
-    Ergebnis(x0,result,0);
+    int result = cg(A,b,x0,maxiter,eps);
+    Ergebnis(x0,result,1);
     }
     catch(...)
     {
@@ -85,9 +85,10 @@ int gsv(Sparse_Matrix & A, const Vektor &b, Vektor &x0, const int k_max, double 
     size_t Asize = A.Zeilen();
     Vektor d(Asize);
     cout << "The size :" << Asize << endl;
+    cout << "testing next" << endl;
     for(size_t i = 0; i < Asize; i++)
     {
-        cout << "creating d\n";
+        cout << "creating d" << endl;
         d(i) = A(i,i);
         if(d(i) <= EPSILON)
         {
@@ -98,7 +99,7 @@ int gsv(Sparse_Matrix & A, const Vektor &b, Vektor &x0, const int k_max, double 
     Sparse_Matrix AR(Asize,Asize);
     for(size_t i = 1; i < Asize; i++) // i begins at the second row
     {
-        cout << "creating AL\n";
+        cout << "creating AL" << endl;
         for(size_t j = 0; j < i; j++) // j < i
         {
             double value = A(i,j);
@@ -107,16 +108,19 @@ int gsv(Sparse_Matrix & A, const Vektor &b, Vektor &x0, const int k_max, double 
     }
     for(size_t i = 0; i < Asize; i++) 
     {
-        cout << "creating AR\n";
+        cout << "creating AR" << endl;
         for(size_t j = i+1; j < Asize; j++)  // j > i
         {
+            cout << "j value " << j << endl;
             double value = A(i,j);
             AR.put(i,j,value);
+            
         }
+        cout << "i value " << i << endl;
     }
-    
+    cout << "after the AR" << endl;
     Sparse_Matrix ALR  = AL + AR;
-    cout << "the matrix all created\n";
+    cout << "the matrix all created" << endl;
     int count = 0;
     Vektor diff = A * x0 - b;;
     while(count <= k_max && diff.Norm2() > eps)
@@ -135,4 +139,75 @@ int gsv(Sparse_Matrix & A, const Vektor &b, Vektor &x0, const int k_max, double 
         return 0;
     }
     
+}
+
+int cg(const Sparse_Matrix &A, const Vektor &b, Vektor &x0, const int k_max, double &eps)
+{
+    if(A.Zeilen() != A.Spalten() || A.Spalten() != b.Dimen())
+    {
+        cout << "Size mismatch in cg, can't do the calculation\n";
+        return -1;
+    }
+    size_t Asize = A.Zeilen();
+    cout << "The matrix A: " << endl;
+    cout << A;
+    cout << "The size: " << endl;
+    cout << Asize << endl;
+    cout << "The vector b: " << endl;
+    cout << b;
+    cout << "x0: " << x0 << endl;
+    cout << "\nk_max: " << k_max << endl;
+    cout << "eps: " << eps << endl;
+    // test symmetric
+    
+   
+    for(size_t i = 0; i < Asize; i++)
+    {
+        for(size_t j = i+1; j < Asize; j++)
+        {
+            if(A(i,j) != A(i,j))
+            {
+                cout << "matrix not symmetric!\n"; 
+                break;
+            }
+        }
+    }
+    Vektor r = b - A * x0;
+    Vektor d(r);
+    int count = 0;
+    while(count <= k_max && r.Norm2() > eps)
+    {
+        cout << "***********************" << endl;
+        cout << "In the " << count <<" loop" << endl;
+        Vektor Ad = A * d;
+        cout << "Ad: \n" << Ad << endl;
+        double rnorm2_square = r.Norm2()* r.Norm2() ;
+        double alpha = rnorm2_square/(Ad * d);
+        cout << "rnorm2_square: " << rnorm2_square << "\talpha: " << alpha << endl;
+
+        Vektor x_temp = x0 + alpha * d;
+        cout << "x_temp: \n" << x_temp << endl;
+        x0 = x_temp;
+        Vektor r_next = r - alpha * Ad;
+        cout << "r_next:\n " << r_next << endl;
+        double r_next_norm2_square = r_next.Norm2() * r_next.Norm2();
+        double beta = r_next_norm2_square / rnorm2_square;
+        cout << "r_next_norm2_square: " << r_next_norm2_square << "\tbeta: " << beta << endl;
+        Vektor d_temp = r_next + beta * d;
+        cout << "d_temp = \n" << d_temp << endl;
+        d = d_temp;
+        r = r_next;
+        count++;
+    }
+    cout << "x0: " << endl;
+    cout << x0;
+    cout << "count: " << count << endl;
+    if(count <= k_max)
+    {
+        return count;
+    }
+    else
+    {
+        return 0;
+    }
 }

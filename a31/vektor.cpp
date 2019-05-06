@@ -42,7 +42,7 @@ Vektor::Vektor (size_t l)
 // ----- Destruktor -----
 
 Vektor::~Vektor () {
-  cout << "Vektor destruct called\n";
+  // cout << "Vektor destruct called\n";
   if(Vek != NULL)
   {
     delete [] Vek;
@@ -55,6 +55,7 @@ Vektor::~Vektor () {
 Vektor::Vektor (const Vektor &x)
 {
   _dimen=x._dimen;
+
 
   Vek=new (nothrow) double[_dimen];
   if (Vek==NULL)

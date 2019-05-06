@@ -333,13 +333,25 @@ Sparse_Matrix::Sparse_Matrix  (const Sparse_Matrix& m1)          // Kopierkonstr
               // the following is the only case we have to modify 
               // the sumMatrix at (i,j) , which is there is at least one nonzero term
               // during addition
-              if(iter1 != m1.Mat.end() || iter2 != m2.Mat.end())
+              if(iter1 != m1.Mat.end())
               {
-                  double result = (iter1 -> second) + (iter2 -> second);
-                  if(abs(result) > EPSILON) // the result is nonzero
+                  if(iter2 != m2.Mat.end()) // have to test this condition or else iter2 may be a nullptr
+                  // a dereference will lead to segmentation fault
                   {
-                      sumMatrix(i,j) = result;
+                    double result = (iter1 -> second) + (iter2 -> second);
+                    if(abs(result) > EPSILON) // the result is nonzero
+                    {
+                        sumMatrix(i,j) = result;
+                    }
                   }
+                  else // iter2 has no value
+                  {
+                      sumMatrix(i,j) = (iter1 -> second);
+                  }
+              }
+              else if(iter2 != m2.Mat.end())
+              {
+                  sumMatrix(i,j) = (iter2 -> second);
               }
           }
       }
@@ -370,13 +382,25 @@ Sparse_Matrix::Sparse_Matrix  (const Sparse_Matrix& m1)          // Kopierkonstr
               // the following is the only case we have to modify 
               // the sumMatrix at (i,j) , which is there is at least one nonzero term
               // during addition
-              if(iter1 != m1.Mat.end() || iter2 != m2.Mat.end())
+              if(iter1 != m1.Mat.end())
               {
-                  double result =  (iter1 -> second) - (iter2 -> second);
-                  if(abs(result) > EPSILON) // the result is nonzero
+                  if(iter2 != m2.Mat.end()) // have to test this condition or else iter2 may be a nullptr
+                  // a dereference will lead to segmentation fault
                   {
-                      subMatrix(i,j) = result;
+                    double result = (iter1 -> second) - (iter2 -> second);
+                    if(abs(result) > EPSILON) // the result is nonzero
+                    {
+                        subMatrix(i,j) = result;
+                    }
                   }
+                  else // iter2 has no value
+                  {
+                      subMatrix(i,j) = (iter1 -> second);
+                  }
+              }
+              else if(iter2 != m2.Mat.end())
+              {
+                  subMatrix(i,j) = (iter2 -> second);
               }
           }
       }
