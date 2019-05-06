@@ -40,6 +40,7 @@ class Sparse_Matrix
     Sparse_Matrix  (const Sparse_Matrix&);              // Kopierkonstruktor
 
     void    put(size_t i, size_t j, double x);   // Matrixelement schreiben
+    double & operator() (size_t,size_t);
     double  operator () (size_t, size_t) const;  // Matrixelement lesen
     double  get(size_t i, size_t j) const;
 

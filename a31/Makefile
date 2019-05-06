@@ -3,8 +3,9 @@ CXXFLAGS = -g -Wall -fPIC
 
 .PHONY: clean
 
-A3: #Hier fehlt was
-	#Hier fehlt was
+SOURSE = vektor.o sparse_matrix.o A3.cpp
+A3: vektor.o vektor.h sparse_matrix.o sparse_matrix.h A3.cpp
+	$(CXX) $(CXXFLAGS) -o $@ $(SOURSE)
 
 meine_loesung.o: #Hier fehlt was
 	#Hier fehlt was

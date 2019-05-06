@@ -12,9 +12,9 @@
 #define _VEKTOR_H
 
 #include <iostream>
-
+#include <cfloat>
 class Sparse_Matrix;                      // fuer friend Matrix * Vektor etc.
-#define EPSILON 1e-9
+#define EPSILON DBL_MIN
 
 class Vektor
 {

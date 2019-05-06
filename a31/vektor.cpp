@@ -9,7 +9,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <iomanip>
-
+#include <new>
 
 // =======================
 //      Konstruktoren
@@ -188,22 +188,38 @@ Vektor& Vektor::operator /= (double c)
 
 Vektor& Vektor::ReDim (size_t l)
 {
-  if(l < _dimen)
-  {
-    cout << "reducing size of vectors, choosing the first l elements.\n";
-  }
-  double * temp = new (nothrow) double[l];
-  size_t min = (_dimen < l) ? _dimen : l;
-  if(Vek != NULL)
-  {
-    for(size_t i = 0; i < min; i++)
-    {
-      temp[i] = Vek[i];
-    }
-    delete [] Vek;
-  }
-  Vek = temp;
+  // if(l < _dimen)
+  // {
+  //   cout << "reducing size of vectors, choosing the first l elements.\n";
+  // }
+  // double * temp = new (nothrow) double[l];
+  // size_t min = (_dimen < l) ? _dimen : l;
+  // if(Vek != NULL)
+  // {
+  //   for(size_t i = 0; i < min; i++)
+  //   {
+  //     temp[i] = Vek[i];
+  //   }
+  //   delete [] Vek;
+  // }
+  // Vek = temp;
+  // _dimen = l;
+  // if(Vek != NULL)
+  // {
+  //   delete [] Vek;
+  // }
+  delete[] Vek;
+  Vek = new (nothrow) double[l];
   _dimen = l;
+  if(Vek == NULL)
+  {
+    VekFehler("Nicht genug plaetze");
+  }
+  for(size_t i = 0; i < _dimen; i++)
+  {
+    Vek[i] = 0;
+  }
+  return (*this);
 }
 
 
