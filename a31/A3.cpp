@@ -127,7 +127,6 @@ int gsv(Sparse_Matrix &A, const Vektor &b, Vektor &x0, const int k_max, double &
     // cout << "the matrix all created" << endl;
     int count = 0;
     Vektor diff = A * x0 - b;
-    ;
     while (count <= k_max && diff.Norm2() > eps)
     {
         Vektor x_temp = (b - A * x0) / d;
@@ -198,19 +197,18 @@ int cg(const Sparse_Matrix &A, const Vektor &b, Vektor &x0, const int k_max, dou
         double alpha = rnorm2_square / (Ad * d);
         cout << "rnorm2_square: " << rnorm2_square << "\talpha: " << alpha << endl;
 
-        Vektor x_temp = x0 + alpha * d;
+        x0 +=  alpha * d;
         cout << "x_temp: \n"
-             << x_temp << endl;
-        x0 = x_temp;
+             << x0<< endl;
         Vektor r_next = r - alpha * Ad;
         cout << "r_next:\n " << r_next << endl;
         double r_next_norm2_square = r_next.Norm2() * r_next.Norm2();
         double beta = r_next_norm2_square / rnorm2_square;
         cout << "r_next_norm2_square: " << r_next_norm2_square << "\tbeta: " << beta << endl;
-        Vektor d_temp = r_next + beta * d;
+        d *= beta;
+        d += r_next;
         cout << "d_temp = \n"
-             << d_temp << endl;
-        d = d_temp;
+             << d << endl;
         r = r_next;
         count++;
     }
