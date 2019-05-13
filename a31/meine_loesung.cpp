@@ -53,14 +53,14 @@ int main()
     Vektor b;
     Vektor x0;
     double eps;
-    int Bsp = 3;
+    int Bsp = 2;
     int maxiter;
     // int Bsp, Sparse_Matrix &A, Vektor &x0, Vektor &b, double &tol, int &maxiter
     Start(Bsp, A, x0, b, eps, maxiter);
     try
     {
-        int result = cg(A, b, x0, maxiter, eps);
-        Ergebnis(x0, result, 1);
+        int result = gsv(A, b, x0, maxiter, eps);
+        Ergebnis(x0, result, 0);
     }
     catch (...)
     {
@@ -161,15 +161,15 @@ int cg(const Sparse_Matrix &A, const Vektor &b, Vektor &x0, const int k_max, dou
         return -1;
     }
     size_t Asize = A.Zeilen();
-    cout << "The matrix A: " << endl;
-    cout << A;
-    cout << "The size: " << endl;
-    cout << Asize << endl;
-    cout << "The vector b: " << endl;
-    cout << b;
-    cout << "x0: " << x0 << endl;
-    cout << "\nk_max: " << k_max << endl;
-    cout << "eps: " << eps << endl;
+    // cout << "The matrix A: " << endl;
+    // cout << A;
+    // cout << "The size: " << endl;
+    // cout << Asize << endl;
+    // cout << "The vector b: " << endl;
+    // cout << b;
+    // cout << "x0: " << x0 << endl;
+    // cout << "\nk_max: " << k_max << endl;
+    // cout << "eps: " << eps << endl;
     // test symmetric
 
     for (size_t i = 0; i < Asize; i++)
@@ -188,35 +188,35 @@ int cg(const Sparse_Matrix &A, const Vektor &b, Vektor &x0, const int k_max, dou
     int count = 0;
     while (count <= k_max && r.Norm2() > eps)
     {
-        cout << "***********************" << endl;
-        cout << "In the " << count << " loop" << endl;
+        // cout << "***********************" << endl;
+        // cout << "In the " << count << " loop" << endl;
         Vektor Ad = A * d;
-        cout << "Ad: \n"
-             << Ad << endl;
+        // cout << "Ad: \n"
+        //      << Ad << endl;
         double rnorm2_square = r.Norm2() * r.Norm2();
         double alpha = rnorm2_square / (Ad * d);
-        cout << "rnorm2_square: " << rnorm2_square << "\talpha: " << alpha << endl;
+        // cout << "rnorm2_square: " << rnorm2_square << "\talpha: " << alpha << endl;
 
         x0 +=  alpha * d;
-        cout << "x_temp: \n"
-             << x0<< endl;
+        // cout << "x_temp: \n"
+        //      << x0<< endl;
         Vektor r_next = r - alpha * Ad;
-        cout << "r_next:\n " << r_next << endl;
+        // cout << "r_next:\n " << r_next << endl;
         double r_next_norm2_square = r_next.Norm2() * r_next.Norm2();
         double beta = r_next_norm2_square / rnorm2_square;
-        cout << "r_next_norm2_square: " << r_next_norm2_square << "\tbeta: " << beta << endl;
+        // cout << "r_next_norm2_square: " << r_next_norm2_square << "\tbeta: " << beta << endl;
         d *= beta;
         d += r_next;
-        cout << "d_temp = \n"
-             << d << endl;
+        // cout << "d_temp = \n"
+        //      << d << endl;
         r = r_next;
         count++;
     }
-    cout << "x0: " << endl;
-    cout << x0;
-    cout << "count: " << count << endl;
-    cout << "The difference: Ax - b\n"
-         << A * x0 - b << endl;
+    // cout << "x0: " << endl;
+    // cout << x0;
+    // cout << "count: " << count << endl;
+    // cout << "The difference: Ax - b\n"
+    //      << A * x0 - b << endl;
     if (count <= k_max)
     {
         return count;

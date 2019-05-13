@@ -3,12 +3,12 @@ CXXFLAGS = -g -Wall -fPIC
 
 .PHONY: clean
 
-SOURSE = vektor.o sparse_matrix.o A3.cpp unit.o
-A3: vektor.o vektor.h sparse_matrix.o sparse_matrix.h A3.cpp unit.h unit.o
-	$(CXX) $(CXXFLAGS) -o $@ $(SOURSE)
+SOURSE = meine_loesung.o vektor.o sparse_matrix.o unit.o
 
-meine_loesung.o: #Hier fehlt was
-	#Hier fehlt was
+A3: vektor.o vektor.h sparse_matrix.o sparse_matrix.h meine_loesung.o unit.h unit.o
+	$(CXX) $(CXXFLAGS) -o $@ $(SOURSE)
+meine_loesung.o: meine_loesung.cpp	
+	$(CXX) $(CXXFLAGS) -c $<
 
 test_mv: vektor.o sparse_matrix.o test_mv.o
 	$(CXX) $(CXXFLAGS) -o $@ vektor.o sparse_matrix.o test_mv.o
