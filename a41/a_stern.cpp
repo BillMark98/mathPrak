@@ -22,6 +22,15 @@ using std::list;
 typedef set<VertexT> setVertex;
 typedef map<VertexT,CostT> mapVertexCost;
 typedef pair<VertexT,CostT> pairVC;
+typedef pair<VertexT,VertexT> VertexTwilling;
+struct ComparePair{
+    bool operator()(const pairVC& p1, const pairVC& p2){
+        return p1.second < p2.second;
+    }
+};
+typedef set<pairVC,ComparePair()> setVC;
+
+typedef DistanceGraph::NeighborT neighbourVector;
 // typedef neighbourVector::iterator neighborVecIter; global-scope qualifier (leading '::') is not allowed
 
 // the pair used for saving g and h in the f = g + h for a star algo
@@ -39,12 +48,138 @@ struct CompareVertexTf
     {
         CostT d1 = v1.second.first + v1.second.second;
         CostT d2 = v2.second.first + v2.second.second;
-        return d1 < d2;
+        // minimum heap
+        // if d1 < d2 then the largest element will be at front i.e maximum heap
+        return d1 > d2; 
     }
 };
 
 // Help functions for a star algo
 // creating the path from the start to the destination, the help func for a star algo
+void traceback(VertexT start, VertexT destination, std::list<VertexT>& weg,map2V & predecessors);
+
+// a more complex version
+bool traceback2(const DistanceGraph& g, VertexT start, VertexT destination, std::list<VertexT>& weg,map2V & predecessors);
+
+// Help func for a star algo
+// VertexT_f * isIn(VertexT & vertex, v_VertexTf & vec)
+v_VertexTf::iterator isIn(neighbourVector::iterator & iter, v_VertexTf & vec);
+// void Dijkstra(const DistanceGraph& g, GraphVisualizer& v, VertexT start, std::vector<CostT>& kostenZumStart) {
+//     // ...
+// }
+
+
+// class VertexCompare
+// {
+//     private:
+//         const vector<CostT> & vectorcost;
+//     public:
+//         VertexCompare(vector<CostT> & vc) : vectorcost(vc){};
+//         VertexCompare(const vector<CostT> &vc) : vectorcost(vc){};
+//         bool operator() (const VertexT & v1, const VertexT & v2) const {
+//             return vectorcost[v1] < vectorcost[v2];
+//         }
+// };
+
+// output function
+void outputVC(pairVC p1) {cout << p1.first << " : " << p1.second << endl;}
+void outputCost(CostT c) {cout.width(8); cout << c;}
+void outputVertex(VertexT v){cout.width(8); cout << v;}
+void outputVertexTwilling(VertexTwilling v){cout << "first: " << v.first<< endl; cout << "second: " << v.second << endl; }
+void outputVertexTf(VertexT_f v){cout.width(4); cout << v.first << " : " << v.second.first << "\t" << v.second.second<<endl;}
+void Dijkstra(const DistanceGraph& g, VertexT start, std::vector<CostT>& kostenZumStart);
+
+// bool A_star(const DistanceGraph& g, GraphVisualizer& v, VertexT start, VertexT destination, std::list<VertexT>& weg) 
+bool A_star(const DistanceGraph& g, VertexT start, VertexT destination, std::list<VertexT>& weg);
+
+int main()
+{
+    // Frage Beispielnummer vom User ab
+    
+    // Lade die zugehoerige Textdatei in einen Graphen
+    // PruefeHeuristik
+    
+    // Loese die in der Aufgabenstellung beschriebenen Probleme fuer die jeweilige Datei
+    // PruefeDijkstra / PruefeWeg
+    
+    //testing read in files
+    ifstream inFile;
+    inFile.open("daten/Graph3.dat");
+    if(!inFile.is_open())
+    {
+        cout << "could not find the given files\n";
+        exit(FILE_OPEN_ERROR);
+    }
+    DistCoordGraph coorG1;
+    inFile >> coorG1;
+    
+    if(inFile.eof())
+    {
+        cout << "end of file reached.\n";
+    }
+    else if(inFile.fail())
+    {
+        cout << "Input terminated by data mismatch.\n";
+    }
+    else
+    {
+        cout << "Input terminated by unkown reasons.\n";
+    }
+
+    cout << coorG1;
+    // cout << "get cost from 0 to 1: " << coorG1.cost(0,1) << endl;
+    // cout << "cost from 3 to 1:  " << coorG1.cost(3,1) << endl;
+    // cout << "cost from 2 to 1:  " << coorG1.cost(2,1) << endl;
+
+    // cout << "Estimated cost from 0 to 1: " << coorG1.estimatedCost(0,1) <<endl;
+    // cout << "Estimated cost from 1 to 2: " << coorG1.estimatedCost(1,2) <<endl;
+    // cout << "getting neighbour vector of 1\n";
+    DistanceGraph::NeighborT neighbours = coorG1.getNeighbors(1);
+    DistanceGraph::NeighborT::const_iterator iter;
+    for(iter = neighbours.begin(); iter != neighbours.end(); iter++)
+    {
+        cout << "vertex: " << iter -> first << endl;
+        cout << "distance: " << iter -> second << endl;
+    }
+
+    // cout << "Testing dijkstra\n";
+    // vector<CostT> vecCost(coorG1.numVertices(),0);
+    
+    
+    // for(VertexT ve = 0 ; ve < coorG1.numVertices(); ve++)
+    // {
+        
+    //     cout << "\nStarting at " << ve << endl;
+    //     Dijkstra(coorG1,ve,vecCost);
+    //     cout << "\nafter dijkstra\n";
+    //     for_each(vecCost.begin(),vecCost.end(),outputCost);
+    //     PruefeDijkstra(3,ve,vecCost);
+    // }
+
+    // map<int,int> maptest;
+    // maptest[1] = 2;
+    // cout << maptest[1] << endl;
+    // cout << maptest[0] << endl;
+
+    // testing a star algo
+    
+    for(VertexT v1 = 0; v1 < coorG1.numVertices(); v1++)
+    {
+        for(VertexT v2 = 0; v2 < coorG1.numVertices(); v2++)
+        {
+            list<VertexT> weg;
+            A_star(coorG1,v1,v2,weg);
+            cout << "after a_star starting : " << v1 << "\t end: " << v2 << endl;
+            for_each(weg.begin(),weg.end(),outputVertex);
+            PruefeWeg(3,weg);
+        }
+    }
+    
+    
+    inFile.close();
+    return 0;
+}
+ 
 void traceback(VertexT start, VertexT destination, std::list<VertexT>& weg,map2V & predecessors)
 {
     if(!weg.empty())
@@ -55,6 +190,7 @@ void traceback(VertexT start, VertexT destination, std::list<VertexT>& weg,map2V
     // shall we push the start and destination?
 
     VertexT currentVertex = destination;
+    weg.push_front(destination);
     while(currentVertex != start)
     {
         weg.push_front(predecessors[currentVertex]);
@@ -63,7 +199,6 @@ void traceback(VertexT start, VertexT destination, std::list<VertexT>& weg,map2V
     
 }
 
-// a more complex version
 bool traceback2(const DistanceGraph& g, VertexT start, VertexT destination, std::list<VertexT>& weg,map2V & predecessors)
 {
     if(!weg.empty())
@@ -94,50 +229,30 @@ bool traceback2(const DistanceGraph& g, VertexT start, VertexT destination, std:
     
 }
 
-// Help func for a star algo
-// std::vector<pair<VertexT,CostT isIn(neighbourVector::iterator & iter, v_VertexTf & vec)
-VertexT_f * isIn(VertexT & vertex, v_VertexTf & vec)
+v_VertexTf::iterator isIn(neighbourVector::iterator & iter, v_VertexTf & vec)
 {
+    // v_VertexTf::iterator viter;
+    // for(viter = vec.begin(); viter != vec.end(); viter++)
+    // {
+    //     if((viter -> first) == vertex)
+    //     {
+    //         return &(*viter);
+    //     }
+    // }
     v_VertexTf::iterator viter;
     for(viter = vec.begin(); viter != vec.end(); viter++)
     {
-        if((viter -> first) == vertex)
+        if((viter -> first) == (iter -> first))
         {
-            return &(*viter);
+            break;
         }
     }
-    return nullptr;
+    return viter;
+    // return nullptr;
 }
 
-// void Dijkstra(const DistanceGraph& g, GraphVisualizer& v, VertexT start, std::vector<CostT>& kostenZumStart) {
-//     // ...
-// }
-struct ComparePair{
-    bool operator()(const pairVC& p1, const pairVC& p2){
-        return p1.second < p2.second;
-    }
-};
-typedef set<pairVC,ComparePair> setVC;
-
-typedef DistanceGraph::NeighborT neighbourVector;
-// class VertexCompare
-// {
-//     private:
-//         const vector<CostT> & vectorcost;
-//     public:
-//         VertexCompare(vector<CostT> & vc) : vectorcost(vc){};
-//         VertexCompare(const vector<CostT> &vc) : vectorcost(vc){};
-//         bool operator() (const VertexT & v1, const VertexT & v2) const {
-//             return vectorcost[v1] < vectorcost[v2];
-//         }
-// };
-
-// output function
-void outputVC(pairVC p1) {cout << p1.first << " : " << p1.second << endl;}
-void outputCost(CostT c) {cout.width(8); cout << c;}
-void outputVertex(VertexT v){cout.width(4); cout << v;}
-
-void Dijkstra(const DistanceGraph& g, VertexT start, std::vector<CostT>& kostenZumStart) {
+void Dijkstra(const DistanceGraph& g, VertexT start, std::vector<CostT>& kostenZumStart) 
+{
     size_t vertex_number = g.numVertices();
     // setVertex S;
     // S.insert(start);
@@ -214,7 +329,6 @@ void Dijkstra(const DistanceGraph& g, VertexT start, std::vector<CostT>& kostenZ
 
 }
 
-// bool A_star(const DistanceGraph& g, GraphVisualizer& v, VertexT start, VertexT destination, std::list<VertexT>& weg) 
 bool A_star(const DistanceGraph& g, VertexT start, VertexT destination, std::list<VertexT>& weg)
 {
     // ...
@@ -222,6 +336,8 @@ bool A_star(const DistanceGraph& g, VertexT start, VertexT destination, std::lis
     if(start == destination)
     {
         cout << "the start and destination coincide\n";
+        // according to PruefeWeg weg containts starting point
+        weg.push_front(start);
         return true;
     }
     v_VertexTf openlist;
@@ -233,7 +349,10 @@ bool A_star(const DistanceGraph& g, VertexT start, VertexT destination, std::lis
         // initializing the elements of predecessors to -1
         predecessor[i] = NOTVISITED;
     }
+    predecessor[start] = start;
     openlist.push_back(VertexT_f(start,CostTgh(0,g.estimatedCost(start,destination))));
+    cout << "Initializing openlist\n";
+    for_each(openlist.begin(),openlist.end(),outputVertexTf);
     while(!openlist.empty())
     {
         VertexT_f firstVTf(*openlist.begin());
@@ -247,20 +366,30 @@ bool A_star(const DistanceGraph& g, VertexT start, VertexT destination, std::lis
         neighbourVector neV = g.getNeighbors(bestVertex);
         // three cases
         neighbourVector::iterator iter;
+        cout << "The bestVertex: " << bestVertex << endl;
+        cout << "The neighbours\n";
+        for_each(neV.begin(),neV.end(),outputVC);
         for(iter = neV.begin(); iter != neV.end(); iter++)
         {
             VertexT currentNode = iter -> first;
-            VertexT_f * p_VertexTf = isIn(currentNode,openlist);
+            // VertexT_f * p_VertexTf = isIn(currentNode,openlist);
+            v_VertexTf::iterator p_VertexTf = isIn(iter,openlist);
             CostT distToNode = firstVTf.second.first + (iter -> second);
+            cout << "The currentNode: " << currentNode << endl;
+            cout << "The distToNode: " << distToNode << endl;
             // first case if the node not ever visited
-            if(!p_VertexTf && predecessor[currentNode] == NOTVISITED)
+            if((p_VertexTf == openlist.end()) && predecessor[currentNode] == NOTVISITED)
             {
+                cout << "In the first case\n";
                 CostT estiCost = g.estimatedCost(currentNode,destination);
                 openlist.push_back(VertexT_f(currentNode,CostTgh(distToNode,estiCost)));
                 predecessor[currentNode] = bestVertex;
+                cout << "The predecessor maxtirx\n";
+                for_each(predecessor.begin(),predecessor.end(),outputVertexTwilling);
             }
-            else if(p_VertexTf)
+            else if((p_VertexTf != openlist.end()))
             {
+                cout << "The second case\n";
                 CostT distOld = (*p_VertexTf).second.first;
                 if(distToNode < distOld)
                 {
@@ -269,118 +398,52 @@ bool A_star(const DistanceGraph& g, VertexT start, VertexT destination, std::lis
                     predecessor[currentNode] = bestVertex;
                 }
             }
-            else if(p_VertexTf == isIn(currentNode,closelist))
+            else 
             {
                 // node in the closelist check for possible updates
-                CostT distOld = (*p_VertexTf).second.first;
-                if(distToNode < distOld)
+                p_VertexTf = isIn(iter,closelist);
+                if( p_VertexTf != closelist.end())
                 {
-                    (*p_VertexTf).second.first = distToNode;
-                    VertexT_f vTfNew(*p_VertexTf);
-                    // a little bit stupid code
-                    v_VertexTf::iterator iter;
-                    for(iter = closelist.begin(); iter != closelist.end(); iter++)
+                    CostT distOld = (*p_VertexTf).second.first;
+                    if(distToNode < distOld)
                     {
-                        if((*iter).first == (*p_VertexTf).first)
-                        closelist.erase(iter);
+                        (*p_VertexTf).second.first = distToNode;
+                        VertexT_f vTfNew(*p_VertexTf);
+                        // a little bit stupid code
+                        // v_VertexTf::iterator iter;
+                        // for(iter = closelist.begin(); iter != closelist.end(); iter++)
+                        // {
+                        //     if((*iter).first == (*p_VertexTf).first)
+                        //     closelist.erase(iter);
+                        // }
+                        closelist.erase(p_VertexTf);
+                        openlist.push_back(vTfNew);
+                        predecessor[currentNode] = bestVertex;
                     }
-                    
-                    openlist.push_back(vTfNew);
-                    predecessor[currentNode] = bestVertex;
                 }
-            }
-            else
-            {
-                // an error
-                cout << "The fourth case in A_star algo appears\n";
-                exit(FOURTH_CASE);
+                else
+                {
+                    // an error
+                    cout << "The fourth case in A_star algo appears\n";
+                    exit(FOURTH_CASE);
+                }
             }
         }
         // all the neighbours coverd delete the vertex from the openlist and push it in the closelist
+        cout << "end of the for loop\n";
+        cout << "the closelist\n";
         closelist.push_back(firstVTf);
+        for_each(closelist.begin(),closelist.end(),outputVertexTf);
         openlist.erase(openlist.begin());
+        cout << "The openlist\n";
+        for_each(openlist.begin(),openlist.end(),outputVertexTf);
 
         // sort the openlist
         make_heap(openlist.begin(),openlist.end(),CompareVertexTf());
+        cout << "After making heap\n";
+        for_each(openlist.begin(),openlist.end(),outputVertexTf);
     }
+    // according to the PruefeWeg function weg has the point starting point
+    weg.push_front(start);
     return false; // Kein Weg gefunden.
 }
-
-int main()
-{
-    // Frage Beispielnummer vom User ab
-    
-    // Lade die zugehoerige Textdatei in einen Graphen
-    // PruefeHeuristik
-    
-    // Loese die in der Aufgabenstellung beschriebenen Probleme fuer die jeweilige Datei
-    // PruefeDijkstra / PruefeWeg
-    
-    //testing read in files
-    ifstream inFile;
-    inFile.open("daten/Graph2.dat");
-    if(!inFile.is_open())
-    {
-        cout << "could not find the given files\n";
-        exit(FILE_OPEN_ERROR);
-    }
-    DistCoordGraph coorG1;
-    inFile >> coorG1;
-    
-    if(inFile.eof())
-    {
-        cout << "end of file reached.\n";
-    }
-    else if(inFile.fail())
-    {
-        cout << "Input terminated by data mismatch.\n";
-    }
-    else
-    {
-        cout << "Input terminated by unkown reasons.\n";
-    }
-
-    cout << coorG1;
-    // cout << "get cost from 0 to 1: " << coorG1.cost(0,1) << endl;
-    // cout << "cost from 3 to 1:  " << coorG1.cost(3,1) << endl;
-    // cout << "cost from 2 to 1:  " << coorG1.cost(2,1) << endl;
-
-    // cout << "Estimated cost from 0 to 1: " << coorG1.estimatedCost(0,1) <<endl;
-    // cout << "Estimated cost from 1 to 2: " << coorG1.estimatedCost(1,2) <<endl;
-    // cout << "getting neighbour vector of 1\n";
-    DistanceGraph::NeighborT neighbours = coorG1.getNeighbors(1);
-    DistanceGraph::NeighborT::const_iterator iter;
-    for(iter = neighbours.begin(); iter != neighbours.end(); iter++)
-    {
-        cout << "vertex: " << iter -> first << endl;
-        cout << "distance: " << iter -> second << endl;
-    }
-
-    // cout << "Testing dijkstra\n";
-    // vector<CostT> vecCost(coorG1.numVertices(),0);
-    
-    
-    // for(VertexT ve = 0 ; ve < coorG1.numVertices(); ve++)
-    // {
-        
-    //     cout << "\nStarting at " << ve << endl;
-    //     Dijkstra(coorG1,ve,vecCost);
-    //     cout << "\nafter dijkstra\n";
-    //     for_each(vecCost.begin(),vecCost.end(),outputCost);
-    //     PruefeDijkstra(3,ve,vecCost);
-    // }
-
-    // map<int,int> maptest;
-    // maptest[1] = 2;
-    // cout << maptest[1] << endl;
-    // cout << maptest[0] << endl;
-
-    // testing a star algo
-    list<VertexT> weg;
-    A_star(coorG1,1,7,weg);
-    cout << "after a_star\n";
-    for_each(weg.begin(),weg.end(),outputVertex);
-    inFile.close();
-    return 0;
-}
- 
