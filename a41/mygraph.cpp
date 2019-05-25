@@ -1,5 +1,6 @@
 #include "mygraph.h"
 
+typedef DistanceGraph::NeighborT neighT;
 const DistanceGraph::NeighborT& CoordinateGraph::getNeighbors( VertexT v) const
 {
     if(v < 0 || v > vertexCount)
@@ -107,4 +108,77 @@ CostT DistCoordGraph::estimatedCost( VertexT from, VertexT to) const
     double distance = sqrt(pow((fromx - tox),2) + pow((fromy - toy),2));
     return distance;
 
+}
+CostT DistSphereGraph::estimatedCost(VertexT from, VertexT to) const
+{
+    if(from < 0 || from > vertexCount || to < 0 || to > vertexCount)
+    {
+        cout << "Wrong index of vertex in CoGraph:estiCos\n";
+        exit(WRONG_VERTEX_INDEX);
+    }
+    double fromx = deg2rad(vcMap.at(from).first); // can't use [] operator here because expected is a const pair
+    // no operator "[]" matches these operands -- operand types are: const VertexCoord [ VertexT ]
+    double fromy = deg2rad(vcMap.at(from).second);
+    double tox = deg2rad(vcMap.at(to).first);
+    double toy = deg2rad(vcMap.at(to).second);
+    // x dist squared
+    CostT dist1 = pow(cos(fromx)*cos(fromy)-cos(tox)*cos(toy),2);
+    // y dist squared
+    CostT dist2 = pow(cos(fromx)*sin(fromy)-cos(tox)*sin(toy),2);
+    // z dist squared
+    CostT dist3 = pow(sin(fromx) - sin(tox),2);
+    CostT distance = radius * sqrt(dist1 + dist2 + dist3);
+    return distance;
+}
+CostT TimeCoordGraph::estimatedCost(VertexT from, VertexT to) const
+{
+    if(from < 0 || from > vertexCount || to < 0 || to > vertexCount)
+    {
+        cout << "Wrong index of vertex in CoGraph:estiCos\n";
+        exit(WRONG_VERTEX_INDEX);
+    }
+    double fromx = deg2rad(vcMap.at(from).first); // can't use [] operator here because expected is a const pair
+    // no operator "[]" matches these operands -- operand types are: const VertexCoord [ VertexT ]
+    double fromy = deg2rad(vcMap.at(from).second);
+    double tox = deg2rad(vcMap.at(to).first);
+    double toy = deg2rad(vcMap.at(to).second);
+    // x dist squared
+    CostT dist1 = pow(cos(fromx)*cos(fromy)-cos(tox)*cos(toy),2);
+    // y dist squared
+    CostT dist2 = pow(cos(fromx)*sin(fromy)-cos(tox)*sin(toy),2);
+    // z dist squared
+    CostT dist3 = pow(sin(fromx) - sin(tox),2);
+    CostT distance = radius * sqrt(dist1 + dist2 + dist3);
+    CostT time = distance/vehicleSpeed * Hour2Min;
+    return time;
+}
+
+
+// MazeGraph
+const DistanceGraph::NeighborT& MazeGraph::getNeighbors( VertexT v) const
+{
+    if(v_vC[v] == CellType::Wall)
+    {
+        // the v is a Wall
+        // no neighbors return a null vector
+        neighT vec;
+        return vec;
+    }
+    
+}
+CostT MazeGraph::estimatedCost( VertexT from, VertexT to) const
+{
+
+}
+CostT MazeGraph::cost( VertexT from, VertexT to) const
+{
+
+}
+istream & operator>>(istream & is, MazeGraph & mz)
+{
+
+}
+ostream & operator<<(ostream & os, MazeGraph & mz)
+{
+    
 }

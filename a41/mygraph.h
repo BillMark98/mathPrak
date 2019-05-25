@@ -14,9 +14,19 @@ using std::ostream;
 using std::size_t;
 using std::ifstream;
 using std::ofstream;
-
+// the earth radius 6371 km
+#define EARTH_RADIUS 6371
+#define pi 3.1415926
+// estimated car speed 1000 km/h
+#define CAR_SPEED 200
+#define Hour2Min 60
 typedef std::pair<double,double> coordinate;
 typedef std::map< VertexT,coordinate> VertexCoord;
+
+typedef std::pair<VertexT, CellType> p_vertexCell;
+// vectors of pair of vertex and cell type
+typedef std::vector<p_vertexCell> v_vertexCell;
+typedef std::vector<CellType> v_Cell;
 class CoordinateGraph : public DistanceGraph {
 protected:
     // vectors of NeighborT each element is a vector which holds the 
@@ -50,3 +60,45 @@ public:
     CostT estimatedCost( VertexT from, VertexT to) const override;
     ~DistCoordGraph(){};
 };
+// the graph on a sphere given by a radius
+class DistSphereGraph: public CoordinateGraph {
+protected:
+    double radius;
+public:
+    DistSphereGraph(int num_verts = 0,double R = EARTH_RADIUS)
+        : CoordinateGraph(num_verts),radius(R){};
+    CostT estimatedCost(VertexT from, VertexT to) const override;
+    ~DistSphereGraph(){};
+    double deg2rad(double deg) const{ return deg * pi / 180;};
+};
+class TimeCoordGraph: public CoordinateGraph {
+protected:
+    double radius;
+    double vehicleSpeed;
+public:
+    TimeCoordGraph(int num_verts = 0,double R = EARTH_RADIUS,double v = CAR_SPEED)
+        : CoordinateGraph(num_verts),radius(R),vehicleSpeed(v){};
+    CostT estimatedCost(VertexT from, VertexT to) const override;
+    ~TimeCoordGraph(){};
+    double deg2rad(double deg) const{ return deg * pi / 180;};
+};
+
+
+// the maze graph
+class MazeGraph : public DistanceGraph
+{
+protected:
+    v_Cell v_vC;
+    size_t edgeCount;
+    size_t height;
+    size_t width;
+public:
+    MazeGraph(int num = 0)
+        : DistanceGraph(num){};
+    const NeighborT& getNeighbors( VertexT v) const;
+    CostT estimatedCost( VertexT from, VertexT to) const;
+    CostT cost( VertexT from, VertexT to) const;
+    friend istream & operator>>(istream & is, MazeGraph & mz);
+    friend ostream & operator<<(ostream & os, MazeGraph & mz);
+
+}

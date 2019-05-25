@@ -104,13 +104,13 @@ int main()
     
     //testing read in files
     ifstream inFile;
-    inFile.open("daten/Graph3.dat");
+    inFile.open("daten/Graph4.dat");
     if(!inFile.is_open())
     {
         cout << "could not find the given files\n";
         exit(FILE_OPEN_ERROR);
     }
-    DistCoordGraph coorG1;
+    TimeCoordGraph coorG1;
     inFile >> coorG1;
     
     if(inFile.eof())
@@ -169,13 +169,13 @@ int main()
         {
             list<VertexT> weg;
             A_star(coorG1,v1,v2,weg);
-            cout << "after a_star starting : " << v1 << "\t end: " << v2 << endl;
-            for_each(weg.begin(),weg.end(),outputVertex);
-            PruefeWeg(3,weg);
+            // cout << "after a_star starting : " << v1 << "\t end: " << v2 << endl;
+            // for_each(weg.begin(),weg.end(),outputVertex);
+            PruefeWeg(4,weg);
         }
     }
-    
-    
+    cout << "Test heuristik\n";
+    PruefeHeuristik(coorG1);
     inFile.close();
     return 0;
 }
@@ -351,8 +351,12 @@ bool A_star(const DistanceGraph& g, VertexT start, VertexT destination, std::lis
     }
     predecessor[start] = start;
     openlist.push_back(VertexT_f(start,CostTgh(0,g.estimatedCost(start,destination))));
-    cout << "Initializing openlist\n";
-    for_each(openlist.begin(),openlist.end(),outputVertexTf);
+
+
+    // cout << "Initializing openlist\n";
+    // for_each(openlist.begin(),openlist.end(),outputVertexTf);
+
+
     while(!openlist.empty())
     {
         VertexT_f firstVTf(*openlist.begin());
@@ -366,30 +370,36 @@ bool A_star(const DistanceGraph& g, VertexT start, VertexT destination, std::lis
         neighbourVector neV = g.getNeighbors(bestVertex);
         // three cases
         neighbourVector::iterator iter;
-        cout << "The bestVertex: " << bestVertex << endl;
-        cout << "The neighbours\n";
-        for_each(neV.begin(),neV.end(),outputVC);
+
+        // cout << "The bestVertex: " << bestVertex << endl;
+        // cout << "The neighbours\n";
+        // for_each(neV.begin(),neV.end(),outputVC);
         for(iter = neV.begin(); iter != neV.end(); iter++)
         {
             VertexT currentNode = iter -> first;
             // VertexT_f * p_VertexTf = isIn(currentNode,openlist);
             v_VertexTf::iterator p_VertexTf = isIn(iter,openlist);
             CostT distToNode = firstVTf.second.first + (iter -> second);
-            cout << "The currentNode: " << currentNode << endl;
-            cout << "The distToNode: " << distToNode << endl;
+
+
+            // cout << "The currentNode: " << currentNode << endl;
+            // cout << "The distToNode: " << distToNode << endl;
+
+
             // first case if the node not ever visited
             if((p_VertexTf == openlist.end()) && predecessor[currentNode] == NOTVISITED)
             {
-                cout << "In the first case\n";
+                // cout << "In the first case\n";
                 CostT estiCost = g.estimatedCost(currentNode,destination);
                 openlist.push_back(VertexT_f(currentNode,CostTgh(distToNode,estiCost)));
                 predecessor[currentNode] = bestVertex;
-                cout << "The predecessor maxtirx\n";
-                for_each(predecessor.begin(),predecessor.end(),outputVertexTwilling);
+
+                // cout << "The predecessor maxtirx\n";
+                // for_each(predecessor.begin(),predecessor.end(),outputVertexTwilling);
             }
             else if((p_VertexTf != openlist.end()))
             {
-                cout << "The second case\n";
+                // cout << "The second case\n";
                 CostT distOld = (*p_VertexTf).second.first;
                 if(distToNode < distOld)
                 {
@@ -430,18 +440,20 @@ bool A_star(const DistanceGraph& g, VertexT start, VertexT destination, std::lis
             }
         }
         // all the neighbours coverd delete the vertex from the openlist and push it in the closelist
-        cout << "end of the for loop\n";
-        cout << "the closelist\n";
+        // cout << "end of the for loop\n";
+        // cout << "the closelist\n";
+
         closelist.push_back(firstVTf);
-        for_each(closelist.begin(),closelist.end(),outputVertexTf);
+
+        // for_each(closelist.begin(),closelist.end(),outputVertexTf);
         openlist.erase(openlist.begin());
-        cout << "The openlist\n";
-        for_each(openlist.begin(),openlist.end(),outputVertexTf);
+        // cout << "The openlist\n";
+        // for_each(openlist.begin(),openlist.end(),outputVertexTf);
 
         // sort the openlist
         make_heap(openlist.begin(),openlist.end(),CompareVertexTf());
-        cout << "After making heap\n";
-        for_each(openlist.begin(),openlist.end(),outputVertexTf);
+        // cout << "After making heap\n";
+        // for_each(openlist.begin(),openlist.end(),outputVertexTf);
     }
     // according to the PruefeWeg function weg has the point starting point
     weg.push_front(start);
