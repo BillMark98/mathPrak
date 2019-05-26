@@ -5,7 +5,11 @@
 #include <cmath>
 
 #define WRONG_VERTEX_INDEX 3
-
+#define INITIALIZING_ERROR 5
+#define WRONG_POSITION 13
+#define INVALID_SIZE 8
+#define READ_ERROR 9
+#define GRAPH_EMPTY 10
 using std::cin;
 using std::cout;
 using std::endl;
@@ -22,6 +26,7 @@ using std::ofstream;
 #define Hour2Min 60
 typedef std::pair<double,double> coordinate;
 typedef std::map< VertexT,coordinate> VertexCoord;
+typedef std::pair<size_t,size_t> mzCoord;
 
 typedef std::pair<VertexT, CellType> p_vertexCell;
 // vectors of pair of vertex and cell type
@@ -33,6 +38,11 @@ protected:
     // information of all the neighbours connected to this specific node. 
     // for example neighbour_vector[0] is a vector of type Neighbor T , we call it vec. then each element of vec
     // is a pair, < index of node, cost to node>
+
+    // actually we have to create such vectors to hold 
+    // because the api getNeighbors return a const NeighborT& 
+    // so the vector has to be a member element
+    // especially we cant create it inside getNeighbors temporarily
     std::vector<NeighborT> neigbour_vector; 
     // number of edges of the graph
     size_t edgeCount;
@@ -92,13 +102,32 @@ protected:
     size_t edgeCount;
     size_t height;
     size_t width;
+    std::vector<NeighborT> neighbour_vector; 
 public:
     MazeGraph(int num = 0)
         : DistanceGraph(num){};
-    const NeighborT& getNeighbors( VertexT v) const;
-    CostT estimatedCost( VertexT from, VertexT to) const;
-    CostT cost( VertexT from, VertexT to) const;
+    const NeighborT& getNeighbors( VertexT v) const override;
+    void setNeighbors();
+    CostT estimatedCost( VertexT from, VertexT to) const override;
+    CostT cost( VertexT from, VertexT to) const override;
+    bool isEmpty() const {return height < 1 || width < 1 || vertexCount <= 0;}
+    bool isValid(VertexT v) const{ return v >= 0 && v < vertexCount;}
+    bool isBorder(VertexT v) const;
+    bool isLeftBorder(VertexT v) const;
+    bool isRightBorder(VertexT v) const;
+    bool isUpBorder(VertexT v) const;
+    bool isCorner(VertexT v) const;
+    bool isUpCorner(VertexT v) const;
+    mzCoord Vertex2mzCoord(VertexT v) const;
+    // mzCoord in primitive version, i.e two size_t
+    VertexT mzCoord2VertexT(size_t w, size_t h) const;
+    // testing the validity of the mzCoordinate
+    bool ismzCodValid(size_t w, size_t h) const;
+    // giving back the value of the v_vC using the mzCoord
+    const CellType& at(size_t w, size_t h) const;
+    CellType& operator()(size_t w, size_t h);
+
     friend istream & operator>>(istream & is, MazeGraph & mz);
     friend ostream & operator<<(ostream & os, MazeGraph & mz);
 
-}
+};

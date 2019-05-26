@@ -8,7 +8,6 @@
 // Ein Graph, der Koordinaten von Knoten speichert.
 
 #define FILE_OPEN_ERROR 4
-#define INITIALIZING_ERROR 5
 #define NOTVISITED 10000000
 #define FOURTH_CASE 6
 using std::set;
@@ -104,13 +103,13 @@ int main()
     
     //testing read in files
     ifstream inFile;
-    inFile.open("daten/Graph4.dat");
+    inFile.open("daten/Maze3.dat");
     if(!inFile.is_open())
     {
         cout << "could not find the given files\n";
         exit(FILE_OPEN_ERROR);
     }
-    TimeCoordGraph coorG1;
+    MazeGraph coorG1;
     inFile >> coorG1;
     
     if(inFile.eof())
@@ -127,6 +126,57 @@ int main()
     }
 
     cout << coorG1;
+
+    // cout << "Test in main\n";
+    // vector<CellType> vcell;
+    // vcell.resize(3);
+    // vcell[0] = CellType::Ground;
+    // vcell[1] = CellType::Start;
+    // vcell[2] = CellType::Wall;
+    // for(int i = 0; i < 3; i++)
+    // {
+    //     if(vcell[i] == CellType::Ground)
+    //     {
+    //         cout << "Ground\n";
+    //     }
+    //     if(vcell[i] == CellType::Start)
+    //     {
+    //         cout << "Start\n";
+    //     }
+    //     if(vcell[i] == CellType::Wall)
+    //     {
+    //         cout << "Wall\n";
+    //     }
+    // }
+    // cout << " Testing single celltype\n";
+    // CellType test = CellType::Ground;
+    // if(test == CellType::Ground)
+    // {
+    //     cout << "test: Ground\n";
+    // }
+    // if(test == CellType::Wall)
+    // {
+    //     cout << "test: Wall\n";
+    // }
+    // if(test == CellType::Start)
+    // {
+    //     cout << "test: Start\n";
+    // }
+    // cout << "Trying to change value\n";
+    // test = CellType::Wall;
+    // if(test == CellType::Ground)
+    // {
+    //     cout << "test: Ground\n";
+    // }
+    // if(test == CellType::Wall)
+    // {
+    //     cout << "test: Wall\n";
+    // }
+    // if(test == CellType::Start)
+    // {
+    //     cout << "test: Start\n";
+    // }
+
     // cout << "get cost from 0 to 1: " << coorG1.cost(0,1) << endl;
     // cout << "cost from 3 to 1:  " << coorG1.cost(3,1) << endl;
     // cout << "cost from 2 to 1:  " << coorG1.cost(2,1) << endl;
@@ -163,19 +213,33 @@ int main()
 
     // testing a star algo
     
-    for(VertexT v1 = 0; v1 < coorG1.numVertices(); v1++)
-    {
-        for(VertexT v2 = 0; v2 < coorG1.numVertices(); v2++)
-        {
-            list<VertexT> weg;
-            A_star(coorG1,v1,v2,weg);
-            // cout << "after a_star starting : " << v1 << "\t end: " << v2 << endl;
-            // for_each(weg.begin(),weg.end(),outputVertex);
-            PruefeWeg(4,weg);
-        }
-    }
-    cout << "Test heuristik\n";
-    PruefeHeuristik(coorG1);
+    // for(VertexT v1 = 0; v1 < coorG1.numVertices(); v1++)
+    // {
+    //     for(VertexT v2 = 0; v2 < coorG1.numVertices(); v2++)
+    //     {
+    //         list<VertexT> weg;
+    //         A_star(coorG1,v1,v2,weg);
+    //         // cout << "after a_star starting : " << v1 << "\t end: " << v2 << endl;
+    //         // for_each(weg.begin(),weg.end(),outputVertex);
+    //         PruefeWeg(4,weg);
+    //     }
+    // }
+    // cout << "Test heuristik\n";
+    // PruefeHeuristik(coorG1);
+
+    // size_t index = 2;
+    // int test = -1;
+    // size_t me = index - 1;
+    // size_t you = index + test;
+    // cout << "me: " << me << endl;
+    // cout << "you: " << you << endl;
+
+    // size_t in2 = 4;
+    // cout << "2 - 4 in size_t: " << index - in2 << endl;
+    // size_t res = index - in2;
+    // cout << "res: " << res << endl;
+    // size_t re2 = abs(index - in2);
+    // cout << "re2: " << re2 << endl;
     inFile.close();
     return 0;
 }
