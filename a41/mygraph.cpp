@@ -186,12 +186,16 @@ CostT TimeCoordGraph::estimatedCost(VertexT from, VertexT to) const
 
 // MazeGraph
 MazeGraph::MazeGraph(int num,v_Cell & v_C,int breite, int hoehe)
-:  DistanceGraph(num),width(breite),height(hoehe)
+:  DistanceGraph(num),v_vC(v_C),width(breite),height(hoehe)
 {
 
-    cout << "before set in constructor\n";
-    v_vC = v_C;
+    // cout << "before set in constructor\n";
+    // cout << "v_vC size:\n";
+    // cout << v_vC.size() << endl;
+    // v_vC = v_C;
+    neighbour_vector.resize(width * height);
     setNeighbors();
+
     cout << "Maze graph successfully created\n";
 }
 
@@ -233,14 +237,15 @@ void MazeGraph::setNeighbors()
             // whether the same node will be added twice 
             if(ismzCodValid(w+index[i],h))
             {
-                if(at(w+index[i],h) == CellType::Ground)
+                // the other three types can have neighbours  
+                if(at(w+index[i],h) != CellType::Wall)
                 {
                     vec.push_back(pa_verCost(mzCoord2VertexT(w+index[i],h),1));
                 }
             }
             if(ismzCodValid(w,h+index[i]))
             {
-                if(at(w,h+index[i]) == CellType::Ground)
+                if(at(w,h+index[i]) != CellType::Wall)
                 {
                     vec.push_back(pa_verCost(mzCoord2VertexT(w,h+index[i]),1));
                 }
@@ -248,6 +253,34 @@ void MazeGraph::setNeighbors()
         }
     }
     
+}
+
+VertexT MazeGraph::getStart() const
+{
+    VertexT index;
+    for(index = 0; index < vertexCount; index++)
+    {
+        if(v_vC[index] == CellType::Start)
+        {
+            return index;
+        }
+    }
+    // not found
+    return NOTFOUND;
+}
+    // get the destination
+VertexT MazeGraph::getDestination() const
+{
+    VertexT index;
+    for(index = 0; index < vertexCount; index++)
+    {
+        if(v_vC[index] == CellType::Destination)
+        {
+            return index;
+        }
+    }
+    // not found
+    return NOTFOUND;
 }
 bool MazeGraph::isBorder(VertexT v) const
 {

@@ -219,27 +219,34 @@ int main()
 // Testing Maze
 
     // Segmentation fault of the vector<CellType>?
-    // vector<CellType> labyrinth = ErzeugeLabyrinth(256,256,1);
+    // because in the constructor
+    // before calling setNeighbors, have to resize neighbour_vector
+    vector<CellType> labyrinth = ErzeugeLabyrinth(256,256,15);
+
     // cout << "Vector labyrinth successfully created\n";
-    // MazeGraph coorG2(256*256,labyrinth,256,256);
-
-
+    MazeGraph coorG3(256*256,labyrinth,256,256);
+    VertexT start = coorG3.getStart();
+    VertexT dest = coorG3.getDestination();
+    cout << "The start: " << start << " the desti: " << dest << endl;
+    list<VertexT> weg10;
+    A_star(coorG3,v,start,dest,weg10);
+    PruefeWeg(10,weg10);
     // Bsp 5   Maze1
     // Bsp 6   Maze2
     // Bsp 7   Maze3
     // Bsp 8   Maze4
     // Bsp 9   Maze5
-    for ( auto pair : StartZielPaare(9)) 
-    {
-        auto start = pair.first;
-        auto goal  = pair.second;
-        cout << "The start: " << start << " the goal: " << goal << endl;
-        list<VertexT> weg_maze;
-        A_star(coorG1,v,start,goal,weg_maze);
-        cout << "The path\n";
-        outWegMaze(coorG1,weg_maze);
-        PruefeWeg(9,weg_maze);
-    }
+    // for ( auto pair : StartZielPaare(10)) 
+    // {
+    //     auto start = pair.first;
+    //     auto goal  = pair.second;
+    //     cout << "The start: " << start << " the goal: " << goal << endl;
+    //     list<VertexT> weg_maze;
+    //     A_star(coorG2,v,start,goal,weg_maze);
+    //     cout << "The path\n";
+    //     outWegMaze(coorG1,weg_maze);
+    //     PruefeWeg(10,weg_maze);
+    // }
 
 // *************************************************************
 

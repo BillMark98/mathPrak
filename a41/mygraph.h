@@ -10,6 +10,7 @@
 #define INVALID_SIZE 8
 #define READ_ERROR 9
 #define GRAPH_EMPTY 10
+#define NOTFOUND 10000000
 using std::cin;
 using std::cout;
 using std::endl;
@@ -108,6 +109,10 @@ public:
     MazeGraph(int num = 0)
         : DistanceGraph(num){};
     MazeGraph(int num,v_Cell & v_C,int breite, int hoehe);
+    // get the start
+    VertexT getStart() const;
+    // get the destination
+    VertexT getDestination() const;
     const NeighborT& getNeighbors( VertexT v) const override;
     void setNeighbors();
     CostT estimatedCost( VertexT from, VertexT to) const override;
