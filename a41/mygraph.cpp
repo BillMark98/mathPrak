@@ -485,6 +485,15 @@ CostT MazeGraph::cost( VertexT from, VertexT to) const
     }
     return infty;
 }
+
+ostream & MazeGraph::VertexInMzCoord(const VertexT &v,ostream & os) const
+{
+    mzCoord mzC = Vertex2mzCoord(v);
+    os << "(" << mzC.first << "," << mzC.second<< ") ";
+    return os;
+}
+
+
 istream & operator>>(istream & is, MazeGraph & mz)
 {
     is >> mz.height;

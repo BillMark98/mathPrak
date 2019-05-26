@@ -67,6 +67,8 @@ v_VertexTf::iterator isIn(neighbourVector::iterator & iter, v_VertexTf & vec);
 //     // ...
 // }
 
+// Help func for outputting the weg for a-star algo on the maze
+void outWegMaze(const MazeGraph& mz, std::list<VertexT>& weg);
 
 // class VertexCompare
 // {
@@ -103,7 +105,7 @@ int main()
     
     //testing read in files
     ifstream inFile;
-    inFile.open("daten/Maze3.dat");
+    inFile.open("daten/Maze5.dat");
     if(!inFile.is_open())
     {
         cout << "could not find the given files\n";
@@ -184,14 +186,35 @@ int main()
     // cout << "Estimated cost from 0 to 1: " << coorG1.estimatedCost(0,1) <<endl;
     // cout << "Estimated cost from 1 to 2: " << coorG1.estimatedCost(1,2) <<endl;
     // cout << "getting neighbour vector of 1\n";
-    DistanceGraph::NeighborT neighbours = coorG1.getNeighbors(1);
-    DistanceGraph::NeighborT::const_iterator iter;
-    for(iter = neighbours.begin(); iter != neighbours.end(); iter++)
-    {
-        cout << "vertex: " << iter -> first << endl;
-        cout << "distance: " << iter -> second << endl;
-    }
+    // DistanceGraph::NeighborT neighbours = coorG1.getNeighbors(1);
+    // DistanceGraph::NeighborT::const_iterator iter;
+    // for(iter = neighbours.begin(); iter != neighbours.end(); iter++)
+    // {
+    //     cout << "vertex: " << iter -> first << endl;
+    //     cout << "distance: " << iter -> second << endl;
+    // }
 
+    // testing a star for maze
+    // list<VertexT> weg_maze;
+    // VertexT start = coorG1.mzCoord2VertexT(2,2);
+    // VertexT end = coorG1.mzCoord2VertexT(5,11);
+    // A_star(coorG1,start,end,weg_maze);
+    // cout << "finding path \n";
+    // outWegMaze(coorG1,weg_maze);
+
+
+
+    for ( auto pair : StartZielPaare(9)) 
+    {
+        auto start = pair.first;
+        auto goal  = pair.second;
+        cout << "The start: " << start << " the goal: " << goal << endl;
+        list<VertexT> weg_maze;
+        A_star(coorG1,start,goal,weg_maze);
+        cout << "The path\n";
+        outWegMaze(coorG1,weg_maze);
+        PruefeWeg(9,weg_maze);
+    }
     // cout << "Testing dijkstra\n";
     // vector<CostT> vecCost(coorG1.numVertices(),0);
     
@@ -522,4 +545,21 @@ bool A_star(const DistanceGraph& g, VertexT start, VertexT destination, std::lis
     // according to the PruefeWeg function weg has the point starting point
     weg.push_front(start);
     return false; // Kein Weg gefunden.
+}
+
+void outWegMaze(const MazeGraph& mz, std::list<VertexT>& weg)
+{
+
+    list<VertexT>::const_iterator iter;
+    int count = 1;
+    for(iter = weg.begin(); iter!= weg.end(); iter++)
+    {
+        mz.VertexInMzCoord((*iter),cout);
+        if(count % 7 == 0)
+        {
+            cout << endl;
+        }
+        count++;
+    }
+    cout << endl;
 }

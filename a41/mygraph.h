@@ -126,7 +126,8 @@ public:
     // giving back the value of the v_vC using the mzCoord
     const CellType& at(size_t w, size_t h) const;
     CellType& operator()(size_t w, size_t h);
-
+    // outputting the Vertex v in mzcoordinate
+    ostream & VertexInMzCoord(const VertexT &v,ostream & os) const;
     friend istream & operator>>(istream & is, MazeGraph & mz);
     friend ostream & operator<<(ostream & os, MazeGraph & mz);
 
