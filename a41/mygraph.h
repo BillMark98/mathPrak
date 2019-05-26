@@ -99,13 +99,15 @@ class MazeGraph : public DistanceGraph
 {
 protected:
     v_Cell v_vC;
-    size_t edgeCount;
-    size_t height;
+    // size_t edgeCount;
     size_t width;
+    size_t height;
+    
     std::vector<NeighborT> neighbour_vector; 
 public:
     MazeGraph(int num = 0)
         : DistanceGraph(num){};
+    MazeGraph(int num,v_Cell & v_C,int breite, int hoehe);
     const NeighborT& getNeighbors( VertexT v) const override;
     void setNeighbors();
     CostT estimatedCost( VertexT from, VertexT to) const override;

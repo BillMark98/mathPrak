@@ -10,6 +10,7 @@
 #define FILE_OPEN_ERROR 4
 #define NOTVISITED 10000000
 #define FOURTH_CASE 6
+// #define DRAW 1
 using std::set;
 using std::vector;
 using std::map;
@@ -88,10 +89,10 @@ void outputCost(CostT c) {cout.width(8); cout << c;}
 void outputVertex(VertexT v){cout.width(8); cout << v;}
 void outputVertexTwilling(VertexTwilling v){cout << "first: " << v.first<< endl; cout << "second: " << v.second << endl; }
 void outputVertexTf(VertexT_f v){cout.width(4); cout << v.first << " : " << v.second.first << "\t" << v.second.second<<endl;}
-void Dijkstra(const DistanceGraph& g, VertexT start, std::vector<CostT>& kostenZumStart);
+void Dijkstra(const DistanceGraph& g, GraphVisualizer& v,VertexT start, std::vector<CostT>& kostenZumStart);
 
 // bool A_star(const DistanceGraph& g, GraphVisualizer& v, VertexT start, VertexT destination, std::list<VertexT>& weg) 
-bool A_star(const DistanceGraph& g, VertexT start, VertexT destination, std::list<VertexT>& weg);
+bool A_star(const DistanceGraph& g, GraphVisualizer& v,VertexT start, VertexT destination, std::list<VertexT>& weg);
 
 int main()
 {
@@ -105,12 +106,22 @@ int main()
     
     //testing read in files
     ifstream inFile;
+    // inFile.open("daten/Graph4.dat");
     inFile.open("daten/Maze5.dat");
     if(!inFile.is_open())
     {
         cout << "could not find the given files\n";
         exit(FILE_OPEN_ERROR);
     }
+    // using DistCoordGraph for 1,2
+    // DistSphereGraph for 3
+    // TimeCoordGraph for 4
+    // MazeGraph for Maze 1 ~ 5
+    // Bsp 5   Maze1
+    // Bsp 6   Maze2
+    // Bsp 7   Maze3
+    // Bsp 8   Maze4
+    // Bsp 9   Maze5
     MazeGraph coorG1;
     inFile >> coorG1;
     
@@ -126,8 +137,9 @@ int main()
     {
         cout << "Input terminated by unkown reasons.\n";
     }
-
-    cout << coorG1;
+    // a graph visualizer
+    TextVisualizer v;
+    // cout << coorG1;
 
     // cout << "Test in main\n";
     // vector<CellType> vcell;
@@ -203,52 +215,81 @@ int main()
     // outWegMaze(coorG1,weg_maze);
 
 
+// *************************************************************
+// Testing Maze
 
+    // Segmentation fault of the vector<CellType>?
+    // vector<CellType> labyrinth = ErzeugeLabyrinth(256,256,1);
+    // cout << "Vector labyrinth successfully created\n";
+    // MazeGraph coorG2(256*256,labyrinth,256,256);
+
+
+    // Bsp 5   Maze1
+    // Bsp 6   Maze2
+    // Bsp 7   Maze3
+    // Bsp 8   Maze4
+    // Bsp 9   Maze5
     for ( auto pair : StartZielPaare(9)) 
     {
         auto start = pair.first;
         auto goal  = pair.second;
         cout << "The start: " << start << " the goal: " << goal << endl;
         list<VertexT> weg_maze;
-        A_star(coorG1,start,goal,weg_maze);
+        A_star(coorG1,v,start,goal,weg_maze);
         cout << "The path\n";
         outWegMaze(coorG1,weg_maze);
         PruefeWeg(9,weg_maze);
     }
+
+// *************************************************************
+
+
+// *************************************************************
+
+// Testing Dijkstra
+
     // cout << "Testing dijkstra\n";
     // vector<CostT> vecCost(coorG1.numVertices(),0);
-    
-    
     // for(VertexT ve = 0 ; ve < coorG1.numVertices(); ve++)
     // {
         
     //     cout << "\nStarting at " << ve << endl;
-    //     Dijkstra(coorG1,ve,vecCost);
+    //     Dijkstra(coorG1,v,ve,vecCost);
     //     cout << "\nafter dijkstra\n";
-    //     for_each(vecCost.begin(),vecCost.end(),outputCost);
-    //     PruefeDijkstra(3,ve,vecCost);
+    //     // for_each(vecCost.begin(),vecCost.end(),outputCost);
+    //     PruefeDijkstra(4,ve,vecCost);
     // }
+
+
+// ********************************************************************
 
     // map<int,int> maptest;
     // maptest[1] = 2;
     // cout << maptest[1] << endl;
     // cout << maptest[0] << endl;
 
-    // testing a star algo
+// *************************************************************
+
+// Testing a star algo
     
     // for(VertexT v1 = 0; v1 < coorG1.numVertices(); v1++)
     // {
     //     for(VertexT v2 = 0; v2 < coorG1.numVertices(); v2++)
     //     {
     //         list<VertexT> weg;
-    //         A_star(coorG1,v1,v2,weg);
+    //         A_star(coorG1,v,v1,v2,weg);
     //         // cout << "after a_star starting : " << v1 << "\t end: " << v2 << endl;
     //         // for_each(weg.begin(),weg.end(),outputVertex);
     //         PruefeWeg(4,weg);
     //     }
     // }
-    // cout << "Test heuristik\n";
-    // PruefeHeuristik(coorG1);
+
+// **********************************************************************
+// Testing Heuristik
+    cout << "Test heuristik\n";
+    PruefeHeuristik(coorG1);
+
+// **********************************************************************
 
     // size_t index = 2;
     // int test = -1;
@@ -338,7 +379,7 @@ v_VertexTf::iterator isIn(neighbourVector::iterator & iter, v_VertexTf & vec)
     // return nullptr;
 }
 
-void Dijkstra(const DistanceGraph& g, VertexT start, std::vector<CostT>& kostenZumStart) 
+void Dijkstra(const DistanceGraph& g, GraphVisualizer& v,VertexT start, std::vector<CostT>& kostenZumStart) 
 {
     size_t vertex_number = g.numVertices();
     // setVertex S;
@@ -349,21 +390,43 @@ void Dijkstra(const DistanceGraph& g, VertexT start, std::vector<CostT>& kostenZ
     neighbourVector vectorVC; // using vector to store VertexT, CostT
     kostenZumStart[start] = 0;
     CostT dist;
+#ifdef DRAW
+    v.markVertex(start,VertexStatus::Done);
+#endif
     for(VertexT i = 0; i < vertex_number; i++)
     {
         if(i != start)
         {
             dist = g.cost(start,i);
             kostenZumStart[i] = dist;
+#ifdef DRAW
+            if(dist < infty)
+            {
+                // vertex is connected to start
+                
+                v.markVertex(i,VertexStatus::InQueue);
+                v.markEdge(EdgeT(start,i),EdgeStatus::Visited); 
+                
+            }
+            else
+            {
+                // still unknown
+
+                v.markVertex(i,VertexStatus::UnknownVertex);
+            }
+#endif
             // sVC.insert(pairVC(i,dist));
             vectorVC.push_back(pairVC(i,dist));
         }
     }
+#ifdef DRAW
+    v.draw();
+#endif
     sort(vectorVC.begin(),vectorVC.end(),ComparePair());
-    cout << "After initialization the vectorVC\n";
-    for_each(vectorVC.begin(),vectorVC.end(),outputVC);
-    cout << "\nThe vector kostenZumStart\n";
-    for_each(kostenZumStart.begin(),kostenZumStart.end(),outputCost);
+    // cout << "After initialization the vectorVC\n";
+    // for_each(vectorVC.begin(),vectorVC.end(),outputVC);
+    // cout << "\nThe vector kostenZumStart\n";
+    // for_each(kostenZumStart.begin(),kostenZumStart.end(),outputCost);
     while(!vectorVC.empty())
     {
         // choose the node in sVC s.t D[v] minimal
@@ -374,18 +437,23 @@ void Dijkstra(const DistanceGraph& g, VertexT start, std::vector<CostT>& kostenZ
 
 
         pairVC firstPair(*vectorVC.begin());
+#ifdef DRAW
+        v.markVertex(firstPair.first,VertexStatus::Active);
+#endif
         neighbourVector neV = g.getNeighbors(firstPair.first);
         if(neV.empty())
         {
             // no need to check for updats just delete the first node
             vectorVC.erase(vectorVC.begin()); // may be slow to perform this opertion
+            // v.markVertex(firstPair.first,VertexStatus::Done);
             continue;
         }
         // cout << "The chosen node: " << firstPair.first << endl;
         // cout << "its neighbours: \n";
         // for_each(neV.begin(),neV.end(),outputVC);
-
-
+#ifdef DRAW
+        v.draw();
+#endif
         neighbourVector::const_iterator neV_iter;
         size_t sizeVec = vectorVC.size();
         CostT dmin = kostenZumStart[firstPair.first];
@@ -396,6 +464,9 @@ void Dijkstra(const DistanceGraph& g, VertexT start, std::vector<CostT>& kostenZ
                 if(vectorVC[i].first == (neV_iter -> first))
                 {
                     CostT distold = vectorVC[i].second;
+#ifdef DRAW
+                    v.markVertex(vectorVC[i].first,VertexStatus::InQueue);
+#endif
                     CostT distnew = dmin + neV_iter -> second;
                     if(distnew < distold)
                     {
@@ -407,16 +478,21 @@ void Dijkstra(const DistanceGraph& g, VertexT start, std::vector<CostT>& kostenZ
             }
         }
 
+
         // cout << "End of two for loop\n";
         // cout << "The kostenZumStart\n";
         // for_each(kostenZumStart.begin(),kostenZumStart.end(),outputCost);
 
         vectorVC.erase(vectorVC.begin()); // may be slow to perform this opertion
+#ifdef DRAW
+        v.markVertex(firstPair.first,VertexStatus::Done);
+        v.draw();
+#endif
     }
 
 }
 
-bool A_star(const DistanceGraph& g, VertexT start, VertexT destination, std::list<VertexT>& weg)
+bool A_star(const DistanceGraph& g,GraphVisualizer& v, VertexT start, VertexT destination, std::list<VertexT>& weg)
 {
     // ...
     // trivial case
@@ -435,6 +511,9 @@ bool A_star(const DistanceGraph& g, VertexT start, VertexT destination, std::lis
     {
         // initializing the elements of predecessors to -1
         predecessor[i] = NOTVISITED;
+#ifdef DRAW
+        v.markVertex(i,VertexStatus::UnknownVertex);
+#endif
     }
     predecessor[start] = start;
     openlist.push_back(VertexT_f(start,CostTgh(0,g.estimatedCost(start,destination))));
@@ -447,6 +526,10 @@ bool A_star(const DistanceGraph& g, VertexT start, VertexT destination, std::lis
     while(!openlist.empty())
     {
         VertexT_f firstVTf(*openlist.begin());
+#ifdef DRAW
+        v.markVertex(firstVTf.first,VertexStatus::Active);
+        v.draw();
+#endif
         if(firstVTf.first == destination)
         {
             traceback(start,destination,weg,predecessor);
@@ -472,15 +555,17 @@ bool A_star(const DistanceGraph& g, VertexT start, VertexT destination, std::lis
             // cout << "The currentNode: " << currentNode << endl;
             // cout << "The distToNode: " << distToNode << endl;
 
-
+            CostT estiCost = g.estimatedCost(currentNode,destination);
             // first case if the node not ever visited
             if((p_VertexTf == openlist.end()) && predecessor[currentNode] == NOTVISITED)
             {
                 // cout << "In the first case\n";
-                CostT estiCost = g.estimatedCost(currentNode,destination);
+                // CostT estiCost = g.estimatedCost(currentNode,destination);
                 openlist.push_back(VertexT_f(currentNode,CostTgh(distToNode,estiCost)));
                 predecessor[currentNode] = bestVertex;
-
+#ifdef DRAW
+                v.updateVertex(currentNode,distToNode,estiCost,bestVertex,VertexStatus::InQueue);
+#endif
                 // cout << "The predecessor maxtirx\n";
                 // for_each(predecessor.begin(),predecessor.end(),outputVertexTwilling);
             }
@@ -493,6 +578,9 @@ bool A_star(const DistanceGraph& g, VertexT start, VertexT destination, std::lis
                     // the value from start to currentNode need to be modified
                     (*p_VertexTf).second.first = distToNode;
                     predecessor[currentNode] = bestVertex;
+#ifdef DRAW
+                    v.updateVertex(currentNode,distToNode,estiCost,bestVertex,VertexStatus::InQueue);
+#endif
                 }
             }
             else 
@@ -516,11 +604,14 @@ bool A_star(const DistanceGraph& g, VertexT start, VertexT destination, std::lis
                         closelist.erase(p_VertexTf);
                         openlist.push_back(vTfNew);
                         predecessor[currentNode] = bestVertex;
+#ifdef DRAW
+                        v.updateVertex(currentNode,distToNode,estiCost,bestVertex,VertexStatus::InQueue);
+#endif
                     }
                 }
                 else
                 {
-                    // an error
+                    // an error 
                     cout << "The fourth case in A_star algo appears\n";
                     exit(FOURTH_CASE);
                 }
@@ -531,12 +622,16 @@ bool A_star(const DistanceGraph& g, VertexT start, VertexT destination, std::lis
         // cout << "the closelist\n";
 
         closelist.push_back(firstVTf);
-
+#ifdef DRAW
+        v.markVertex(bestVertex,VertexStatus::Done);
+#endif
         // for_each(closelist.begin(),closelist.end(),outputVertexTf);
         openlist.erase(openlist.begin());
         // cout << "The openlist\n";
         // for_each(openlist.begin(),openlist.end(),outputVertexTf);
-
+#ifdef DRAW        
+        v.draw();
+#endif
         // sort the openlist
         make_heap(openlist.begin(),openlist.end(),CompareVertexTf());
         // cout << "After making heap\n";

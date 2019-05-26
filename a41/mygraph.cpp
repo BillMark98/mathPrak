@@ -144,7 +144,13 @@ CostT DistSphereGraph::estimatedCost(VertexT from, VertexT to) const
     CostT dist2 = pow(cos(fromx)*sin(fromy)-cos(tox)*sin(toy),2);
     // z dist squared
     CostT dist3 = pow(sin(fromx) - sin(tox),2);
-    CostT distance = radius * sqrt(dist1 + dist2 + dist3);
+    // CostT distance = radius * sqrt(dist1 + dist2 + dist3);
+
+    // using the arc length
+    CostT radiusSquare = pow(radius,2);
+    CostT sectorlength = pow(radius,2) * (dist1 + dist2 + dist3);
+    double costheta = 1 - sectorlength/(2 * radiusSquare);
+    CostT distance = radius * acos(costheta);
     return distance;
 }
 CostT TimeCoordGraph::estimatedCost(VertexT from, VertexT to) const
@@ -165,13 +171,29 @@ CostT TimeCoordGraph::estimatedCost(VertexT from, VertexT to) const
     CostT dist2 = pow(cos(fromx)*sin(fromy)-cos(tox)*sin(toy),2);
     // z dist squared
     CostT dist3 = pow(sin(fromx) - sin(tox),2);
-    CostT distance = radius * sqrt(dist1 + dist2 + dist3);
+    // CostT distance = radius * sqrt(dist1 + dist2 + dist3);
+
+    CostT radiusSquare = pow(radius,2);
+    CostT sectorlength = pow(radius,2) * (dist1 + dist2 + dist3);
+    double costheta = 1 - sectorlength/(2 * radiusSquare);
+    CostT distance = radius * acos(costheta);
+
+
     CostT time = distance/vehicleSpeed * Hour2Min;
     return time;
 }
 
 
 // MazeGraph
+MazeGraph::MazeGraph(int num,v_Cell & v_C,int breite, int hoehe)
+:  DistanceGraph(num),width(breite),height(hoehe)
+{
+
+    cout << "before set in constructor\n";
+    v_vC = v_C;
+    setNeighbors();
+    cout << "Maze graph successfully created\n";
+}
 
 void MazeGraph::setNeighbors()
 {
