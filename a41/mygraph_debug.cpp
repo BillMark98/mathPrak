@@ -189,6 +189,10 @@ MazeGraph::MazeGraph(int num,v_Cell & v_C,int breite, int hoehe)
 :  DistanceGraph(num),v_vC(v_C),width(breite),height(hoehe)
 {
 
+    // cout << "before set in constructor\n";
+    // cout << "v_vC size:\n";
+    // cout << v_vC.size() << endl;
+    // v_vC = v_C;
     neighbour_vector.resize(width * height);
     setNeighbors();
 
@@ -410,6 +414,99 @@ const DistanceGraph::NeighborT& MazeGraph::getNeighbors( VertexT v) const
     }
     
     return neighbour_vector[v];
+
+    // if(width >= 3 && height >= 3)
+    // {
+    //     int situation;
+    //     // the following is for width >=3, height >= 3
+    //     // the situation is defined as followed
+    //     // 1 2 2 2 2 3
+    //     // 4 5 5 5 5 6
+    //     // 4 5 5 5 5 6
+    //     // 7 8 8 8 8 9
+
+    //     if(isBorder(v))
+    //     {
+    //         if(isLeftBorder(v))
+    //         {
+    //             // if v at the upper left corner
+    //             if(v == 0)
+    //             {
+    //                 situation = 1;
+    //             }
+    //             // if v at the down left corner
+    //             else if(v == width * (height - 1))
+    //             {
+    //                 situation = 7;
+    //             }
+    //             else
+    //             {
+    //                 situation = 4;
+    //             }
+    //         }
+    //         else if(isUpBorder(v))
+    //         {
+    //             // if v at the upper right corner
+    //             if(v == width - 1)
+    //             {
+    //                 situation = 3;
+    //             }
+    //             else
+    //             {
+    //                 situation = 2;
+    //             }
+    //         }
+    //         else if(isRightBorder(v))
+    //         {
+    //             if(v == width * height - 1)
+    //             {
+    //                 situation = 9;
+    //             }
+    //             else
+    //             {
+    //                 situation = 6;
+    //             }
+    //         }
+    //         else
+    //         {
+    //             situation = 8;
+    //         }
+    //     }
+    //     else
+    //     {
+    //         situation = 5;
+    //     }
+    //     switch (situation)
+    //     {
+    //         // since width >= 3 && height >= 3 
+    //         // the following e.g v+1, v+width is always valid index
+    //     case 1:
+    //         if(v_vC[v + 1] == CellType::Ground)
+    //         {
+    //             vec.push_back(pa_verCost(v+1,1));
+    //         }
+    //         if(v_vC[v + width] == CellType::Ground)
+    //         {
+    //             vec.push_back(pa_verCost(v+width,1));
+    //         }
+    //         break;
+    //     case 2:
+    //         if(v_vC[v - 1] == CellType::Ground)
+    //         {
+    //             vec.push_back(pa_verCost(v-1,1));
+    //         }
+    //         if(v_vC[v + 1] == CellType::Ground)
+    //         {
+    //             vec.push_back(pa_verCost(v+1,1));
+    //         }
+    //         if(v_vC[v+width] == CellType::Ground)
+    //         {
+    //             vec.
+    //         }
+    //     default:
+    //         break;
+    //     }
+    // }
 }
 CostT MazeGraph::estimatedCost( VertexT from, VertexT to) const
 {
@@ -476,9 +573,21 @@ istream & operator>>(istream & is, MazeGraph & mz)
             {
                 case '#':
                     mz(w,h) = CellType::Wall;
+                    // cout << " \n# read set to wall\n";
+                    // cout << "The mz(" << w << ", " << h << "): " ;
+                    // outCellType(cout,mz(w,h));
+                    // cout << "The vertexT v: " << mz.mzCoord2VertexT(w,h)<< endl;
+                    // cout << "The corresponding v_vC[v]: ";
+                    // outCellType(cout,mz.v_vC[mz.mzCoord2VertexT(w,h)]);
                     break;
                 case '.':
                     mz(w,h) = CellType::Ground;
+                    // cout << " \n. read set to ground\n";
+                    // cout << "The mz(" << w << ", " << h << "): " ;
+                    // outCellType(cout,mz(w,h));
+                    // cout << "The vertexT v: " << mz.mzCoord2VertexT(w,h)<< endl;
+                    // cout << "The corresponding v_vC[v]: ";
+                    // outCellType(cout,mz.v_vC[mz.mzCoord2VertexT(w,h)]);
                     break;
                 default:
                     cout << "types other than # and . read\n";
@@ -487,8 +596,48 @@ istream & operator>>(istream & is, MazeGraph & mz)
             }
         }
     }
-    
+    // cout << "\nAfter reading in\n";
+    // cout << "The data of v_vC\n";
+    // v_Cell::const_iterator iter;
+    // int count = 1;
+    // for(iter = mz.v_vC.begin(); iter != mz.v_vC.end();iter++)
+    // {
+    //     cout.width(4);
+    //     if((*iter) == CellType::Wall)
+    //     {
+    //         cout << '#';
+    //     }
+    //     else if((*iter) == CellType::Ground)
+    //     {
+    //         cout << '.';
+    //     }
+    //     if(count % width == 0)
+    //     {
+    //         cout << endl;
+    //     }
+    //     count++;
+    // }
     mz.setNeighbors();
+    // cout << "\nAfter setting Neighbors\n";
+    // // v_Cell::const_iterator iter;
+    // count = 1;
+    // for(iter = mz.v_vC.begin(); iter != mz.v_vC.end();iter++)
+    // {
+    //     cout.width(4);
+    //     if((*iter) == CellType::Wall)
+    //     {
+    //         cout << '#';
+    //     }
+    //     else if((*iter) == CellType::Ground)
+    //     {
+    //         cout << '.';
+    //     }
+    //     if(count % width == 0)
+    //     {
+    //         cout << endl;
+    //     }
+    //     count++;
+    // }
     return is;
 }
 
@@ -502,6 +651,27 @@ ostream & operator<<(ostream & os, MazeGraph & mz)
     }
     size_t width = mz.width;
     size_t height = mz.height;
+    // os << "first the v_vC\n";
+    // v_Cell::const_iterator iter;
+    // int count = 1;
+    // for(iter = mz.v_vC.begin(); iter != mz.v_vC.end();iter++)
+    // {
+    //     cout.width(4);
+    //     if((*iter) == CellType::Wall)
+    //     {
+    //         cout << '#';
+    //     }
+    //     else if((*iter) == CellType::Ground)
+    //     {
+    //         cout << '.';
+    //     }
+    //     if(count % width == 0)
+    //     {
+    //         cout << endl;
+    //     }
+    //     count++;
+    // }
+
     
     for(size_t h = 1; h <= height; h++)
     {
@@ -569,6 +739,70 @@ ostream & operator<<(ostream & os, MazeGraph & mz)
             os << endl;
         }
     }
+    // os << "In ostream << \n";
+    // os << "Testing whether we can change the mz's v_vC\n";
+    // // mz.v_vC[0] = CellType::Ground;
+    // mz.v_vC[1] = CellType::Ground;
+    // mz.v_vC[width] = CellType::Ground;
+    // mz.v_vC[width+3] = CellType::Ground;
+    // mz.setNeighbors();
+    // os << "\nAfter modifying by hand\n";
+    // for(size_t h = 1; h <= height; h++)
+    // {
+    //     if(h == 1)
+    //     {
+    //         for(size_t w = 1; w <= width; w++)
+    //         {
+    //             os.width(4);
+    //             os << w;
+    //         }
+    //         os << "\n--------------------------------------------\n";
+    //     }
+    //     os.width(2);
+    //     os << h;
+    //     for(size_t w = 1; w <= width; w++)
+    //     {
+            
+    //         if(w == 1)
+    //         {
+    //             os.width(2);
+    //         }
+    //         else
+    //         {
+    //             os.width(4);
+    //         }
+            
+    //         if(mz.at(w,h) == CellType::Wall)
+    //         {
+    //             os << '#';
+    //         }
+    //         else
+    //         {
+    //             os << '.';
+    //         }
+    //     }
+    //     os << endl;
+    // }
+    // for(size_t h = 1; h <= height; h++)
+    // {
+    //     for(size_t w = 1; w <= width; w++)
+    //     {
+    //         os.width(10);
+    //         os << h;
+    //         os.width(10);
+    //         os << w <<'\t';
+    //         neighT neV = mz.getNeighbors(mz.mzCoord2VertexT(w,h));
+    //         neighT::const_iterator iter;
+    //         for(iter = neV.begin(); iter != neV.end();iter++)
+    //         {
+    //             VertexT vert = (*iter).first;
+    //             mzCoord mzC = mz.Vertex2mzCoord(vert);
+    //             os << "("<< mzC.first << "," << mzC.second<<") ";
+    //         }
+    //         os << endl;
+    //     }
+    // }
+
 
     return os;
 }
