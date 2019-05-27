@@ -65,9 +65,12 @@ public:
 };
 
 class DistCoordGraph: public CoordinateGraph {
+protected:
+    // for the heuristik 
+    int Normierung; 
 public:
-    DistCoordGraph(int num_verts= 0)
-        : CoordinateGraph(num_verts){};
+    DistCoordGraph(int normierung = 1,int num_verts= 0)
+        : CoordinateGraph(num_verts),Normierung(normierung){};
     CostT estimatedCost( VertexT from, VertexT to) const override;
     ~DistCoordGraph(){};
 };

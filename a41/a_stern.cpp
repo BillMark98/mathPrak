@@ -5,6 +5,7 @@
 #include <set>
 #include <list>
 #include <algorithm>
+#include <deque>
 // Ein Graph, der Koordinaten von Knoten speichert.
 
 #define FILE_OPEN_ERROR 4
@@ -21,12 +22,13 @@ using std::sort;
 using std::make_heap;
 using std::list;
 using std::string;
+using std::deque;
 
 typedef pair<VertexT,CostT> pairVC;
 typedef pair<VertexT,VertexT> VertexTwilling;
 struct ComparePair{
     bool operator()(const pairVC& p1, const pairVC& p2){
-        return p1.second < p2.second;
+        return p1.second > p2.second;
     }
 };
 
@@ -39,8 +41,8 @@ typedef pair<VertexT,CostTgh> VertexT_f;
 // map of two vertices
 typedef map<VertexT, VertexT> map2V;
 // vectors of VertexT_f
-typedef vector<VertexT_f> v_VertexTf;
-
+// typedef vector<VertexT_f> v_VertexTf;
+typedef deque<VertexT_f> v_VertexTf;
 struct CompareVertexTf
 {
     bool operator()(const VertexT_f & v1, const VertexT_f & v2) const
@@ -91,6 +93,7 @@ int main()
     cout << "Please enter a number (1 ~ 10)" << endl;
     int input;
     // cin >> input;
+    // input = 2;
     // Lade die zugehoerige Textdatei in einen Graphen
     ifstream inFile;
     // int Bsp;
@@ -117,7 +120,9 @@ int main()
             case 2:
             {
                 name = "daten/Graph2.dat";
-                DistCoordGraph coorG2;
+                // the largest edge is 15 
+                // so choose the normierung as 15
+                DistCoordGraph coorG2(15);
                 InputFile(inFile,name);
                 inFile >> coorG2;
                 PruefeHeuristik(coorG2);
@@ -288,14 +293,6 @@ bool traceback2(const DistanceGraph& g, VertexT start, VertexT destination, std:
 
 v_VertexTf::iterator isIn(neighbourVector::iterator & iter, v_VertexTf & vec)
 {
-    // v_VertexTf::iterator viter;
-    // for(viter = vec.begin(); viter != vec.end(); viter++)
-    // {
-    //     if((viter -> first) == vertex)
-    //     {
-    //         return &(*viter);
-    //     }
-    // }
     v_VertexTf::iterator viter;
     for(viter = vec.begin(); viter != vec.end(); viter++)
     {
@@ -305,7 +302,7 @@ v_VertexTf::iterator isIn(neighbourVector::iterator & iter, v_VertexTf & vec)
         }
     }
     return viter;
-    // return nullptr;
+
 }
 
 void Dijkstra(const DistanceGraph& g, GraphVisualizer& v,VertexT start, std::vector<CostT>& kostenZumStart) 
@@ -352,7 +349,8 @@ void Dijkstra(const DistanceGraph& g, GraphVisualizer& v,VertexT start, std::vec
     {
         // choose the node in sVC s.t D[v] minimal
         sort(vectorVC.begin(),vectorVC.end(),ComparePair());
-        pairVC firstPair(*vectorVC.begin());
+        // pairVC firstPair(*vectorVC.begin());
+        pairVC firstPair = vectorVC.back();
 #ifdef DRAW
         v.markVertex(firstPair.first,VertexStatus::Active);
 #endif
@@ -360,8 +358,9 @@ void Dijkstra(const DistanceGraph& g, GraphVisualizer& v,VertexT start, std::vec
         if(neV.empty())
         {
             // no need to check for updats just delete the first node
-            vectorVC.erase(vectorVC.begin()); // may be slow to perform this opertion
+            // vectorVC.erase(vectorVC.begin()); // may be slow to perform this opertion
             // v.markVertex(firstPair.first,VertexStatus::Done);
+            vectorVC.pop_back();
             continue;
         }
 #ifdef DRAW
@@ -391,7 +390,8 @@ void Dijkstra(const DistanceGraph& g, GraphVisualizer& v,VertexT start, std::vec
             }
         }
 
-        vectorVC.erase(vectorVC.begin()); // may be slow to perform this opertion
+        // vectorVC.erase(vectorVC.begin()); // may be slow to perform this opertion
+        vectorVC.pop_back();
 #ifdef DRAW
         v.markVertex(firstPair.first,VertexStatus::Done);
         v.draw();
@@ -430,6 +430,7 @@ bool A_star(const DistanceGraph& g,GraphVisualizer& v, VertexT start, VertexT de
     while(!openlist.empty())
     {
         VertexT_f firstVTf(*openlist.begin());
+        // VertexT_f firstVTf = openlist.back();
 #ifdef DRAW
         v.markVertex(firstVTf.first,VertexStatus::Active);
         v.draw();
@@ -513,6 +514,7 @@ bool A_star(const DistanceGraph& g,GraphVisualizer& v, VertexT start, VertexT de
 #endif
        
         openlist.erase(openlist.begin());
+        // openlist.pop_back();
         
 #ifdef DRAW        
         v.draw();

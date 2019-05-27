@@ -123,7 +123,7 @@ CostT DistCoordGraph::estimatedCost( VertexT from, VertexT to) const
     double tox = vcMap.at(to).first;
     double toy = vcMap.at(to).second;
     double distance = sqrt(pow((fromx - tox),2) + pow((fromy - toy),2));
-    return distance;
+    return distance/Normierung;
 
 }
 CostT DistSphereGraph::estimatedCost(VertexT from, VertexT to) const
