@@ -8,8 +8,12 @@
 #include <string>
 
 #define FONT_OPEN_ERROR 20
+#define NO_PATH_FOUND 21
+#define ON_PATH 5000000
+#define NOTVISITED 10000000
 using std::pair;
 using std::string;
+
 // // the pair used for saving g and h in the f = g + h for a star algo
 // typedef pair<CostT,CostT> CostTgh;
 // // the vertex and the corresponding (g,h) value
@@ -42,6 +46,7 @@ class MazeVisualizer : public GraphVisualizer
         // the colors:
         static mapRGB colormap;
         size_t charsize;
+        vector<VertexT> predecessors;
     public:
         MazeVisualizer(MazeGraph & mz, VertexT & st, VertexT & end,unsigned int modeWidth = 800,unsigned int modeHeight = 600);
         MazeVisualizer(MazeGraph & mz,unsigned int modeWidth = 800,unsigned int modeHeight = 600);
@@ -50,7 +55,7 @@ class MazeVisualizer : public GraphVisualizer
         void setStartEnd(VertexT & st, VertexT & end);
         // set the vectInfo
         void setVecInfo();
-        
+
         // set the vectInfo for the current node
         void setVertexInfo(VertexT,VertexStatus,CostT g,CostT h);
         // set the cost g h

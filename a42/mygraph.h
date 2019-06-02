@@ -27,6 +27,7 @@ using std::ifstream;
 using std::ofstream;
 using std::pair;
 using std::map;
+using std::vector;
 // the earth radius 6371 km
 #define EARTH_RADIUS 6371
 #define pi 3.1415926
