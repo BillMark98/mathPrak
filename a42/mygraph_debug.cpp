@@ -18,6 +18,7 @@ void outCellType(ostream & os,CellType & ct)
         os << "Other type\n";
     }
 }
+
 double CoordinateGraph::getMaxXcoord() const
 {
     VertexCoord::const_iterator iter;

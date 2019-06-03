@@ -9,6 +9,7 @@
 
 #define FONT_OPEN_ERROR 20
 #define NO_PATH_FOUND 21
+#define WRONT_EDGE_STATUS 22
 #define ON_PATH 5000000
 #define NOTVISITED 10000000
 // the side factor a smaller than 1/2 value
@@ -85,6 +86,7 @@ class MazeVisualizer : public GraphVisualizer
         // Aktualisiere jegliche Daten eines Knotens.
         void updateVertex(VertexT vertex, double cost, double estimate, VertexT parent, VertexStatus status);
         
+        
         // Zeichne den aktuellen Zustand des Graphen.
         void draw();
         // draw the protetype of the maze
@@ -123,7 +125,8 @@ class RouteVisualizer : public GraphVisualizer
         double a_y;
         double b_x;
         double b_y;
-        shapeSize rectShape;
+        // the radius of the vertex circle shape
+        float circShape;
         // the colors:
         static mapRGB colormap;
         size_t charsize;
@@ -131,16 +134,24 @@ class RouteVisualizer : public GraphVisualizer
     public:
         RouteVisualizer(CoordinateGraph & cg, VertexT & st, VertexT & end,unsigned int modeWidth = 800,unsigned int modeHeight = 600);
         RouteVisualizer(CoordinateGraph & cg,unsigned int modeWidth = 800,unsigned int modeHeight = 600);
-        void InitializeVectEI(CoordinateGraph & cg);
+        void InitializeVectEI();
         void setStartEnd(VertexT & st, VertexT & end);
         // set the vectInfo
         void setVecInfo();
-
+        
+        void AffineIntialize();
+        void CircInitialize();
+        // calculate the position on the graph
+        sf::Vector2f getPosition(const VertexT & v) const;
+        // get the graph visual coordinate giving back the pair<double,double>
+        coordinate getGraphVisPosition(const VertexT &v) const;
         // set the vectInfo for the current node
         void setVertexInfo(VertexT,VertexStatus,CostT g,CostT h);
         // set the cost g h
         void setVertexGH(VertexT,CostT g, CostT h);
 
+        // test whether there is an edge from vertex from to vertex to
+        bool IsEdge(const VertexT & from, const VertexT & to) const;
         // Zeige an, dass sich ein Knoten jetzt in dem angegebenen Zustand befindet.
         void markVertex(VertexT vertex, VertexStatus status);
         
@@ -150,6 +161,8 @@ class RouteVisualizer : public GraphVisualizer
         // Aktualisiere jegliche Daten eines Knotens.
         void updateVertex(VertexT vertex, double cost, double estimate, VertexT parent, VertexStatus status);
         
+        // draw an edge between two vertices
+        void drawEdge(VertexT from, VertexT to,CostT cost,EdgeStatus eds = EdgeStatus::UnknownEdge);
         // Zeichne den aktuellen Zustand des Graphen.
         void draw();
         // draw the protetype of the maze

@@ -123,8 +123,8 @@ int main()
     //testing read in files
     ifstream inFile;
     // inFile.open("daten/Graph1.dat");
-    int Bsp = 6;
-    inFile.open("daten/Maze2.dat");
+    int Bsp = 1;
+    inFile.open("daten/Graph1.dat");
     if(!inFile.is_open())
     {
         cout << "could not find the given files\n";
@@ -139,7 +139,8 @@ int main()
     // Bsp 7   Maze3
     // Bsp 8   Maze4
     // Bsp 9   Maze5
-    MazeGraph coorG1;
+    // MazeGraph coorG1;
+    DistCoordGraph coorG1;
     inFile >> coorG1;
     
     if(inFile.eof())
@@ -154,10 +155,16 @@ int main()
     {
         cout << "Input terminated by unkown reasons.\n";
     }
-    // a graph visualizer
-    MazeVisualizer v(coorG1,800,600);
+    // a graph visualizer for maze
+    // MazeVisualizer v(coorG1,800,600);
     // v.draw_raw();
     // cout << coorG1;
+
+
+    // a graph visualizer for route graph
+    RouteVisualizer rv(coorG1);
+    rv.draw_raw();
+
 
     // cout << "Test in main\n";
     // vector<CellType> vcell;
@@ -271,16 +278,16 @@ int main()
 
 
     // for visualizer test single pair test
-    vector<VertexTwilling> v_stEnd = StartZielPaare(Bsp);
-    VertexTwilling StEnd =  v_stEnd[0];
-    VertexT start = StEnd.first;
-    VertexT end = StEnd.second;
-    cout << "The start: " << start << " the goal: " << end << endl;
-    list<VertexT> weg_maze;
-    v.setStartEnd(start,end);
-    A_star(coorG1,v,start,end,weg_maze);
-    cout << "The path\n";
-    outWegMaze(coorG1,weg_maze);
+    // vector<VertexTwilling> v_stEnd = StartZielPaare(Bsp);
+    // VertexTwilling StEnd =  v_stEnd[0];
+    // VertexT start = StEnd.first;
+    // VertexT end = StEnd.second;
+    // cout << "The start: " << start << " the goal: " << end << endl;
+    // list<VertexT> weg_maze;
+    // v.setStartEnd(start,end);
+    // A_star(coorG1,v,start,end,weg_maze);
+    // cout << "The path\n";
+    // outWegMaze(coorG1,weg_maze);
 
 // *************************************************************
 

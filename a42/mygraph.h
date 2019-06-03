@@ -77,7 +77,7 @@ public:
     // virtual CostT estimatedCost( VertexT from, VertexT to) const override = 0;
     // change the coordinateGraph to a class instead of ABC for the purpose of 
     // being able to create an object for the RouteVisualizer
-    virtual CostT estimatedCost( VertexT from, VertexT to) const override;
+    virtual CostT estimatedCost( VertexT from, VertexT to) const override {return cost(from,to);}
     
     CostT cost( VertexT from, VertexT to) const override;
 

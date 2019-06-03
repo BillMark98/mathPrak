@@ -68,8 +68,8 @@ int main()
         // defines a line between the position of the circle and the coordinates (800,600)
         sf::Vertex line[] =
         {
-            sf::Vertex(sf::Vector2f(shape.getPosition())),
-            sf::Vertex(sf::Vector2f(800,600))
+            sf::Vertex(sf::Vector2f(shape.getPosition()),sf::Color::Magenta),
+            sf::Vertex(sf::Vector2f(800,600),sf::Color::Cyan)
         };
 
         window.draw(line, 2, sf::Lines); //draws the line
@@ -89,6 +89,20 @@ int main()
         text.setScale(2.f,3.f);
         // text.rotate(45.f);
         window.draw(text);
+
+
+        // a polygon 
+        sf::ConvexShape polygon;
+        polygon.setPointCount(3);
+        polygon.setPoint(0, sf::Vector2f(0, 0));
+        polygon.setPoint(1, sf::Vector2f(0, 10));
+        polygon.setPoint(2, sf::Vector2f(25, 5));
+        polygon.setOutlineColor(sf::Color::Red);
+        polygon.setFillColor(sf::Color::Yellow);
+        polygon.setOutlineThickness(5);
+        polygon.setPosition(100, 200);
+        window.draw(polygon);
+
         window.display();
     }
 

@@ -369,7 +369,7 @@ void MazeVisualizer::draw_raw()
                 float widthCoor = (i-1) * rectShape.first;
                 float heightCoor = (j-1)* rectShape.second;
                 rect.setPosition(sf::Vector2f(widthCoor,heightCoor));
-                // mainWindow.draw(rect);
+                mainWindow.draw(rect);
                 sf::Text text;
 
             }
@@ -388,6 +388,7 @@ mapRGB RouteVisualizer::colormap =
     {"White",sf::Color::White},
     {"Start",sf::Color(250,180,50)},
     {"Destination",sf::Color(240,190,45)},
+    {"UnknownVertex",sf::Color(50,50,50)},
     {"InQueue",sf::Color(100,100,150)},
     {"Done",sf::Color(10,100,10)},
     {"Active",sf::Color(255,10,10)},
@@ -397,40 +398,34 @@ mapRGB RouteVisualizer::colormap =
 
 
 RouteVisualizer::RouteVisualizer(CoordinateGraph & cg, VertexT & st, VertexT & end,unsigned int modeWidth,unsigned int modeHeight) 
-: coorG(cg),start(st),destination(end),windowWidth(modeWidth),
-windowHeight(modeHeight)
+: coorG(cg),mainWindow(sf::VideoMode(modeWidth,modeHeight),"mywindow"),start(st),destination(end),windowWidth(modeWidth),
+windowHeight(modeHeight),predecessors(coorG.numVertices(),NOTVISITED)
 {
     mainWindow.clear(colormap["LightWhite"]);
     vectInfo.resize(cg.numVertices());
-    double xMax = cg.getMaxXcoord();
-    double xMin = cg.getMinXcoord();
-    double yMax = cg.getMaxYcoord();
-    double yMin = cg.getMinYcoord();
-    double xDiff = xMax - xMin;
-    double yDiff = yMax - yMin;
-    // a_x = (1 - 2 * k)/(xMax - xMin) * windowWidth
-    // b_x = ((xMax + xMin) * k * windowWidth - xMin * windowWidth) / (xMax - xMin)
-    // s.t a_x * xMin + b = k * windowWidth
-    // a_x * xMax + b = (1 - k) * windowWidth, where k is the SIDE_FACTOR
-    
-    a_x = (1 - 2 * SIDE_FACTOR)/(xMax - xMin) * windowWidth;
-    b_x = ((xMax + xMin) * SIDE_FACTOR - xMin)* windowWidth / (xMax - xMin);
-
-    a_y = (1 - 2 * SIDE_FACTOR)/(yMax - yMin) * windowWidth;
-    b_y = ((yMax + yMin) * SIDE_FACTOR - yMin)* windowWidth / (yMax - yMin);
-    InitializeVectEI(cg);
+    AffineIntialize();
+    InitializeVectEI();
+    CircInitialize();
     // rectShape = shapeSize(len,hei);
     // charsize = (size_t)MIN(rectShape.first,rectShape.second);
 }
 RouteVisualizer::RouteVisualizer(CoordinateGraph & cg,unsigned int modeWidth,unsigned int modeHeight)
-: coorG(cg),windowWidth(modeWidth),windowHeight(modeHeight)
+: coorG(cg),mainWindow(sf::VideoMode(modeWidth,modeHeight),"mywindow"),windowWidth(modeWidth),windowHeight(modeHeight),predecessors(coorG.numVertices(),NOTVISITED)
 {
     mainWindow.clear(colormap["LightWhite"]);
     vectInfo.resize(cg.numVertices());
-    double xMax = cg.getMaxXcoord();
-    double xMin = cg.getMinXcoord();
-    double yMax = cg.getMaxYcoord();
-    double yMin = cg.getMinYcoord();
+    AffineIntialize();
+    InitializeVectEI();
+    CircInitialize();
+}
+void RouteVisualizer::AffineIntialize()
+{
+    double xMax = coorG.getMaxXcoord();
+    double xMin = coorG.getMinXcoord();
+    double yMax = coorG.getMaxYcoord();
+    double yMin = coorG.getMinYcoord();
+    cout << "xMax : " << xMax << "\txMin: " << xMin << endl;
+    cout << "yMax : " << yMax << "\tyMin: " << yMin << endl;
     double xDiff = xMax - xMin;
     double yDiff = yMax - yMin;
     // a_x = (1 - 2 * k)/(xMax - xMin) * windowWidth
@@ -438,21 +433,40 @@ RouteVisualizer::RouteVisualizer(CoordinateGraph & cg,unsigned int modeWidth,uns
     // s.t a_x * xMin + b = k * windowWidth
     // a_x * xMax + b = (1 - k) * windowWidth, where k is the SIDE_FACTOR
     
-    a_x = (1 - 2 * SIDE_FACTOR)/(xMax - xMin) * windowWidth;
-    b_x = ((xMax + xMin) * SIDE_FACTOR - xMin)* windowWidth / (xMax - xMin);
-
-    a_y = (1 - 2 * SIDE_FACTOR)/(yMax - yMin) * windowWidth;
-    b_y = ((yMax + yMin) * SIDE_FACTOR - yMin)* windowWidth / (yMax - yMin);
-    InitializeVectEI(cg);
+    a_x = (1.0 - 2.0 * SIDE_FACTOR)/xDiff * (double)windowWidth;
+    b_x = ((xMax + xMin) * SIDE_FACTOR - xMin)* (double)windowWidth / xDiff;
+    cout << "a_x : " << a_x << "\tb_x: " << b_x << endl;
+    a_y = (1.0 - 2.0 * SIDE_FACTOR)/yDiff * (double)windowHeight;
+    b_y = ((yMax + yMin) * SIDE_FACTOR - yMin)* (double)windowHeight / yDiff;
+    cout << "a_y : " << a_y << "\tb_y: " << b_y << endl;
 }
-void RouteVisualizer::InitializeVectEI(CoordinateGraph & cg)
+void RouteVisualizer::CircInitialize()
+{
+    // the circles cannot overlap with each other
+    // here the worst case the whole vertices are arranged in one row(column)
+    float s1 = (float)(1 - 2 * SIDE_FACTOR)* windowWidth/coorG.numVertices();
+    float s2 = (float)(1 - 2 * SIDE_FACTOR)* windowHeight/coorG.numVertices();
+    float bound1 = MIN(s1,s2) / 2.0;
+
+    // the radius must not exceed the edge of the window
+    float upx = (float)SIDE_FACTOR * windowWidth;
+    float upy = (float)SIDE_FACTOR * windowHeight;
+    float bound2 = MIN(upx,upy)/2.0;
+    circShape = MIN(bound1,bound2);
+    cout << "The circShape is: " << circShape << endl;
+}
+void RouteVisualizer::InitializeVectEI()
 {
     
-    size_t bound = cg.numVertices();
+    size_t bound = coorG.numVertices();
+    if(!v_eI.empty())
+    {
+        v_eI.clear();
+    }
     v_eI.resize(bound);
     for(size_t i = 0; i < bound; i++)
     {
-        DistanceGraph::NeighborT neighbors = cg.getNeighbors(i);
+        DistanceGraph::NeighborT neighbors = coorG.getNeighbors(i);
         size_t vecSize = neighbors.size();
         for(size_t index = 0; index < vecSize; index++)
         {
@@ -464,7 +478,35 @@ void RouteVisualizer::InitializeVectEI(CoordinateGraph & cg)
 }
 void RouteVisualizer::setStartEnd(VertexT & st, VertexT & end)
 {
+    vectInfo.clear();
+    vectInfo.resize(coorG.numVertices());
+    InitializeVectEI();
+    start = st;
+    destination = end;
+    predecessors.clear();
+    predecessors.resize(coorG.numVertices(),NOTVISITED);
+}
 
+sf::Vector2f RouteVisualizer::getPosition(const VertexT & v) const
+{
+    coordinate vCoord = coorG.getCoordinate(v);
+    float xAxis = a_x * vCoord.first + b_x;
+    float yAxis = a_y * vCoord.second + b_y;
+    cout << "The vertex: " << v << endl;
+    cout << "the graph position: (" << vCoord.first << " , " << vCoord.second << " )\n"; 
+    cout << "The visual position: (" << xAxis << " , " << yAxis << " )\n";
+    return sf::Vector2f(xAxis,yAxis);    
+}
+
+coordinate RouteVisualizer::getGraphVisPosition(const VertexT &v) const
+{
+    coordinate vCoord = coorG.getCoordinate(v);
+    double xAxis = a_x * vCoord.first + b_x;
+    double yAxis = a_y * vCoord.second + b_y;
+    cout << "The vertex: " << v << endl;
+    cout << "the graph position: (" << vCoord.first << " , " << vCoord.second << " )\n"; 
+    cout << "The visual position: (" << xAxis << " , " << yAxis << " )\n";
+    return coordinate(xAxis,yAxis);
 }
 // set the vectInfo
 void RouteVisualizer::setVecInfo()
@@ -481,6 +523,20 @@ void RouteVisualizer::setVertexInfo(VertexT,VertexStatus,CostT g,CostT h)
 void RouteVisualizer::setVertexGH(VertexT,CostT g, CostT h)
 {
 
+}
+
+bool RouteVisualizer::IsEdge(const VertexT & from, const VertexT & to) const
+{
+    // Assume the vertices are valid
+    vectVertexEdgeInfo::const_iterator iter;
+    for(iter = v_eI[from].begin(); iter != v_eI[from].end(); iter++)
+    {
+        if((*iter).first == to)
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 // Zeige an, dass sich ein Knoten jetzt in dem angegebenen Zustand befindet.
@@ -501,6 +557,75 @@ void RouteVisualizer::updateVertex(VertexT vertex, double cost, double estimate,
 
 }
 
+void RouteVisualizer::drawEdge(VertexT from, VertexT to,CostT cost,EdgeStatus eds)
+{
+    // Assume there is an edge from vertex from to vertex to
+    coordinate fromCoord = getGraphVisPosition(from);
+    coordinate toCoord = getGraphVisPosition(to);
+    double fromX = fromCoord.first;
+    double fromY = fromCoord.second;
+    double toX = toCoord.first;
+    double toY = toCoord.second;
+    double distance = sqrt(pow((fromX - toX),2) + pow((fromY - toY),2));
+    double lambda = circShape / distance;
+
+    double Bx,By,Ex,Ey;
+    if(IsEdge(to,from))
+    {
+        // bidirectional
+    }
+    else
+    {
+        Bx = fromX * (1 - lambda) + toX * lambda;
+        By = fromY * (1 - lambda) + toY * lambda;
+        Ex = fromX * lambda + toX * (1 - lambda);
+        Ey = fromY * lambda + toY * (1 - lambda);
+
+    }
+    string typeName;
+    // if(eds == EdgeStatus::UnknownEdge)
+    // {
+        
+    // }
+    switch (eds)
+    {
+    case EdgeStatus::UnknownEdge :
+    {
+        typeName = "UnknwonEdge";
+        break;
+    }
+    case EdgeStatus::Visited :
+    {
+        typeName = "Visited";
+        break;
+    }
+    case EdgeStatus::Active :
+    {
+        typeName = "EdgeActive";
+        break;
+    }
+    case EdgeStatus::Optimal:
+    {
+        typeName = "Optimal";
+        break;
+    }
+    default:
+    {
+        cout << "no other edge status.\n";
+        exit(WRONT_EDGE_STATUS);
+        break;
+    }
+        
+    }
+    sf::Vertex line[] =
+    {
+        sf::Vertex(sf::Vector2f(Bx,By),colormap[typeName]),
+        sf::Vertex(sf::Vector2f(Ex,Ey),colormap[typeName])
+    };
+
+    mainWindow.draw(line, 2, sf::Lines);
+    
+}
 // Zeichne den aktuellen Zustand des Graphen.
 void RouteVisualizer::draw()
 {
@@ -509,5 +634,16 @@ void RouteVisualizer::draw()
 // draw the protetype of the maze
 void RouteVisualizer::draw_raw()
 {
-
+    size_t bound = coorG.numVertices();
+    for(VertexT v = 0; v < bound; v++)
+    {
+        sf::CircleShape vcirc(circShape);
+        vcirc.setFillColor(colormap["UnknownVertex"]);
+        vcirc.setOrigin(vcirc.getRadius(),vcirc.getRadius());
+        vcirc.setPosition(getPosition(v));
+        
+        mainWindow.draw(vcirc);
+    }
+    mainWindow.display();
+    sf::sleep(sf::seconds(2));
 }
