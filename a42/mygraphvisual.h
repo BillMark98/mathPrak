@@ -12,6 +12,15 @@
 #define WRONT_EDGE_STATUS 22
 #define ON_PATH 5000000
 #define NOTVISITED 10000000
+// the relative size of arrow of an edge of a directed graph
+// compared with the radius of the vertex
+#define ARROW_SCALE 1
+#define TEXT_SCALE 1
+// the relative dist from the text showing the weight of the edge
+// to the edge itself, compared with the radius of the vertex
+#define TEXT_TO_LINE_SCALE 1
+// the precision of the decimal
+#define PRECISION 2
 // the side factor a smaller than 1/2 value
 // the min of vertices of a graph xMin will be 
 // mapped to SIDE_FACTOR * windowWidth and xMax will be
@@ -130,6 +139,7 @@ class RouteVisualizer : public GraphVisualizer
         // the colors:
         static mapRGB colormap;
         size_t charsize;
+        // size_t textsize;
         vector<VertexT> predecessors;
     public:
         RouteVisualizer(CoordinateGraph & cg, VertexT & st, VertexT & end,unsigned int modeWidth = 800,unsigned int modeHeight = 600);

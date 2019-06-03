@@ -2,6 +2,9 @@
 
 #define MIN(X,Y) ((X) < (Y) ? (X) : (Y))
 // using DistanceGraph::NeighborT;
+
+// for outputting coordinates
+ostream & outCoord(ostream & os,double x1,double x2);
 mapRGB MazeVisualizer::colormap = 
 {
     {"LightBlack",sf::Color(150,150,150)},
@@ -12,6 +15,10 @@ mapRGB MazeVisualizer::colormap =
     {"InQueue",sf::Color(100,100,150)},
     {"Done",sf::Color(10,100,10)},
     {"Active",sf::Color(255,10,10)},
+    {"UnknwonEdge",sf::Color(40,40,40)},
+    {"Visited",sf::Color(150,150,10)},
+    {"EdgeActive",sf::Color(150,10,10)},
+    {"Optimal",sf::Color(80,50,200)},
     {"Route",sf::Color(250,250,100)},
     {"Text",sf::Color(135,250,250)}
 };
@@ -393,6 +400,7 @@ mapRGB RouteVisualizer::colormap =
     {"Done",sf::Color(10,100,10)},
     {"Active",sf::Color(255,10,10)},
     {"Route",sf::Color(250,250,100)},
+    {"Arrow",sf::Color(100,150,80)},
     {"Text",sf::Color(135,250,250)}
 };
 
@@ -454,6 +462,14 @@ void RouteVisualizer::CircInitialize()
     float bound2 = MIN(upx,upy)/2.0;
     circShape = MIN(bound1,bound2);
     cout << "The circShape is: " << circShape << endl;
+    // set the charsize
+    charsize = (size_t)circShape * TEXT_SCALE;
+    cout << "The char size is " << charsize << endl;
+    if(charsize < 1)
+    {
+        cout << "the calculated charsize is too small, set to 2\n";
+        charsize = 2;
+    }
 }
 void RouteVisualizer::InitializeVectEI()
 {
@@ -559,20 +575,185 @@ void RouteVisualizer::updateVertex(VertexT vertex, double cost, double estimate,
 
 void RouteVisualizer::drawEdge(VertexT from, VertexT to,CostT cost,EdgeStatus eds)
 {
+    // // Assume there is an edge from vertex from to vertex to
+    // coordinate fromCoord = getGraphVisPosition(from);
+    // coordinate toCoord = getGraphVisPosition(to);
+    // double fromX = fromCoord.first;
+    // double fromY = fromCoord.second;
+    // double toX = toCoord.first;
+    // double toY = toCoord.second;
+    // double distance = sqrt(pow((fromX - toX),2) + pow((fromY - toY),2));
+    // double lambda = circShape / distance;
+
+    // cout << "The from graph visual coord: (" << fromX << " , " << fromY << ")\n";
+    // cout << "The to graph visual coord: (" << toX << " , " << toY << ")\n";
+    // double Bx,By,Ex,Ey;
+    // double e45fx = sqrt(2)/2 * (((toX - fromX) - (toY - fromY))/distance);
+    // double e45fy = sqrt(2)/2 * (((toX - fromX) + (toY - fromY))/distance);
+    // cout << "e45f:";
+    // outCoord(cout,e45fx,e45fy)<< endl;
+    // // unit vector 90 degree rotated from e_l
+    // double eVx = (toY - fromY) / distance;
+    // double eVy = (fromX - toX) / distance;
+    // cout << "eV:";
+    // outCoord(cout,eVx,eVy)<< endl;
+    
+    // double e45tx = e45fy;
+    // double e45ty = -e45fx;
+    // cout << "e45t:";
+    // outCoord(cout,e45tx,e45ty) << endl;
+    // if(IsEdge(to,from))
+    // {
+    //     // bidirectional
+    //     Bx = fromX + circShape * e45fx;
+    //     By = fromY + circShape * e45fy;
+    //     Ex = toX + circShape * e45tx;
+    //     Ey = toY + circShape * e45ty;
+    // }
+    // else
+    // {
+    //     Bx = fromX * (1 - lambda) + toX * lambda;
+    //     By = fromY * (1 - lambda) + toY * lambda;
+    //     Ex = fromX * lambda + toX * (1 - lambda);
+    //     Ey = fromY * lambda + toY * (1 - lambda);
+
+    // }
+
+    // cout << "the B coord: ";
+    // outCoord(cout,Bx,By) << endl;
+    // cout << "the E coord: ";
+    // outCoord(cout,Ex,Ey) << endl;
+
+    // string typeName;
+    // // if(eds == EdgeStatus::UnknownEdge)
+    // // {
+        
+    // // }
+    // switch (eds)
+    // {
+    // case EdgeStatus::UnknownEdge :
+    // {
+    //     typeName = "UnknwonEdge";
+    //     break;
+    // }
+    // case EdgeStatus::Visited :
+    // {
+    //     typeName = "Visited";
+    //     break;
+    // }
+    // case EdgeStatus::Active :
+    // {
+    //     typeName = "EdgeActive";
+    //     break;
+    // }
+    // case EdgeStatus::Optimal:
+    // {
+    //     typeName = "Optimal";
+    //     break;
+    // }
+    // default:
+    // {
+    //     cout << "no other edge status.\n";
+    //     exit(WRONT_EDGE_STATUS);
+    //     break;
+    // }
+        
+    // }
+    // sf::Vertex line[] =
+    // {
+    //     sf::Vertex(sf::Vector2f(Bx,By),colormap[typeName]),
+    //     sf::Vertex(sf::Vector2f(Ex,Ey),colormap[typeName])
+    // };
+
+    // mainWindow.draw(line, 2, sf::Lines);
+    // double arrLx = Ex + sqrt(2)/2 * circShape * ARROW_SCALE * e45tx;
+    // double arrLy = Ey + sqrt(2)/2 * circShape * ARROW_SCALE * e45ty;
+
+    // double arrRx = Ex - sqrt(2)/2 * circShape * ARROW_SCALE * e45fx;
+    // double arrRy = Ey - sqrt(2)/2 * circShape * ARROW_SCALE * e45fy;
+
+    // // draw the arrow
+    // sf::ConvexShape polygon;
+    // polygon.setPointCount(3);
+    // polygon.setPoint(0, sf::Vector2f(arrLx, arrLy));
+    // polygon.setPoint(1, sf::Vector2f(Ex, Ey));
+    // polygon.setPoint(2, sf::Vector2f(arrRx, arrRy));
+    // polygon.setFillColor(colormap["Arrow"]);
+    // mainWindow.draw(polygon);
+    // cout << "polygon \n";
+    // cout << "arrL coord: ";
+    // outCoord(cout,arrLx,arrLy)<< endl;
+    // cout << "arrR coord: ";
+    // outCoord(cout,arrRx,arrRy) << endl;
+
+    // // draw the text
+    // sf::Font font;
+    // if(!font.loadFromFile("font/BebasNeue-Regular.ttf"))
+    // {
+    //     cout << "the file could not found\n";
+    //     exit(FONT_OPEN_ERROR);
+    // }
+    // sf::Text text;
+    // // have to set Font or else the text wont be displayed
+    // text.setFont(font);
+    // text.setCharacterSize(charsize);
+    // // std::string edgecost = std::to_string(cost).substr(0, std::to_string(cost).find(".") + PRECISION + 1);
+    // // but all the graph have weights of integer
+    // // so could use
+    // string edgecost = std::to_string((size_t)cost);
+    // text.setString(edgecost);
+    // size_t len = edgecost.length();
+    // text.setOrigin(sf::Vector2f(charsize * len / 2,charsize / 2));
+    // double Tx = 1/2 * (fromX + toX) + circShape * TEXT_TO_LINE_SCALE * eVx;
+    // double Ty = 1/2 * (fromY + toY) + circShape * TEXT_TO_LINE_SCALE * eVy;
+    // text.setPosition(Tx,Ty);
+    // cout << "Text Origin: ";
+    // outCoord(cout,charsize * len / 2,charsize / 2);
+    // cout << "Text Position: ";
+    // outCoord(cout,Tx,Ty) << endl;
+    // mainWindow.draw(text);
+
+
     // Assume there is an edge from vertex from to vertex to
+    // Beware that the coordinate is like interchange the role of x and y
+    // and rotate -90 degree 
+    // so calculate in that manner
+    // while during plotting, remember to enter the correct value of 
+    // x and y value (interchange the two)
     coordinate fromCoord = getGraphVisPosition(from);
     coordinate toCoord = getGraphVisPosition(to);
-    double fromX = fromCoord.first;
-    double fromY = fromCoord.second;
-    double toX = toCoord.first;
-    double toY = toCoord.second;
+    double fromY = fromCoord.first;
+    double fromX = fromCoord.second;
+    double toY = toCoord.first;
+    double toX = toCoord.second;
     double distance = sqrt(pow((fromX - toX),2) + pow((fromY - toY),2));
     double lambda = circShape / distance;
 
+    cout << "The from graph visual coord: (" << fromX << " , " << fromY << ")\n";
+    cout << "The to graph visual coord: (" << toX << " , " << toY << ")\n";
     double Bx,By,Ex,Ey;
+    double e45fx = sqrt(2)/2 * (((toX - fromX) - (toY - fromY))/distance);
+    double e45fy = sqrt(2)/2 * (((toX - fromX) + (toY - fromY))/distance);
+    cout << "e45f:";
+    outCoord(cout,e45fy,e45fx)<< endl;
+    // unit vector 90 degree rotated from e_l
+    double eVx = (fromY - toY ) / distance;
+    double eVy = (toX - fromX) / distance;
+    cout << "eV:";
+    outCoord(cout,eVy,eVx)<< endl;
+    
+    double e45tx = -e45fy;
+    double e45ty = e45fx;
+    cout << "e45t:";
+    // outCoord(cout,e45tx,e45ty) << endl;
+    outCoord(cout,e45ty,e45tx) << endl;
     if(IsEdge(to,from))
     {
         // bidirectional
+        Bx = fromX + circShape * e45fx;
+        By = fromY + circShape * e45fy;
+        Ex = toX + circShape * e45tx;
+        Ey = toY + circShape * e45ty;
     }
     else
     {
@@ -582,6 +763,12 @@ void RouteVisualizer::drawEdge(VertexT from, VertexT to,CostT cost,EdgeStatus ed
         Ey = fromY * lambda + toY * (1 - lambda);
 
     }
+
+    cout << "the B coord: ";
+    outCoord(cout,By,Bx) << endl;
+    cout << "the E coord: ";
+    outCoord(cout,Ey,Ex) << endl;
+
     string typeName;
     // if(eds == EdgeStatus::UnknownEdge)
     // {
@@ -619,12 +806,68 @@ void RouteVisualizer::drawEdge(VertexT from, VertexT to,CostT cost,EdgeStatus ed
     }
     sf::Vertex line[] =
     {
-        sf::Vertex(sf::Vector2f(Bx,By),colormap[typeName]),
-        sf::Vertex(sf::Vector2f(Ex,Ey),colormap[typeName])
+        sf::Vertex(sf::Vector2f(By,Bx),colormap[typeName]),
+        sf::Vertex(sf::Vector2f(Ey,Ex),colormap[typeName])
     };
 
     mainWindow.draw(line, 2, sf::Lines);
-    
+    double arrLx = Ex + sqrt(2)/2 * circShape * ARROW_SCALE * e45tx;
+    double arrLy = Ey + sqrt(2)/2 * circShape * ARROW_SCALE * e45ty;
+
+    double arrRx = Ex - sqrt(2)/2 * circShape * ARROW_SCALE * e45fx;
+    double arrRy = Ey - sqrt(2)/2 * circShape * ARROW_SCALE * e45fy;
+
+    // draw the arrow
+    sf::ConvexShape polygon;
+    polygon.setPointCount(3);
+    polygon.setPoint(0, sf::Vector2f(arrLy, arrLx));
+    polygon.setPoint(1, sf::Vector2f(Ey, Ex));
+    polygon.setPoint(2, sf::Vector2f(arrRy, arrRx));
+    polygon.setFillColor(colormap["Arrow"]);
+    mainWindow.draw(polygon);
+    cout << "polygon \n";
+    cout << "arrL coord: ";
+    // outCoord(cout,arrLx,arrLy)<< endl;
+    outCoord(cout,arrLy,arrLx)<< endl;
+    cout << "arrR coord: ";
+    // outCoord(cout,arrRx,arrRy) << endl;
+    outCoord(cout,arrRy,arrRx) << endl;
+    // draw the text
+    sf::Font font;
+    if(!font.loadFromFile("font/BebasNeue-Regular.ttf"))
+    {
+        cout << "the file could not found\n";
+        exit(FONT_OPEN_ERROR);
+    }
+    sf::Text text;
+    // have to set Font or else the text wont be displayed
+    text.setFont(font);
+    text.setCharacterSize(charsize);
+    // std::string edgecost = std::to_string(cost).substr(0, std::to_string(cost).find(".") + PRECISION + 1);
+    // but all the graph have weights of integer
+    // so could use
+    string edgecost = std::to_string((size_t)cost);
+    cout << "Edgecost : " << edgecost << endl;
+    text.setString(edgecost);
+    // have to set color or else won't display
+    text.setFillColor(colormap["Text"]);
+    size_t len = edgecost.length();
+    text.setOrigin(sf::Vector2f(charsize * len / 2,charsize / 2));
+    cout << "Calculate Tx: \n";
+    cout << "fromX + toX = " << fromX << " + " << toX << endl;
+    cout << "1/2 ans = " << 1.0/2.0 * (fromX + toX) << endl;
+    cout << "circShape * TEXT_TO_LINE_SCALE * eVx = " << circShape * TEXT_TO_LINE_SCALE * eVx << endl;
+    // have to 1.0/2.0  if 1/2 will get 0
+    double Tx = 1.0/2.0* (fromX + toX) + circShape * TEXT_TO_LINE_SCALE * eVx;
+    double Ty = 1.0/2.0 * (fromY + toY) + circShape * TEXT_TO_LINE_SCALE * eVy;
+    text.setPosition(Ty,Tx);
+    cout << "Text Origin: ";
+    outCoord(cout,charsize * len / 2,charsize / 2);
+    cout << "Text Position: ";
+    // outCoord(cout,Tx,Ty) << endl;
+    outCoord(cout,Ty,Tx) << endl;
+    mainWindow.draw(text);
+
 }
 // Zeichne den aktuellen Zustand des Graphen.
 void RouteVisualizer::draw()
@@ -643,7 +886,26 @@ void RouteVisualizer::draw_raw()
         vcirc.setPosition(getPosition(v));
         
         mainWindow.draw(vcirc);
+        vectVertexEdgeInfo::const_iterator iter;
+        for(iter = v_eI[v].begin(); iter != v_eI[v].end(); iter++)
+        {
+            drawEdge(v,(*iter).first,(*iter).second.first);
+        }
     }
     mainWindow.display();
-    sf::sleep(sf::seconds(2));
+    while(mainWindow.isOpen())
+    {
+        sf::Event event;
+        while (mainWindow.pollEvent(event)) // event loop
+        {
+            // "close requested" event: we close the window
+            if (event.type == sf::Event::Closed)
+                mainWindow.close();
+        }
+    }
+}
+ostream & outCoord(ostream & os,double x1,double x2)
+{
+    cout << "(" << x1 << ","<< x2 << ")";
+    return os;
 }
