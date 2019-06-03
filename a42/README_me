@@ -20,3 +20,10 @@ bash: result.txt: cannot overwrite existing file
 
 
 Solution:  set +o noclobber
+
+RouteVisualizer RouteVisualizer::(blablabla)
+error: expected unqualified-id before ‘(’ token
+ RouteVisualizer RouteVisualizer::(CoordinateGraph & cg, VertexT & st, VertexT & end,unsigned int modeWidth,unsigned int modeHeight)
+
+Reason: Quite simple 
+because it's RouteVisualizer::RouteVisualizer !!!!!!!!!

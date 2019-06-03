@@ -51,7 +51,8 @@ typedef pair<VertexT,CostTgh> VertexT_f;
 typedef std::pair<VertexStatus,CostTgh> VertexInfo;
 typedef std::vector<VertexInfo> v_vtInfo;
 
-
+// CoordinateGraph be a ABC or just a class?
+// if ABC then RouteVisualiser can't have a object of this type
 class CoordinateGraph : public DistanceGraph {
 protected:
     // vectors of NeighborT each element is a vector which holds the 
@@ -73,13 +74,21 @@ public:
         : DistanceGraph(num_verts){};
     const NeighborT& getNeighbors( VertexT v) const override;
     
-    virtual CostT estimatedCost( VertexT from, VertexT to) const override = 0;
+    // virtual CostT estimatedCost( VertexT from, VertexT to) const override = 0;
+    // change the coordinateGraph to a class instead of ABC for the purpose of 
+    // being able to create an object for the RouteVisualizer
+    virtual CostT estimatedCost( VertexT from, VertexT to) const override;
     
     CostT cost( VertexT from, VertexT to) const override;
 
     friend istream & operator>>(istream & is, CoordinateGraph & coorGraph);
     // naive implementation of output
     friend ostream & operator<<(ostream & os, CoordinateGraph & coorGraph); 
+    double getMaxXcoord() const;
+    double getMinXcoord() const;
+    double getMaxYcoord() const;
+    double getMinYcoord() const;
+    coordinate getCoordinate(VertexT v) const {return vcMap.at(v);}
     ~CoordinateGraph(){};
 };
 

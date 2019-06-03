@@ -1,6 +1,7 @@
 #include "mygraphvisual.h"
 
 #define MIN(X,Y) ((X) < (Y) ? (X) : (Y))
+// using DistanceGraph::NeighborT;
 mapRGB MazeVisualizer::colormap = 
 {
     {"LightBlack",sf::Color(150,150,150)},
@@ -377,4 +378,136 @@ void MazeVisualizer::draw_raw()
     mainWindow.display();
     sf::sleep(sf::seconds(2));
     // }
+}
+
+mapRGB RouteVisualizer::colormap = 
+{
+    {"LightBlack",sf::Color(150,150,150)},
+    {"LightWhite",sf::Color(240,240,240)},
+    {"Black",sf::Color(0,0,0)},
+    {"White",sf::Color::White},
+    {"Start",sf::Color(250,180,50)},
+    {"Destination",sf::Color(240,190,45)},
+    {"InQueue",sf::Color(100,100,150)},
+    {"Done",sf::Color(10,100,10)},
+    {"Active",sf::Color(255,10,10)},
+    {"Route",sf::Color(250,250,100)},
+    {"Text",sf::Color(135,250,250)}
+};
+
+
+RouteVisualizer::RouteVisualizer(CoordinateGraph & cg, VertexT & st, VertexT & end,unsigned int modeWidth,unsigned int modeHeight) 
+: coorG(cg),start(st),destination(end),windowWidth(modeWidth),
+windowHeight(modeHeight)
+{
+    mainWindow.clear(colormap["LightWhite"]);
+    vectInfo.resize(cg.numVertices());
+    double xMax = cg.getMaxXcoord();
+    double xMin = cg.getMinXcoord();
+    double yMax = cg.getMaxYcoord();
+    double yMin = cg.getMinYcoord();
+    double xDiff = xMax - xMin;
+    double yDiff = yMax - yMin;
+    // a_x = (1 - 2 * k)/(xMax - xMin) * windowWidth
+    // b_x = ((xMax + xMin) * k * windowWidth - xMin * windowWidth) / (xMax - xMin)
+    // s.t a_x * xMin + b = k * windowWidth
+    // a_x * xMax + b = (1 - k) * windowWidth, where k is the SIDE_FACTOR
+    
+    a_x = (1 - 2 * SIDE_FACTOR)/(xMax - xMin) * windowWidth;
+    b_x = ((xMax + xMin) * SIDE_FACTOR - xMin)* windowWidth / (xMax - xMin);
+
+    a_y = (1 - 2 * SIDE_FACTOR)/(yMax - yMin) * windowWidth;
+    b_y = ((yMax + yMin) * SIDE_FACTOR - yMin)* windowWidth / (yMax - yMin);
+    InitializeVectEI(cg);
+    // rectShape = shapeSize(len,hei);
+    // charsize = (size_t)MIN(rectShape.first,rectShape.second);
+}
+RouteVisualizer::RouteVisualizer(CoordinateGraph & cg,unsigned int modeWidth,unsigned int modeHeight)
+: coorG(cg),windowWidth(modeWidth),windowHeight(modeHeight)
+{
+    mainWindow.clear(colormap["LightWhite"]);
+    vectInfo.resize(cg.numVertices());
+    double xMax = cg.getMaxXcoord();
+    double xMin = cg.getMinXcoord();
+    double yMax = cg.getMaxYcoord();
+    double yMin = cg.getMinYcoord();
+    double xDiff = xMax - xMin;
+    double yDiff = yMax - yMin;
+    // a_x = (1 - 2 * k)/(xMax - xMin) * windowWidth
+    // b_x = ((xMax + xMin) * k * windowWidth - xMin * windowWidth) / (xMax - xMin)
+    // s.t a_x * xMin + b = k * windowWidth
+    // a_x * xMax + b = (1 - k) * windowWidth, where k is the SIDE_FACTOR
+    
+    a_x = (1 - 2 * SIDE_FACTOR)/(xMax - xMin) * windowWidth;
+    b_x = ((xMax + xMin) * SIDE_FACTOR - xMin)* windowWidth / (xMax - xMin);
+
+    a_y = (1 - 2 * SIDE_FACTOR)/(yMax - yMin) * windowWidth;
+    b_y = ((yMax + yMin) * SIDE_FACTOR - yMin)* windowWidth / (yMax - yMin);
+    InitializeVectEI(cg);
+}
+void RouteVisualizer::InitializeVectEI(CoordinateGraph & cg)
+{
+    
+    size_t bound = cg.numVertices();
+    v_eI.resize(bound);
+    for(size_t i = 0; i < bound; i++)
+    {
+        DistanceGraph::NeighborT neighbors = cg.getNeighbors(i);
+        size_t vecSize = neighbors.size();
+        for(size_t index = 0; index < vecSize; index++)
+        {
+            edgeInfo edI(neighbors[index].second,EdgeStatus::UnknownEdge);
+            sourceEdgeInfo sourcInfo(neighbors[index].first,edI);
+            v_eI[i].push_back(sourcInfo);
+        }
+    }
+}
+void RouteVisualizer::setStartEnd(VertexT & st, VertexT & end)
+{
+
+}
+// set the vectInfo
+void RouteVisualizer::setVecInfo()
+{
+
+}
+
+// set the vectInfo for the current node
+void RouteVisualizer::setVertexInfo(VertexT,VertexStatus,CostT g,CostT h)
+{
+
+}
+// set the cost g h
+void RouteVisualizer::setVertexGH(VertexT,CostT g, CostT h)
+{
+
+}
+
+// Zeige an, dass sich ein Knoten jetzt in dem angegebenen Zustand befindet.
+void RouteVisualizer::markVertex(VertexT vertex, VertexStatus status)
+{
+    
+}
+
+// Zeige an, dass sich eine Kante im angegebenen Zustand befindet.
+void RouteVisualizer::markEdge(EdgeT e, EdgeStatus status)
+{
+
+}
+
+// Aktualisiere jegliche Daten eines Knotens.
+void RouteVisualizer::updateVertex(VertexT vertex, double cost, double estimate, VertexT parent, VertexStatus status)
+{
+
+}
+
+// Zeichne den aktuellen Zustand des Graphen.
+void RouteVisualizer::draw()
+{
+
+}
+// draw the protetype of the maze
+void RouteVisualizer::draw_raw()
+{
+
 }
