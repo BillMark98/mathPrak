@@ -123,8 +123,8 @@ int main()
     //testing read in files
     ifstream inFile;
     // inFile.open("daten/Graph1.dat");
-    int Bsp = 10;
-    inFile.open("daten/Maze4.dat");
+    int Bsp = 6;
+    inFile.open("daten/Maze2.dat");
     if(!inFile.is_open())
     {
         cout << "could not find the given files\n";
@@ -155,7 +155,7 @@ int main()
         cout << "Input terminated by unkown reasons.\n";
     }
     // a graph visualizer
-    // MazeVisualizer v(coorG1,800,600);
+    MazeVisualizer v(coorG1,800,600);
     // v.draw_raw();
     // cout << coorG1;
 
@@ -239,18 +239,18 @@ int main()
     // Segmentation fault of the vector<CellType>?
     // because in the constructor
     // before calling setNeighbors, have to resize neighbour_vector
-    vector<CellType> labyrinth = ErzeugeLabyrinth(256,256,15);
+    // vector<CellType> labyrinth = ErzeugeLabyrinth(256,256,15);
 
-    // cout << "Vector labyrinth successfully created\n";
-    MazeGraph coorG3(256*256,labyrinth,256,256);
-    MazeVisualizer v1(coorG3,1300,1000);
-    VertexT start = coorG3.getStart();
-    VertexT dest = coorG3.getDestination();
-    cout << "The start: " << start << " the desti: " << dest << endl;
-    v1.setStartEnd(start,dest);
-    list<VertexT> weg10;
-    A_star(coorG3,v1,start,dest,weg10);
-    PruefeWeg(Bsp,weg10);
+    // // cout << "Vector labyrinth successfully created\n";
+    // MazeGraph coorG3(256*256,labyrinth,256,256);
+    // MazeVisualizer v1(coorG3,1300,1000);
+    // VertexT start = coorG3.getStart();
+    // VertexT dest = coorG3.getDestination();
+    // cout << "The start: " << start << " the desti: " << dest << endl;
+    // v1.setStartEnd(start,dest);
+    // list<VertexT> weg10;
+    // A_star(coorG3,v1,start,dest,weg10);
+    // PruefeWeg(Bsp,weg10);
     // Bsp 5   Maze1   StartZielPaare
     // Bsp 6   Maze2   StartZielPaare: 2
     // Bsp 7   Maze3   StartZielPaare: 1
@@ -271,16 +271,16 @@ int main()
 
 
     // for visualizer test single pair test
-    // vector<VertexTwilling> v_stEnd = StartZielPaare(Bsp);
-    // VertexTwilling StEnd =  v_stEnd[0];
-    // VertexT start = StEnd.first;
-    // VertexT end = StEnd.second;
-    // cout << "The start: " << start << " the goal: " << end << endl;
-    // list<VertexT> weg_maze;
-    // v.setStartEnd(start,end);
-    // A_star(coorG1,v,start,end,weg_maze);
-    // cout << "The path\n";
-    // outWegMaze(coorG1,weg_maze);
+    vector<VertexTwilling> v_stEnd = StartZielPaare(Bsp);
+    VertexTwilling StEnd =  v_stEnd[0];
+    VertexT start = StEnd.first;
+    VertexT end = StEnd.second;
+    cout << "The start: " << start << " the goal: " << end << endl;
+    list<VertexT> weg_maze;
+    v.setStartEnd(start,end);
+    A_star(coorG1,v,start,end,weg_maze);
+    cout << "The path\n";
+    outWegMaze(coorG1,weg_maze);
 
 // *************************************************************
 
@@ -578,10 +578,15 @@ bool A_star(const DistanceGraph& g,GraphVisualizer& v, VertexT start, VertexT de
         if(firstVTf.first == destination)
         {
             traceback(start,destination,weg,predecessor);
-#ifdef DRAW
-            v.markVertex(firstVTf.first,VertexStatus::Done);
-            v.draw();
-#endif
+// #ifdef DRAW
+//             // already marked the destination above 
+//             // after the while loop
+//             // can't call draw again, because
+//             // now the predecessors have to enter value 
+//             // at predecessors[ON_PATH] ---> Segmentation fault
+//             v.markVertex(firstVTf.first,VertexStatus::Done);
+//             v.draw();
+// #endif
             return true;
         }
         // get all the successors of firstVTf.first

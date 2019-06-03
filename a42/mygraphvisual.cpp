@@ -321,25 +321,25 @@ void MazeVisualizer::draw()
     if(!PathFound)
     {
         mainWindow.display();
-        // sf::sleep(sf::seconds(0.0001));
-        sf::sleep(sf::microseconds(10));
+        sf::sleep(sf::seconds(0.01));
+        // sf::sleep(sf::microseconds(10));
     }
     else
     {
         // display the window until user close it
         mainWindow.display();
-        sf::sleep(sf::seconds(2));
-        cout << "sleep ends, now the while loop\n";
-        // while(mainWindow.isOpen())
-        // {
-        //     sf::Event event;
-        //     while (mainWindow.pollEvent(event)) // event loop
-        //     {
-        //         // "close requested" event: we close the window
-        //         if (event.type == sf::Event::Closed)
-        //             mainWindow.close();
-        //     }
-        // }
+        // sf::sleep(sf::seconds(2));
+        // cout << "sleep ends, now the while loop\n";
+        while(mainWindow.isOpen())
+        {
+            sf::Event event;
+            while (mainWindow.pollEvent(event)) // event loop
+            {
+                // "close requested" event: we close the window
+                if (event.type == sf::Event::Closed)
+                    mainWindow.close();
+            }
+        }
     }
     
 }

@@ -1,0 +1,22 @@
+debug 时 一开始，undefined reference to main
+Makefile 中 -g -O3 改为-O0就解决了
+但还有后续的错误如 undefined reference to GraphVisualizer ..
+再看Makefile中，start: ...依赖文件中缺少相应的头文件，补齐就可以了
+再debug
+报错:
+ Executing task: /usr/bin/g++ -g /home/bill/Desktop/mathPrak/a42/Makefile -o /home/bill/Desktop/mathPrak/a42/Makefile <
+
+g++: fatal error: input file ‘/home/bill/Desktop/mathPrak/a42/Makefile’ is the same as output file
+compilation terminated.
+The terminal process terminated with exit code: 1
+
+Terminal will be reused by tasks, press any key to close it.
+
+删除了tasks.json 然后debug 
+cannot find g++ build tasks file 选择debug anyway 
+
+bill@bill-ThinkPad-E560:~/Desktop/mathPrak/a42$ ./start &> result.txt 
+bash: result.txt: cannot overwrite existing file
+
+
+Solution:  set +o noclobber
