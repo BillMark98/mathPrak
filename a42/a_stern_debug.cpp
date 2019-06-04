@@ -123,8 +123,8 @@ int main()
     //testing read in files
     ifstream inFile;
     // inFile.open("daten/Graph1.dat");
-    int Bsp = 2;
-    inFile.open("daten/Graph2.dat");
+    int Bsp = 4;
+    inFile.open("daten/Graph4.dat");
     if(!inFile.is_open())
     {
         cout << "could not find the given files\n";
@@ -140,7 +140,7 @@ int main()
     // Bsp 8   Maze4
     // Bsp 9   Maze5
     // MazeGraph coorG1;
-    DistCoordGraph coorG1;
+    TimeCoordGraph coorG1;
     inFile >> coorG1;
     
     if(inFile.eof())
@@ -162,7 +162,7 @@ int main()
 
 
     // a graph visualizer for route graph
-    RouteVisualizer rv(coorG1);
+    RouteVisualizer rv(coorG1,1500,1000);
     // rv.draw_raw();
 
 
@@ -323,9 +323,12 @@ int main()
 // Graph1  Start: 1   Desti: 2
 // Graph2  Start: 2   Desti: 8
 // Graph2  Start: 2   Desti: 7
+// Graph2  Start: 1   Desti: 5
+// Graph3  Start: 0   Desti: 9
 
-    VertexT start = 2;
-    VertexT desti = 7;
+// Graph4  Start: 10  Desti: 20
+    VertexT start = 10;
+    VertexT desti = 20;
     rv.setStartEnd(start,desti);
     list<VertexT> weg;
     A_star(coorG1,rv,start,desti,weg);

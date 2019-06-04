@@ -20,10 +20,10 @@
 // the relative size of arrow of an edge of a directed graph
 // compared with the radius of the vertex
 #define ARROW_SCALE 1
-#define TEXT_SCALE 1/2
+#define TEXT_SCALE 1
 // the relative dist from the text showing the weight of the edge
 // to the edge itself, compared with the radius of the vertex
-#define TEXT_TO_LINE_SCALE 1
+#define TEXT_TO_LINE_SCALE 1/4
 // the relative dist of the text CostTgh from the center of the vertex
 // compared with the radius
 #define VERTEX_TEXT_TO_RADIUS_SCALE 1/4

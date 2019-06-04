@@ -5,6 +5,8 @@
 
 // for outputting coordinates
 ostream & outCoord(ostream & os,double x1,double x2);
+// for outputting the predecessors
+ostream & outPred(ostream & os, const vector<VertexT> & vc);
 mapRGB MazeVisualizer::colormap = 
 {
     {"LightBlack",sf::Color(150,150,150)},
@@ -406,7 +408,7 @@ mapRGB RouteVisualizer::colormap =
     {"Route",sf::Color(250,250,100)},
     {"EdgeRoute",sf::Color(230,200,10)},
     {"Arrow",sf::Color(100,150,80)},
-    {"Text",sf::Color(135,250,250)}
+    {"Text",sf::Color(135,200,250)}
 };
 
 
@@ -562,10 +564,39 @@ bool RouteVisualizer::IsEdge(const VertexT & from, const VertexT & to) const
 }
 bool RouteVisualizer::IsEdgeOnPath(const VertexT & from, const VertexT & to) const
 {
-    cout << "The IsEdgeOnPath func: from " << from << "to : " << to << endl;
-    bool val1 = (predecessors[from] == ON_PATH) && (mapPath.at(from) == to);
+    // cout << "The IsEdgeOnPath func: from " << from << "to : " << to << endl;
+    bool val1 = (predecessors[from] == ON_PATH);
+    if(!val1)
+    {
+        return false;
+    }
+    mPath::const_iterator it = mapPath.find(from);
+    if(it != mapPath.end())
+    {
+        bool val2 = (it ->second == to); 
+        return (val1 && val2);
+    }
+    else
+    {
+        // could this happen?
+        // yes, only possible in one case
+        // since the destination is marked On path
+        ///ostream & outPred(ostream & os, const vector<VertexT> & vc); 
+        // in the predecessor[destination],so the first val1 is true
+        // but there is no edge going from destination on path
+        // especially mapPath does not save the information for destination
+        // i.e mathPath[destination] doesnt exist
+        // cout << "The else statement in IsEdgeOnP\n";
+        // cout << "Output the predecessors\n";
+        // outPred(cout,predecessors);
+        // cout << "\n*************************\n";
+        // cout << "the from vertex: " << from << "\t to: " << to << endl;
+        // cout << "\n***************************\n";
+        return false;
+    }
+    
     // bool val2 = (from == start) && (predecessors[to] == ON_PATH);
-    return (val1);
+    
 }
 
 // Zeige an, dass sich ein Knoten jetzt in dem angegebenen Zustand befindet.
@@ -906,7 +937,7 @@ void RouteVisualizer::drawEdge(VertexT from, VertexT to,CostT cost,EdgeStatus ed
     //  v  y axis
     float originX = charsize * len / 2.0;
     float originY = charsize / 2.0;
-    text.setOrigin(sf::Vector2f(originX,originY));
+    // text.setOrigin(sf::Vector2f(originX,originY));
     
     cout << "Calculate Tx: \n";
     cout << "fromX + toX = " << fromX << " + " << toX << endl;
@@ -987,7 +1018,16 @@ void RouteVisualizer::drawVertex(VertexT v,VertexStatus vSt,CostTgh cGH)
 
     double vX = vCoord.second;
     double vY = vCoord.first;
-    srand (time(NULL));
+    // generating a "fixed" random number
+    if(v != 0)
+    {
+        srand (v);
+    }
+    else
+    {
+        srand(1);
+    }
+    
     int deg = rand() % 1000;
     double theta = deg / 180.0 * pi;
     cout << "the degree: " << deg << endl;
@@ -1048,7 +1088,7 @@ void RouteVisualizer::drawVertex(VertexT v,VertexStatus vSt,CostTgh cGH)
     sf::Text vText;
     vText.setFont(font);
     vText.setFillColor(colormap["Text"]);
-    text.setCharacterSize(charsize);
+    vText.setCharacterSize(charsize);
     string name = std::to_string(v);
     vText.setPosition(getPosition(v));
     vText.setString(name);
@@ -1107,7 +1147,7 @@ void RouteVisualizer::draw()
      if(!PathFound)
     {
         mainWindow.display();
-        sf::sleep(sf::seconds(1));
+        sf::sleep(sf::seconds(0.1));
         // sf::sleep(sf::microseconds(10));
     }
     else
@@ -1162,5 +1202,30 @@ void RouteVisualizer::draw_raw()
 ostream & outCoord(ostream & os,double x1,double x2)
 {
     cout << "(" << x1 << ","<< x2 << ")";
+    return os;
+}
+
+ostream & outPred(ostream & os, const vector<VertexT> & vc)
+{
+    size_t bound = vc.size();
+    os << "Vertex       Predecessor\n";
+    for(VertexT v = 0; v < bound; v++)
+    {
+        os.width(4);
+        os << v;
+        os.width(6);
+        if(vc[v] == NOTVISITED)
+        {
+            os << "not visited\n";
+        }
+        else if(vc[v] == ON_PATH)
+        {
+            os << "on path\n";
+        }
+        else
+        {
+            os << vc[v] << endl;
+        }
+    }
     return os;
 }
