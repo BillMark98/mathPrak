@@ -580,6 +580,7 @@ bool A_star(const DistanceGraph& g,GraphVisualizer& v, VertexT start, VertexT de
         // cout << "The firstVTf: " << firstVTf.first << endl;
 #ifdef DRAW
         v.markVertex(firstVTf.first,VertexStatus::Done);
+        v.markEdge(EdgeT(predecessor[firstVTf.first],firstVTf.first),EdgeStatus::Optimal);
         v.draw();
 #endif
         if(firstVTf.first == destination)
@@ -616,6 +617,7 @@ bool A_star(const DistanceGraph& g,GraphVisualizer& v, VertexT start, VertexT de
             CostT distToNode = firstVTf.second.first + (iter -> second);
 #ifdef DRAW
             v.markVertex(currentNode,VertexStatus::Active);
+            v.markEdge(EdgeT(bestVertex,currentNode),EdgeStatus::Active);
             v.draw();
 #endif
 

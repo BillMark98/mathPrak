@@ -6,19 +6,26 @@
 #include "mygraph.h"
 #include <SFML/Graphics.hpp>
 #include <string>
+#include <cstdlib>
+#include <ctime>
 
 #define FONT_OPEN_ERROR 20
 #define NO_PATH_FOUND 21
 #define WRONT_EDGE_STATUS 22
+#define WRONG_VERTEX_STATUS 23
+#define NO_EDGE 24
 #define ON_PATH 5000000
 #define NOTVISITED 10000000
 // the relative size of arrow of an edge of a directed graph
 // compared with the radius of the vertex
 #define ARROW_SCALE 1
-#define TEXT_SCALE 1
+#define TEXT_SCALE 1/2
 // the relative dist from the text showing the weight of the edge
 // to the edge itself, compared with the radius of the vertex
 #define TEXT_TO_LINE_SCALE 1
+// the relative dist of the text CostTgh from the center of the vertex
+// compared with the radius
+#define VERTEX_TEXT_TO_RADIUS_SCALE 1/4
 // the precision of the decimal
 #define PRECISION 2
 // the side factor a smaller than 1/2 value
@@ -162,6 +169,9 @@ class RouteVisualizer : public GraphVisualizer
 
         // test whether there is an edge from vertex from to vertex to
         bool IsEdge(const VertexT & from, const VertexT & to) const;
+
+        // test whether the edge is on the path
+        bool IsEdgeOnPath(const VertexT & from, const VertexT & to) const;
         // Zeige an, dass sich ein Knoten jetzt in dem angegebenen Zustand befindet.
         void markVertex(VertexT vertex, VertexStatus status);
         
@@ -173,6 +183,8 @@ class RouteVisualizer : public GraphVisualizer
         
         // draw an edge between two vertices
         void drawEdge(VertexT from, VertexT to,CostT cost,EdgeStatus eds = EdgeStatus::UnknownEdge);
+        // draw Vertex
+        void drawVertex(VertexT v,VertexStatus vSt,CostTgh cGH);
         // Zeichne den aktuellen Zustand des Graphen.
         void draw();
         // draw the protetype of the maze

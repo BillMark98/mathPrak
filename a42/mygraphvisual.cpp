@@ -398,8 +398,13 @@ mapRGB RouteVisualizer::colormap =
     {"UnknownVertex",sf::Color(50,50,50)},
     {"InQueue",sf::Color(100,100,150)},
     {"Done",sf::Color(10,100,10)},
-    {"Active",sf::Color(255,10,10)},
+    {"VertexActive",sf::Color(255,10,10)},
+    {"UnknwonEdge",sf::Color(40,40,40)},
+    {"Visited",sf::Color(150,150,10)},
+    {"EdgeActive",sf::Color(150,10,10)},
+    {"Optimal",sf::Color(80,50,200)},
     {"Route",sf::Color(250,250,100)},
+    {"EdgeRoute",sf::Color(230,250,30)},
     {"Arrow",sf::Color(100,150,80)},
     {"Text",sf::Color(135,250,250)}
 };
@@ -463,7 +468,7 @@ void RouteVisualizer::CircInitialize()
     circShape = MIN(bound1,bound2);
     cout << "The circShape is: " << circShape << endl;
     // set the charsize
-    charsize = (size_t)circShape * TEXT_SCALE;
+    charsize = circShape * TEXT_SCALE;
     cout << "The char size is " << charsize << endl;
     if(charsize < 1)
     {
@@ -519,7 +524,7 @@ coordinate RouteVisualizer::getGraphVisPosition(const VertexT &v) const
     coordinate vCoord = coorG.getCoordinate(v);
     double xAxis = a_x * vCoord.first + b_x;
     double yAxis = a_y * vCoord.second + b_y;
-    cout << "The vertex: " << v << endl;
+    cout << "In getGvP, The vertex: " << v << endl;
     cout << "the graph position: (" << vCoord.first << " , " << vCoord.second << " )\n"; 
     cout << "The visual position: (" << xAxis << " , " << yAxis << " )\n";
     return coordinate(xAxis,yAxis);
@@ -554,23 +559,51 @@ bool RouteVisualizer::IsEdge(const VertexT & from, const VertexT & to) const
     }
     return false;
 }
+bool RouteVisualizer::IsEdgeOnPath(const VertexT & from, const VertexT & to) const
+{
+    return ((predecessors[from] == ON_PATH) && (predecessors[to] == ON_PATH));
+}
 
 // Zeige an, dass sich ein Knoten jetzt in dem angegebenen Zustand befindet.
 void RouteVisualizer::markVertex(VertexT vertex, VertexStatus status)
 {
-    
+    vectInfo[vertex].first = status;
 }
 
 // Zeige an, dass sich eine Kante im angegebenen Zustand befindet.
 void RouteVisualizer::markEdge(EdgeT e, EdgeStatus status)
 {
+    VertexT from = e.first;
+    VertexT to = e.second;
+    vectVertexEdgeInfo::iterator iter;
+    for(iter = v_eI[from].begin(); iter != v_eI[from].end(); iter++)
+    {
+        if((*iter).first == to)
+        {
+            break;
+        }
+    }
+    if(iter == v_eI[from].end())
+    {
+        cout << "No such given edge! " << endl;
+        exit(NO_EDGE);
+    }
+    else
+    {
+        (*iter).second.second = status;
+    }
 
 }
 
 // Aktualisiere jegliche Daten eines Knotens.
 void RouteVisualizer::updateVertex(VertexT vertex, double cost, double estimate, VertexT parent, VertexStatus status)
 {
-
+    // Assume the vertex is valid
+    vectInfo[vertex].first = status;
+    vectInfo[vertex].second.first = cost;
+    vectInfo[vertex].second.second = estimate;
+    predecessors[vertex] = parent;
+    draw();
 }
 
 void RouteVisualizer::drawEdge(VertexT from, VertexT to,CostT cost,EdgeStatus eds)
@@ -774,35 +807,42 @@ void RouteVisualizer::drawEdge(VertexT from, VertexT to,CostT cost,EdgeStatus ed
     // {
         
     // }
-    switch (eds)
+    if(IsEdgeOnPath(from,to))
     {
-    case EdgeStatus::UnknownEdge :
-    {
-        typeName = "UnknwonEdge";
-        break;
+        typeName = "EdgeRoute";
     }
-    case EdgeStatus::Visited :
+    else
     {
-        typeName = "Visited";
-        break;
-    }
-    case EdgeStatus::Active :
-    {
-        typeName = "EdgeActive";
-        break;
-    }
-    case EdgeStatus::Optimal:
-    {
-        typeName = "Optimal";
-        break;
-    }
-    default:
-    {
-        cout << "no other edge status.\n";
-        exit(WRONT_EDGE_STATUS);
-        break;
-    }
-        
+
+        switch (eds)
+        {
+        case EdgeStatus::UnknownEdge :
+        {
+            typeName = "UnknwonEdge";
+            break;
+        }
+        case EdgeStatus::Visited :
+        {
+            typeName = "Visited";
+            break;
+        }
+        case EdgeStatus::Active :
+        {
+            typeName = "EdgeActive";
+            break;
+        }
+        case EdgeStatus::Optimal:
+        {
+            typeName = "Optimal";
+            break;
+        }
+        default:
+        {
+            cout << "no other edge status.\n";
+            exit(WRONT_EDGE_STATUS);
+            break;
+        }
+        }
     }
     sf::Vertex line[] =
     {
@@ -852,7 +892,18 @@ void RouteVisualizer::drawEdge(VertexT from, VertexT to,CostT cost,EdgeStatus ed
     // have to set color or else won't display
     text.setFillColor(colormap["Text"]);
     size_t len = edgecost.length();
-    text.setOrigin(sf::Vector2f(charsize * len / 2,charsize / 2));
+
+
+    // the coordinate below is the coordination scheme in the mainWindow 
+    //  --------->  x axis
+    //  |
+    //  |
+    //  |
+    //  v  y axis
+    float originX = charsize * len / 2.0;
+    float originY = charsize / 2.0;
+    text.setOrigin(sf::Vector2f(originX,originY));
+    
     cout << "Calculate Tx: \n";
     cout << "fromX + toX = " << fromX << " + " << toX << endl;
     cout << "1/2 ans = " << 1.0/2.0 * (fromX + toX) << endl;
@@ -862,17 +913,192 @@ void RouteVisualizer::drawEdge(VertexT from, VertexT to,CostT cost,EdgeStatus ed
     double Ty = 1.0/2.0 * (fromY + toY) + circShape * TEXT_TO_LINE_SCALE * eVy;
     text.setPosition(Ty,Tx);
     cout << "Text Origin: ";
-    outCoord(cout,charsize * len / 2,charsize / 2);
+    outCoord(cout,originX,originY) << endl;
     cout << "Text Position: ";
     // outCoord(cout,Tx,Ty) << endl;
     outCoord(cout,Ty,Tx) << endl;
     mainWindow.draw(text);
 
 }
+void RouteVisualizer::drawVertex(VertexT v,VertexStatus vSt,CostTgh cGH)
+{
+    sf::CircleShape vcirc(circShape);
+    string typeName;
+    cout << "In drawVertex, The vertex : " << v << endl;
+    if(v == start)
+    {
+        typeName = "Start";
+    }
+    else if(v == destination)
+    {
+        typeName = "Destination";
+    }
+    else if(predecessors[v] == ON_PATH)
+    {
+        typeName = "Route";
+    }
+    else
+    {
+        switch(vSt)
+        {
+            case VertexStatus::UnknownVertex :
+            {
+                typeName = "UnknwonVertex";
+                break;
+            }
+            case VertexStatus::InQueue :
+            {
+                typeName = "InQueue";
+                break;
+            }
+            case VertexStatus::Active :
+            {
+                typeName = "VertexActive";
+                break;
+            }
+            case VertexStatus::Done :
+            {
+                typeName = "Done";
+                break;
+            }
+            default :
+            {
+                cout << "VertexStatus error, no such type\n";
+                exit(WRONG_VERTEX_STATUS);
+                break;
+            }
+        }
+    }
+    vcirc.setFillColor(colormap[typeName]);
+    vcirc.setOrigin(vcirc.getRadius(),vcirc.getRadius());
+    vcirc.setPosition(getPosition(v));
+    mainWindow.draw(vcirc);
+    if(v == start)
+    {
+        // don't need to draw the text
+        return;
+    }
+    // drawing the text
+    coordinate vCoord = getGraphVisPosition(v);
+
+    double vX = vCoord.second;
+    double vY = vCoord.first;
+    srand (time(NULL));
+    int deg = rand() % 1000;
+    double theta = deg / 180.0 * pi;
+    cout << "the degree: " << deg << endl;
+    cout << "the theta: " << theta << endl;
+    double lRx = circShape * cos(theta) * VERTEX_TEXT_TO_RADIUS_SCALE;
+    double lRy = circShape * sin(theta) * VERTEX_TEXT_TO_RADIUS_SCALE;
+    cout << "the lRx: " << lRx << endl;
+    cout << "the lRy: " << lRy << endl;
+
+    double textx = vX + lRx;
+    double texty = vY + lRy;
+    cout << "text position: ";
+    outCoord(cout,texty,textx) << endl;
+    sf::Font font;
+    if(!font.loadFromFile("font/BebasNeue-Regular.ttf"))
+    {
+        cout << "the file could not found\n";
+        exit(FONT_OPEN_ERROR);
+    }
+    sf::Text text;
+    // have to set Font or else the text wont be displayed
+    text.setFont(font);
+    text.setCharacterSize(charsize);
+    // std::string edgecost = std::to_string(cost).substr(0, std::to_string(cost).find(".") + PRECISION + 1);
+    // but all the graph have weights of integer
+    // so could use
+    CostT g = cGH.first;
+    CostT h = cGH.second;
+
+    string gcost =  std::to_string(g).substr(0, std::to_string(g).find(".") + PRECISION + 1);
+    string hcost =  std::to_string(h).substr(0, std::to_string(h).find(".") + PRECISION + 1);
+    string edgecost = "(" + gcost + ","+hcost +")";
+    cout << "Edgecost : " << edgecost << endl;
+    
+    text.setString(edgecost);
+    // have to set color or else won't display
+    text.setFillColor(colormap["Text"]);
+    size_t len = edgecost.length();
+    cout << "Edgecost length: " << len << endl;
+    // the coordinate below is the coordination scheme in the mainWindow 
+    //  --------->  x axis
+    //  |
+    //  |
+    //  |
+    //  v  y axis
+    float originX = charsize * len / 2.0;
+    float originY = charsize / 2.0;
+    text.setOrigin(sf::Vector2f(originX,originY));
+    cout << "Text gh origin: " ;
+    outCoord(cout,originX,originY) << endl;
+    text.setPosition(texty,textx);
+    cout << "Text gh position: " ;
+    outCoord(cout,texty,textx) << endl;
+    mainWindow.draw(text);
+}
 // Zeichne den aktuellen Zustand des Graphen.
 void RouteVisualizer::draw()
 {
-
+     bool PathFound = false;
+    // Combined with the a-star algo
+    // this is the case when destination is the top
+    // of the openlist, i.e the algo terminates and have found
+    // the path
+    if(vectInfo[destination].first == VertexStatus::Done)
+    {
+        PathFound = true;
+        VertexT platform = destination;
+        size_t count = 0;
+        size_t UpperBound = coorG.numVertices();
+        while(platform != start && (count < UpperBound))
+        {
+            // save the next hop
+            VertexT temp = predecessors[platform];
+            predecessors[platform] = ON_PATH;
+            platform = temp;
+            count++;
+        }
+        if(count >= UpperBound)
+        {
+            cout << "Error, no path from start to end\n";
+            exit(NO_PATH_FOUND);
+        }
+    }    size_t bound = coorG.numVertices();
+    for(VertexT v = 0; v < bound; v++)
+    {
+        drawVertex(v,vectInfo[v].first,vectInfo[v].second);
+        vectVertexEdgeInfo::const_iterator iter;
+        for(iter = v_eI[v].begin(); iter != v_eI[v].end(); iter++)
+        {
+            drawEdge(v,(*iter).first,(*iter).second.first,(*iter).second.second);
+        }
+    }
+     if(!PathFound)
+    {
+        mainWindow.display();
+        sf::sleep(sf::seconds(0.5));
+        // sf::sleep(sf::microseconds(10));
+    }
+    else
+    {
+        // display the window until user close it
+        mainWindow.display();
+        // sf::sleep(sf::seconds(2));
+        // cout << "sleep ends, now the while loop\n";
+        while(mainWindow.isOpen())
+        {
+            sf::Event event;
+            while (mainWindow.pollEvent(event)) // event loop
+            {
+                // "close requested" event: we close the window
+                if (event.type == sf::Event::Closed)
+                    mainWindow.close();
+            }
+        }
+    }
 }
 // draw the protetype of the maze
 void RouteVisualizer::draw_raw()
@@ -880,12 +1106,13 @@ void RouteVisualizer::draw_raw()
     size_t bound = coorG.numVertices();
     for(VertexT v = 0; v < bound; v++)
     {
-        sf::CircleShape vcirc(circShape);
-        vcirc.setFillColor(colormap["UnknownVertex"]);
-        vcirc.setOrigin(vcirc.getRadius(),vcirc.getRadius());
-        vcirc.setPosition(getPosition(v));
+        // sf::CircleShape vcirc(circShape);
+        // vcirc.setFillColor(colormap["UnknownVertex"]);
+        // vcirc.setOrigin(vcirc.getRadius(),vcirc.getRadius());
+        // vcirc.setPosition(getPosition(v));
         
-        mainWindow.draw(vcirc);
+        // mainWindow.draw(vcirc);
+        drawVertex(v,VertexStatus::InQueue,CostTgh(10,2.56));
         vectVertexEdgeInfo::const_iterator iter;
         for(iter = v_eI[v].begin(); iter != v_eI[v].end(); iter++)
         {
