@@ -123,8 +123,8 @@ int main()
     //testing read in files
     ifstream inFile;
     // inFile.open("daten/Graph1.dat");
-    int Bsp = 1;
-    inFile.open("daten/Graph1.dat");
+    int Bsp = 2;
+    inFile.open("daten/Graph2.dat");
     if(!inFile.is_open())
     {
         cout << "could not find the given files\n";
@@ -321,9 +321,11 @@ int main()
 
 // Testing RouteVisualizer
 // Graph1  Start: 1   Desti: 2
+// Graph2  Start: 2   Desti: 8
+// Graph2  Start: 2   Desti: 7
 
-    VertexT start = 1;
-    VertexT desti = 2;
+    VertexT start = 2;
+    VertexT desti = 7;
     rv.setStartEnd(start,desti);
     list<VertexT> weg;
     A_star(coorG1,rv,start,desti,weg);

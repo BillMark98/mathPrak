@@ -390,21 +390,21 @@ void MazeVisualizer::draw_raw()
 mapRGB RouteVisualizer::colormap = 
 {
     {"LightBlack",sf::Color(150,150,150)},
-    {"LightWhite",sf::Color(240,240,240)},
-    {"Black",sf::Color(0,0,0)},
+    {"LightWhite",sf::Color(230,230,230)},
+    {"Black",sf::Color(100,100,100)},
     {"White",sf::Color::White},
     {"Start",sf::Color(250,180,50)},
-    {"Destination",sf::Color(240,190,45)},
+    {"Destination",sf::Color(140,190,45)},
     {"UnknownVertex",sf::Color(200,200,200)},
     {"InQueue",sf::Color(100,100,150)},
     {"Done",sf::Color(10,100,10)},
     {"VertexActive",sf::Color(255,10,10)},
-    {"UnknwonEdge",sf::Color(40,40,40)},
-    {"Visited",sf::Color(150,150,10)},
+    {"UnknwonEdge",sf::Color(40,50,40)},
+    {"Visited",sf::Color(20,150,50)},
     {"EdgeActive",sf::Color(150,10,10)},
     {"Optimal",sf::Color(80,50,200)},
     {"Route",sf::Color(250,250,100)},
-    {"EdgeRoute",sf::Color(230,250,30)},
+    {"EdgeRoute",sf::Color(230,200,10)},
     {"Arrow",sf::Color(100,150,80)},
     {"Text",sf::Color(135,250,250)}
 };
@@ -414,7 +414,7 @@ RouteVisualizer::RouteVisualizer(CoordinateGraph & cg, VertexT & st, VertexT & e
 : coorG(cg),mainWindow(sf::VideoMode(modeWidth,modeHeight),"mywindow"),start(st),destination(end),windowWidth(modeWidth),
 windowHeight(modeHeight),predecessors(coorG.numVertices(),NOTVISITED)
 {
-    mainWindow.clear(colormap["Black"]);
+    mainWindow.clear(colormap["LightWhite"]);
     vectInfo.resize(cg.numVertices());
     AffineIntialize();
     InitializeVectEI();
@@ -425,7 +425,7 @@ windowHeight(modeHeight),predecessors(coorG.numVertices(),NOTVISITED)
 RouteVisualizer::RouteVisualizer(CoordinateGraph & cg,unsigned int modeWidth,unsigned int modeHeight)
 : coorG(cg),mainWindow(sf::VideoMode(modeWidth,modeHeight),"mywindow"),windowWidth(modeWidth),windowHeight(modeHeight),predecessors(coorG.numVertices(),NOTVISITED)
 {
-    mainWindow.clear(colormap["Black"]);
+    mainWindow.clear(colormap["LightWhite"]);
     vectInfo.resize(cg.numVertices());
     AffineIntialize();
     InitializeVectEI();
@@ -506,6 +506,7 @@ void RouteVisualizer::setStartEnd(VertexT & st, VertexT & end)
     destination = end;
     predecessors.clear();
     predecessors.resize(coorG.numVertices(),NOTVISITED);
+    mapPath.clear();
 }
 
 sf::Vector2f RouteVisualizer::getPosition(const VertexT & v) const
@@ -561,7 +562,10 @@ bool RouteVisualizer::IsEdge(const VertexT & from, const VertexT & to) const
 }
 bool RouteVisualizer::IsEdgeOnPath(const VertexT & from, const VertexT & to) const
 {
-    return ((predecessors[from] == ON_PATH) && (predecessors[to] == ON_PATH));
+    cout << "The IsEdgeOnPath func: from " << from << "to : " << to << endl;
+    bool val1 = (predecessors[from] == ON_PATH) && (mapPath.at(from) == to);
+    // bool val2 = (from == start) && (predecessors[to] == ON_PATH);
+    return (val1);
 }
 
 // Zeige an, dass sich ein Knoten jetzt in dem angegebenen Zustand befindet.
@@ -1038,11 +1042,22 @@ void RouteVisualizer::drawVertex(VertexT v,VertexStatus vSt,CostTgh cGH)
     cout << "Text gh position: " ;
     outCoord(cout,texty,textx) << endl;
     mainWindow.draw(text);
+
+
+    // for the text indicating which vertex
+    sf::Text vText;
+    vText.setFont(font);
+    vText.setFillColor(colormap["Text"]);
+    text.setCharacterSize(charsize);
+    string name = std::to_string(v);
+    vText.setPosition(getPosition(v));
+    vText.setString(name);
+    mainWindow.draw(vText);
 }
 // Zeichne den aktuellen Zustand des Graphen.
 void RouteVisualizer::draw()
 {
-    mainWindow.clear(colormap["Black"]);
+    mainWindow.clear(colormap["LightWhite"]);
      bool PathFound = false;
     // Combined with the a-star algo
     // this is the case when destination is the top
@@ -1058,6 +1073,12 @@ void RouteVisualizer::draw()
         {
             // save the next hop
             VertexT temp = predecessors[platform];
+            mapPath[temp] = platform;
+            if(temp == NOTVISITED)
+            {
+                cout << "The path is incomplete\n";
+                exit(PATH_INCOMPLETE);
+            }
             predecessors[platform] = ON_PATH;
             platform = temp;
             count++;
@@ -1067,6 +1088,12 @@ void RouteVisualizer::draw()
             cout << "Error, no path from start to end\n";
             exit(NO_PATH_FOUND);
         }
+        else
+        {
+            // still need to modify start
+            predecessors[start] = ON_PATH;
+        }
+        
     }    size_t bound = coorG.numVertices();
     for(VertexT v = 0; v < bound; v++)
     {
@@ -1080,7 +1107,7 @@ void RouteVisualizer::draw()
      if(!PathFound)
     {
         mainWindow.display();
-        sf::sleep(sf::seconds(0.5));
+        sf::sleep(sf::seconds(1));
         // sf::sleep(sf::microseconds(10));
     }
     else

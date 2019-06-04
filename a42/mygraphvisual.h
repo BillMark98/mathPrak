@@ -14,6 +14,7 @@
 #define WRONT_EDGE_STATUS 22
 #define WRONG_VERTEX_STATUS 23
 #define NO_EDGE 24
+#define PATH_INCOMPLETE 25
 #define ON_PATH 5000000
 #define NOTVISITED 10000000
 // the relative size of arrow of an edge of a directed graph
@@ -58,6 +59,9 @@ typedef vector<sourceEdgeInfo> vectVertexEdgeInfo;
 // vector, each element is a vector storing the edge goes
 // out of the vertex with corresponding edge information (CostT,EdgeStatus)
 typedef vector<vectVertexEdgeInfo> v_edgeInfo;
+// the map saves the path information
+// map[from] = to, means the edge from---> to is on path
+typedef map<VertexT, VertexT> mPath;
 class MazeVisualizer : public GraphVisualizer
 {
     protected:
@@ -79,6 +83,7 @@ class MazeVisualizer : public GraphVisualizer
         static mapRGB colormap;
         size_t charsize;
         vector<VertexT> predecessors;
+        mPath mapPath;
     public:
         MazeVisualizer(MazeGraph & mz, VertexT & st, VertexT & end,unsigned int modeWidth = 800,unsigned int modeHeight = 600);
         MazeVisualizer(MazeGraph & mz,unsigned int modeWidth = 800,unsigned int modeHeight = 600);
@@ -148,6 +153,7 @@ class RouteVisualizer : public GraphVisualizer
         size_t charsize;
         // size_t textsize;
         vector<VertexT> predecessors;
+        mPath mapPath;
     public:
         RouteVisualizer(CoordinateGraph & cg, VertexT & st, VertexT & end,unsigned int modeWidth = 800,unsigned int modeHeight = 600);
         RouteVisualizer(CoordinateGraph & cg,unsigned int modeWidth = 800,unsigned int modeHeight = 600);
