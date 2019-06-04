@@ -163,7 +163,7 @@ int main()
 
     // a graph visualizer for route graph
     RouteVisualizer rv(coorG1);
-    rv.draw_raw();
+    // rv.draw_raw();
 
 
     // cout << "Test in main\n";
@@ -315,6 +315,26 @@ int main()
     // maptest[1] = 2;
     // cout << maptest[1] << endl;
     // cout << maptest[0] << endl;
+
+
+//  *************************************************************
+
+// Testing RouteVisualizer
+// Graph1  Start: 1   Desti: 2
+
+    VertexT start = 1;
+    VertexT desti = 2;
+    rv.setStartEnd(start,desti);
+    list<VertexT> weg;
+    A_star(coorG1,rv,start,desti,weg);
+    // cout << "after a_star starting : " << v1 << "\t end: " << v2 << endl;
+    // for_each(weg.begin(),weg.end(),outputVertex);
+    PruefeWeg(Bsp,weg);
+
+
+// *************************************************************
+
+
 
 // *************************************************************
 
@@ -580,7 +600,14 @@ bool A_star(const DistanceGraph& g,GraphVisualizer& v, VertexT start, VertexT de
         // cout << "The firstVTf: " << firstVTf.first << endl;
 #ifdef DRAW
         v.markVertex(firstVTf.first,VertexStatus::Done);
-        v.markEdge(EdgeT(predecessor[firstVTf.first],firstVTf.first),EdgeStatus::Optimal);
+        // at the first loop the start will be extracted 
+        // in this case predecessors[start] is not well defined
+        if(firstVTf.first != start)
+        {
+
+             v.markEdge(EdgeT(predecessor[firstVTf.first],firstVTf.first),EdgeStatus::Optimal);
+        }
+       
         v.draw();
 #endif
         if(firstVTf.first == destination)
@@ -633,7 +660,8 @@ bool A_star(const DistanceGraph& g,GraphVisualizer& v, VertexT start, VertexT de
                 openlist.push_back(VertexT_f(currentNode,CostTgh(distToNode,estiCost)));
                 predecessor[currentNode] = bestVertex;
 #ifdef DRAW
-                v.updateVertex(currentNode,distToNode,estiCost,bestVertex,VertexStatus::InQueue);
+               v.markEdge(EdgeT(bestVertex,currentNode),EdgeStatus::Visited);
+               v.updateVertex(currentNode,distToNode,estiCost,bestVertex,VertexStatus::InQueue);
                 updated = true;
 #endif
                 // cout << "The predecessor maxtirx\n";
@@ -649,6 +677,7 @@ bool A_star(const DistanceGraph& g,GraphVisualizer& v, VertexT start, VertexT de
                     (*p_VertexTf).second.first = distToNode;
                     predecessor[currentNode] = bestVertex;
 #ifdef DRAW
+                    v.markEdge(EdgeT(bestVertex,currentNode),EdgeStatus::Visited);
                     v.updateVertex(currentNode,distToNode,estiCost,bestVertex,VertexStatus::InQueue);
                     updated = true;
 #endif
@@ -676,6 +705,7 @@ bool A_star(const DistanceGraph& g,GraphVisualizer& v, VertexT start, VertexT de
                         openlist.push_back(vTfNew);
                         predecessor[currentNode] = bestVertex;
 #ifdef DRAW
+                        v.markEdge(EdgeT(bestVertex,currentNode),EdgeStatus::Visited);
                         v.updateVertex(currentNode,distToNode,estiCost,bestVertex,VertexStatus::InQueue);
                         updated = true;
 #endif
@@ -691,6 +721,7 @@ bool A_star(const DistanceGraph& g,GraphVisualizer& v, VertexT start, VertexT de
 #ifdef DRAW
             if(!updated)
             {
+                v.markEdge(EdgeT(bestVertex,currentNode),EdgeStatus::Visited);
                 v.markVertex(currentNode,VertexStatus::InQueue);
                 v.draw();
             }

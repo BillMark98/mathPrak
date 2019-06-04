@@ -395,7 +395,7 @@ mapRGB RouteVisualizer::colormap =
     {"White",sf::Color::White},
     {"Start",sf::Color(250,180,50)},
     {"Destination",sf::Color(240,190,45)},
-    {"UnknownVertex",sf::Color(50,50,50)},
+    {"UnknownVertex",sf::Color(200,200,200)},
     {"InQueue",sf::Color(100,100,150)},
     {"Done",sf::Color(10,100,10)},
     {"VertexActive",sf::Color(255,10,10)},
@@ -414,7 +414,7 @@ RouteVisualizer::RouteVisualizer(CoordinateGraph & cg, VertexT & st, VertexT & e
 : coorG(cg),mainWindow(sf::VideoMode(modeWidth,modeHeight),"mywindow"),start(st),destination(end),windowWidth(modeWidth),
 windowHeight(modeHeight),predecessors(coorG.numVertices(),NOTVISITED)
 {
-    mainWindow.clear(colormap["LightWhite"]);
+    mainWindow.clear(colormap["Black"]);
     vectInfo.resize(cg.numVertices());
     AffineIntialize();
     InitializeVectEI();
@@ -425,7 +425,7 @@ windowHeight(modeHeight),predecessors(coorG.numVertices(),NOTVISITED)
 RouteVisualizer::RouteVisualizer(CoordinateGraph & cg,unsigned int modeWidth,unsigned int modeHeight)
 : coorG(cg),mainWindow(sf::VideoMode(modeWidth,modeHeight),"mywindow"),windowWidth(modeWidth),windowHeight(modeHeight),predecessors(coorG.numVertices(),NOTVISITED)
 {
-    mainWindow.clear(colormap["LightWhite"]);
+    mainWindow.clear(colormap["Black"]);
     vectInfo.resize(cg.numVertices());
     AffineIntialize();
     InitializeVectEI();
@@ -585,7 +585,7 @@ void RouteVisualizer::markEdge(EdgeT e, EdgeStatus status)
     }
     if(iter == v_eI[from].end())
     {
-        cout << "No such given edge! " << endl;
+        cout << "No such given edge! from : " << from << "\t to: " << to << endl;
         exit(NO_EDGE);
     }
     else
@@ -1042,6 +1042,7 @@ void RouteVisualizer::drawVertex(VertexT v,VertexStatus vSt,CostTgh cGH)
 // Zeichne den aktuellen Zustand des Graphen.
 void RouteVisualizer::draw()
 {
+    mainWindow.clear(colormap["Black"]);
      bool PathFound = false;
     // Combined with the a-star algo
     // this is the case when destination is the top

@@ -27,3 +27,29 @@ error: expected unqualified-id before ‘(’ token
 
 Reason: Quite simple 
 because it's RouteVisualizer::RouteVisualizer !!!!!!!!!
+
+
+
+
+
+In file included from mygraphvisual.cpp:1:0:
+mygraphvisual.h: In constructor ‘RouteVisualizer::RouteVisualizer(CoordinateGraph&, VertexT&, VertexT&, unsigned int, unsigned int)’:
+mygraphvisual.h:121:27: warning: ‘RouteVisualizer::coorG’ will be initialized after [-Wreorder]
+         CoordinateGraph & coorG;
+                           ^~~~~
+mygraphvisual.h:120:26: warning:   ‘sf::RenderWindow RouteVisualizer::mainWindow’ [-Wreorder]
+         sf::RenderWindow mainWindow;
+                          ^~~~~~~~~~
+mygraphvisual.cpp:413:1: warning:   when initialized here [-Wreorder]
+ RouteVisualizer::RouteVisualizer(CoordinateGraph & cg, VertexT & st, VertexT & end,unsigned int modeWidth,unsigned int modeHeight)
+ ^~~~~~~~~~~~~~~
+In file included from mygraphvisual.cpp:1:0:
+mygraphvisual.h: In constructor ‘RouteVisualizer::RouteVisualizer(CoordinateGraph&, unsigned int, unsigned int)’:
+mygraphvisual.h:121:27: warning: ‘RouteVisualizer::coorG’ will be initialized after [-Wreorder]
+         CoordinateGraph & coorG;
+                           ^~~~~
+mygraphvisual.h:120:26: warning:   ‘sf::RenderWindow RouteVisualizer::mainWindow’ [-Wreorder]
+         sf::RenderWindow mainWindow;
+                          ^~~~~~~~~~
+mygraphvisual.cpp:425:1: warning:   when initialized here [-Wreorder]
+ RouteVisualizer::RouteVisualizer(CoordinateGraph & cg,unsigned int modeWidth,unsigned int modeHeight)
