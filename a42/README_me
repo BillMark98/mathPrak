@@ -53,3 +53,6 @@ mygraphvisual.h:120:26: warning:   ‘sf::RenderWindow RouteVisualizer::mainWind
                           ^~~~~~~~~~
 mygraphvisual.cpp:425:1: warning:   when initialized here [-Wreorder]
  RouteVisualizer::RouteVisualizer(CoordinateGraph & cg,unsigned int modeWidth,unsigned int modeHeight)
+
+有时出现emacs ctrl+P ctrl+N 在移动cursor的时候会选中，因为当前的模式
+是选择模式，可能时之前按了ctrl+space solution： ctrl + g 清除模式

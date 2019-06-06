@@ -47,8 +47,8 @@ MazeVisualizer::MazeVisualizer(MazeGraph & mz,unsigned int modeWidth,unsigned in
     vectInfo.resize(mzGraph.numVertices());
     mzWidth = mzGraph.getWidth();
     mzHeight = mzGraph.getHeight();
-    float len = windowWidth / mzWidth;
-    float hei = windowHeight / mzHeight;
+    float len = (float) windowWidth / mzWidth;
+    float hei = (float) windowHeight / mzHeight;
     rectShape = shapeSize(len,hei);
     charsize = (size_t)MIN(rectShape.first,rectShape.second);
 }
@@ -331,8 +331,8 @@ void MazeVisualizer::draw()
     if(!PathFound)
     {
         mainWindow.display();
-        sf::sleep(sf::seconds(0.01));
-        // sf::sleep(sf::microseconds(10));
+        // sf::sleep(sf::seconds(0.001));
+        // sf::sleep(sf::microseconds(1));
     }
     else
     {
@@ -396,7 +396,7 @@ mapRGB RouteVisualizer::colormap =
     {"Black",sf::Color(100,100,100)},
     {"White",sf::Color::White},
     {"Start",sf::Color(250,180,50)},
-    {"Destination",sf::Color(140,190,45)},
+    {"Destination",sf::Color(250,150,45)},
     {"UnknownVertex",sf::Color(200,200,200)},
     {"InQueue",sf::Color(100,100,150)},
     {"Done",sf::Color(10,100,10)},
@@ -408,7 +408,8 @@ mapRGB RouteVisualizer::colormap =
     {"Route",sf::Color(250,250,100)},
     {"EdgeRoute",sf::Color(230,200,10)},
     {"Arrow",sf::Color(100,150,80)},
-    {"Text",sf::Color(135,200,250)}
+    {"Text",sf::Color(135,200,250)},
+    {"VertexText",sf::Color(10,250,10)}
 };
 
 
@@ -439,8 +440,8 @@ void RouteVisualizer::AffineIntialize()
     double xMin = coorG.getMinXcoord();
     double yMax = coorG.getMaxYcoord();
     double yMin = coorG.getMinYcoord();
-    cout << "xMax : " << xMax << "\txMin: " << xMin << endl;
-    cout << "yMax : " << yMax << "\tyMin: " << yMin << endl;
+    // cout << "xMax : " << xMax << "\txMin: " << xMin << endl;
+    // cout << "yMax : " << yMax << "\tyMin: " << yMin << endl;
     double xDiff = xMax - xMin;
     double yDiff = yMax - yMin;
     // a_x = (1 - 2 * k)/(xMax - xMin) * windowWidth
@@ -450,10 +451,10 @@ void RouteVisualizer::AffineIntialize()
     
     a_x = (1.0 - 2.0 * SIDE_FACTOR)/xDiff * (double)windowWidth;
     b_x = ((xMax + xMin) * SIDE_FACTOR - xMin)* (double)windowWidth / xDiff;
-    cout << "a_x : " << a_x << "\tb_x: " << b_x << endl;
+    // cout << "a_x : " << a_x << "\tb_x: " << b_x << endl;
     a_y = (1.0 - 2.0 * SIDE_FACTOR)/yDiff * (double)windowHeight;
     b_y = ((yMax + yMin) * SIDE_FACTOR - yMin)* (double)windowHeight / yDiff;
-    cout << "a_y : " << a_y << "\tb_y: " << b_y << endl;
+    // cout << "a_y : " << a_y << "\tb_y: " << b_y << endl;
 }
 void RouteVisualizer::CircInitialize()
 {
@@ -468,10 +469,10 @@ void RouteVisualizer::CircInitialize()
     float upy = (float)SIDE_FACTOR * windowHeight;
     float bound2 = MIN(upx,upy)/2.0;
     circShape = MIN(bound1,bound2);
-    cout << "The circShape is: " << circShape << endl;
+    // cout << "The circShape is: " << circShape << endl;
     // set the charsize
     charsize = circShape * TEXT_SCALE;
-    cout << "The char size is " << charsize << endl;
+    // cout << "The char size is " << charsize << endl;
     if(charsize < 1)
     {
         cout << "the calculated charsize is too small, set to 2\n";
@@ -516,9 +517,9 @@ sf::Vector2f RouteVisualizer::getPosition(const VertexT & v) const
     coordinate vCoord = coorG.getCoordinate(v);
     float xAxis = a_x * vCoord.first + b_x;
     float yAxis = a_y * vCoord.second + b_y;
-    cout << "The vertex: " << v << endl;
-    cout << "the graph position: (" << vCoord.first << " , " << vCoord.second << " )\n"; 
-    cout << "The visual position: (" << xAxis << " , " << yAxis << " )\n";
+    // cout << "The vertex: " << v << endl;
+    // cout << "the graph position: (" << vCoord.first << " , " << vCoord.second << " )\n"; 
+    // cout << "The visual position: (" << xAxis << " , " << yAxis << " )\n";
     return sf::Vector2f(xAxis,yAxis);    
 }
 
@@ -527,9 +528,9 @@ coordinate RouteVisualizer::getGraphVisPosition(const VertexT &v) const
     coordinate vCoord = coorG.getCoordinate(v);
     double xAxis = a_x * vCoord.first + b_x;
     double yAxis = a_y * vCoord.second + b_y;
-    cout << "In getGvP, The vertex: " << v << endl;
-    cout << "the graph position: (" << vCoord.first << " , " << vCoord.second << " )\n"; 
-    cout << "The visual position: (" << xAxis << " , " << yAxis << " )\n";
+    // cout << "In getGvP, The vertex: " << v << endl;
+    // cout << "the graph position: (" << vCoord.first << " , " << vCoord.second << " )\n"; 
+    // cout << "The visual position: (" << xAxis << " , " << yAxis << " )\n";
     return coordinate(xAxis,yAxis);
 }
 // set the vectInfo
@@ -797,24 +798,24 @@ void RouteVisualizer::drawEdge(VertexT from, VertexT to,CostT cost,EdgeStatus ed
     double distance = sqrt(pow((fromX - toX),2) + pow((fromY - toY),2));
     double lambda = circShape / distance;
 
-    cout << "The from graph visual coord: (" << fromX << " , " << fromY << ")\n";
-    cout << "The to graph visual coord: (" << toX << " , " << toY << ")\n";
+    // cout << "The from graph visual coord: (" << fromX << " , " << fromY << ")\n";
+    // cout << "The to graph visual coord: (" << toX << " , " << toY << ")\n";
     double Bx,By,Ex,Ey;
     double e45fx = sqrt(2)/2 * (((toX - fromX) - (toY - fromY))/distance);
     double e45fy = sqrt(2)/2 * (((toX - fromX) + (toY - fromY))/distance);
-    cout << "e45f:";
-    outCoord(cout,e45fy,e45fx)<< endl;
+    // cout << "e45f:";
+    // outCoord(cout,e45fy,e45fx)<< endl;
     // unit vector 90 degree rotated from e_l
     double eVx = (fromY - toY ) / distance;
     double eVy = (toX - fromX) / distance;
-    cout << "eV:";
-    outCoord(cout,eVy,eVx)<< endl;
+    // cout << "eV:";
+    // outCoord(cout,eVy,eVx)<< endl;
     
     double e45tx = -e45fy;
     double e45ty = e45fx;
-    cout << "e45t:";
-    // outCoord(cout,e45tx,e45ty) << endl;
-    outCoord(cout,e45ty,e45tx) << endl;
+    // cout << "e45t:";
+    // // outCoord(cout,e45tx,e45ty) << endl;
+    // outCoord(cout,e45ty,e45tx) << endl;
     if(IsEdge(to,from))
     {
         // bidirectional
@@ -832,10 +833,10 @@ void RouteVisualizer::drawEdge(VertexT from, VertexT to,CostT cost,EdgeStatus ed
 
     }
 
-    cout << "the B coord: ";
-    outCoord(cout,By,Bx) << endl;
-    cout << "the E coord: ";
-    outCoord(cout,Ey,Ex) << endl;
+    // cout << "the B coord: ";
+    // outCoord(cout,By,Bx) << endl;
+    // cout << "the E coord: ";
+    // outCoord(cout,Ey,Ex) << endl;
 
     string typeName;
     // if(eds == EdgeStatus::UnknownEdge)
@@ -900,13 +901,13 @@ void RouteVisualizer::drawEdge(VertexT from, VertexT to,CostT cost,EdgeStatus ed
     polygon.setPoint(2, sf::Vector2f(arrRy, arrRx));
     polygon.setFillColor(colormap["Arrow"]);
     mainWindow.draw(polygon);
-    cout << "polygon \n";
-    cout << "arrL coord: ";
+    // cout << "polygon \n";
+    // cout << "arrL coord: ";
     // outCoord(cout,arrLx,arrLy)<< endl;
-    outCoord(cout,arrLy,arrLx)<< endl;
-    cout << "arrR coord: ";
+    // outCoord(cout,arrLy,arrLx)<< endl;
+    // cout << "arrR coord: ";
     // outCoord(cout,arrRx,arrRy) << endl;
-    outCoord(cout,arrRy,arrRx) << endl;
+    // outCoord(cout,arrRy,arrRx) << endl;
     // draw the text
     sf::Font font;
     if(!font.loadFromFile("font/BebasNeue-Regular.ttf"))
@@ -922,7 +923,7 @@ void RouteVisualizer::drawEdge(VertexT from, VertexT to,CostT cost,EdgeStatus ed
     // but all the graph have weights of integer
     // so could use
     string edgecost = std::to_string((size_t)cost);
-    cout << "Edgecost : " << edgecost << endl;
+    // cout << "Edgecost : " << edgecost << endl;
     text.setString(edgecost);
     // have to set color or else won't display
     text.setFillColor(colormap["Text"]);
@@ -939,19 +940,19 @@ void RouteVisualizer::drawEdge(VertexT from, VertexT to,CostT cost,EdgeStatus ed
     float originY = charsize / 2.0;
     // text.setOrigin(sf::Vector2f(originX,originY));
     
-    cout << "Calculate Tx: \n";
-    cout << "fromX + toX = " << fromX << " + " << toX << endl;
-    cout << "1/2 ans = " << 1.0/2.0 * (fromX + toX) << endl;
-    cout << "circShape * TEXT_TO_LINE_SCALE * eVx = " << circShape * TEXT_TO_LINE_SCALE * eVx << endl;
+    // cout << "Calculate Tx: \n";
+    // cout << "fromX + toX = " << fromX << " + " << toX << endl;
+    // cout << "1/2 ans = " << 1.0/2.0 * (fromX + toX) << endl;
+    // cout << "circShape * TEXT_TO_LINE_SCALE * eVx = " << circShape * TEXT_TO_LINE_SCALE * eVx << endl;
     // have to 1.0/2.0  if 1/2 will get 0
     double Tx = 1.0/2.0* (fromX + toX) + circShape * TEXT_TO_LINE_SCALE * eVx;
     double Ty = 1.0/2.0 * (fromY + toY) + circShape * TEXT_TO_LINE_SCALE * eVy;
     text.setPosition(Ty,Tx);
-    cout << "Text Origin: ";
-    outCoord(cout,originX,originY) << endl;
-    cout << "Text Position: ";
-    // outCoord(cout,Tx,Ty) << endl;
-    outCoord(cout,Ty,Tx) << endl;
+    // cout << "Text Origin: ";
+    // outCoord(cout,originX,originY) << endl;
+    // cout << "Text Position: ";
+    // // outCoord(cout,Tx,Ty) << endl;
+    // outCoord(cout,Ty,Tx) << endl;
     mainWindow.draw(text);
 
 }
@@ -959,7 +960,7 @@ void RouteVisualizer::drawVertex(VertexT v,VertexStatus vSt,CostTgh cGH)
 {
     sf::CircleShape vcirc(circShape);
     string typeName;
-    cout << "In drawVertex, The vertex : " << v << endl;
+    // cout << "In drawVertex, The vertex : " << v << endl;
     if(v == start)
     {
         typeName = "Start";
@@ -1008,11 +1009,11 @@ void RouteVisualizer::drawVertex(VertexT v,VertexStatus vSt,CostTgh cGH)
     vcirc.setOrigin(vcirc.getRadius(),vcirc.getRadius());
     vcirc.setPosition(getPosition(v));
     mainWindow.draw(vcirc);
-    if(v == start)
-    {
-        // don't need to draw the text
-        return;
-    }
+    // if(v == start)
+    // {
+    //     // don't need to draw the text
+    //     return;
+    // }
     // drawing the text
     coordinate vCoord = getGraphVisPosition(v);
 
@@ -1030,17 +1031,17 @@ void RouteVisualizer::drawVertex(VertexT v,VertexStatus vSt,CostTgh cGH)
     
     int deg = rand() % 1000;
     double theta = deg / 180.0 * pi;
-    cout << "the degree: " << deg << endl;
-    cout << "the theta: " << theta << endl;
+    // cout << "the degree: " << deg << endl;
+    // cout << "the theta: " << theta << endl;
     double lRx = circShape * cos(theta) * VERTEX_TEXT_TO_RADIUS_SCALE;
     double lRy = circShape * sin(theta) * VERTEX_TEXT_TO_RADIUS_SCALE;
-    cout << "the lRx: " << lRx << endl;
-    cout << "the lRy: " << lRy << endl;
+    // cout << "the lRx: " << lRx << endl;
+    // cout << "the lRy: " << lRy << endl;
 
     double textx = vX + lRx;
     double texty = vY + lRy;
-    cout << "text position: ";
-    outCoord(cout,texty,textx) << endl;
+    // cout << "text position: ";
+    // outCoord(cout,texty,textx) << endl;
     sf::Font font;
     if(!font.loadFromFile("font/BebasNeue-Regular.ttf"))
     {
@@ -1060,13 +1061,13 @@ void RouteVisualizer::drawVertex(VertexT v,VertexStatus vSt,CostTgh cGH)
     string gcost =  std::to_string(g).substr(0, std::to_string(g).find(".") + PRECISION + 1);
     string hcost =  std::to_string(h).substr(0, std::to_string(h).find(".") + PRECISION + 1);
     string edgecost = "(" + gcost + ","+hcost +")";
-    cout << "Edgecost : " << edgecost << endl;
+    // cout << "Edgecost : " << edgecost << endl;
     
     text.setString(edgecost);
     // have to set color or else won't display
     text.setFillColor(colormap["Text"]);
     size_t len = edgecost.length();
-    cout << "Edgecost length: " << len << endl;
+    // cout << "Edgecost length: " << len << endl;
     // the coordinate below is the coordination scheme in the mainWindow 
     //  --------->  x axis
     //  |
@@ -1075,24 +1076,50 @@ void RouteVisualizer::drawVertex(VertexT v,VertexStatus vSt,CostTgh cGH)
     //  v  y axis
     float originX = charsize * len / 2.0;
     float originY = charsize / 2.0;
-    text.setOrigin(sf::Vector2f(originX,originY));
-    cout << "Text gh origin: " ;
-    outCoord(cout,originX,originY) << endl;
+    // text.setOrigin(sf::Vector2f(originX,originY));
+    // cout << "Text gh origin: " ;
+    // outCoord(cout,originX,originY) << endl;
     text.setPosition(texty,textx);
-    cout << "Text gh position: " ;
-    outCoord(cout,texty,textx) << endl;
+    // cout << "Text gh position: " ;
+    // outCoord(cout,texty,textx) << endl;
     mainWindow.draw(text);
 
 
     // for the text indicating which vertex
     sf::Text vText;
     vText.setFont(font);
-    vText.setFillColor(colormap["Text"]);
+    vText.setFillColor(colormap["VertexText"]);
+    vText.setOrigin(sf::Vector2f(charsize,charsize));
     vText.setCharacterSize(charsize);
     string name = std::to_string(v);
     vText.setPosition(getPosition(v));
     vText.setString(name);
     mainWindow.draw(vText);
+
+    if(v == start)
+    {
+        sf::Text vTextName;
+        vTextName.setFont(font);
+        vTextName.setFillColor(colormap["VertexText"]);
+        vTextName.setOrigin(sf::Vector2f(2*charsize,0));
+        vTextName.setCharacterSize(charsize);
+        string name = "Start";
+        vTextName.setPosition(getPosition(v));
+        vTextName.setString(name);
+        mainWindow.draw(vTextName);
+    }
+    if(v == destination)
+    {
+        sf::Text vTextName;
+        vTextName.setFont(font);
+        vTextName.setFillColor(colormap["VertexText"]);
+        vTextName.setOrigin(sf::Vector2f(2*charsize,0));
+        vTextName.setCharacterSize(charsize);
+        string name = "Goal";
+        vTextName.setPosition(getPosition(v));
+        vTextName.setString(name);
+        mainWindow.draw(vTextName);
+    }
 }
 // Zeichne den aktuellen Zustand des Graphen.
 void RouteVisualizer::draw()
@@ -1135,14 +1162,22 @@ void RouteVisualizer::draw()
         }
         
     }    size_t bound = coorG.numVertices();
+    // draw Vertices first then draw all the edges
+    // so that in case the text and the vertex overlaps
+    // the text will be above the vertex
     for(VertexT v = 0; v < bound; v++)
     {
         drawVertex(v,vectInfo[v].first,vectInfo[v].second);
+    }
+    for(VertexT v = 0; v < bound; v++)
+    {
+        // drawVertex(v,vectInfo[v].first,vectInfo[v].second);
         vectVertexEdgeInfo::const_iterator iter;
         for(iter = v_eI[v].begin(); iter != v_eI[v].end(); iter++)
         {
             drawEdge(v,(*iter).first,(*iter).second.first,(*iter).second.second);
         }
+        
     }
      if(!PathFound)
     {
@@ -1156,16 +1191,17 @@ void RouteVisualizer::draw()
         mainWindow.display();
         // sf::sleep(sf::seconds(2));
         // cout << "sleep ends, now the while loop\n";
-        while(mainWindow.isOpen())
-        {
-            sf::Event event;
-            while (mainWindow.pollEvent(event)) // event loop
-            {
-                // "close requested" event: we close the window
-                if (event.type == sf::Event::Closed)
-                    mainWindow.close();
-            }
-        }
+        // while(mainWindow.isOpen())
+        // {
+        //     sf::Event event;
+        //     while (mainWindow.pollEvent(event)) // event loop
+        //     {
+        //         // "close requested" event: we close the window
+        //         if (event.type == sf::Event::Closed)
+        //             mainWindow.close();
+        //     }
+        // }
+        sf::sleep(sf::seconds(2));
     }
 }
 // draw the protetype of the maze

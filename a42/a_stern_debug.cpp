@@ -123,8 +123,8 @@ int main()
     //testing read in files
     ifstream inFile;
     // inFile.open("daten/Graph1.dat");
-    int Bsp = 4;
-    inFile.open("daten/Graph4.dat");
+    int Bsp = 10;
+    inFile.open("daten/Maze3.dat");
     if(!inFile.is_open())
     {
         cout << "could not find the given files\n";
@@ -139,8 +139,8 @@ int main()
     // Bsp 7   Maze3
     // Bsp 8   Maze4
     // Bsp 9   Maze5
-    // MazeGraph coorG1;
-    TimeCoordGraph coorG1;
+    MazeGraph coorG1;
+    // DistCoordGraph coorG1;
     inFile >> coorG1;
     
     if(inFile.eof())
@@ -156,13 +156,13 @@ int main()
         cout << "Input terminated by unkown reasons.\n";
     }
     // a graph visualizer for maze
-    // MazeVisualizer v(coorG1,800,600);
+    MazeVisualizer v(coorG1,800,600);
     // v.draw_raw();
     // cout << coorG1;
 
 
     // a graph visualizer for route graph
-    RouteVisualizer rv(coorG1,1500,1000);
+    // RouteVisualizer rv(coorG1,1500,1000);
     // rv.draw_raw();
 
 
@@ -246,18 +246,18 @@ int main()
     // Segmentation fault of the vector<CellType>?
     // because in the constructor
     // before calling setNeighbors, have to resize neighbour_vector
-    // vector<CellType> labyrinth = ErzeugeLabyrinth(256,256,15);
+    vector<CellType> labyrinth = ErzeugeLabyrinth(256,256,15);
 
     // // cout << "Vector labyrinth successfully created\n";
-    // MazeGraph coorG3(256*256,labyrinth,256,256);
-    // MazeVisualizer v1(coorG3,1300,1000);
-    // VertexT start = coorG3.getStart();
-    // VertexT dest = coorG3.getDestination();
-    // cout << "The start: " << start << " the desti: " << dest << endl;
-    // v1.setStartEnd(start,dest);
-    // list<VertexT> weg10;
-    // A_star(coorG3,v1,start,dest,weg10);
-    // PruefeWeg(Bsp,weg10);
+    MazeGraph coorG3(256*256,labyrinth,256,256);
+    MazeVisualizer v1(coorG3,1300,1000);
+    VertexT start = coorG3.getStart();
+    VertexT dest = coorG3.getDestination();
+    cout << "The start: " << start << " the desti: " << dest << endl;
+    v1.setStartEnd(start,dest);
+    list<VertexT> weg10;
+    A_star(coorG3,v1,start,dest,weg10);
+    PruefeWeg(Bsp,weg10);
     // Bsp 5   Maze1   StartZielPaare
     // Bsp 6   Maze2   StartZielPaare: 2
     // Bsp 7   Maze3   StartZielPaare: 1
@@ -327,14 +327,14 @@ int main()
 // Graph3  Start: 0   Desti: 9
 
 // Graph4  Start: 10  Desti: 20
-    VertexT start = 10;
-    VertexT desti = 20;
-    rv.setStartEnd(start,desti);
-    list<VertexT> weg;
-    A_star(coorG1,rv,start,desti,weg);
-    // cout << "after a_star starting : " << v1 << "\t end: " << v2 << endl;
-    // for_each(weg.begin(),weg.end(),outputVertex);
-    PruefeWeg(Bsp,weg);
+    // VertexT start = 2;
+    // VertexT desti = 8;
+    // rv.setStartEnd(start,desti);
+    // list<VertexT> weg;
+    // A_star(coorG1,rv,start,desti,weg);
+    // // cout << "after a_star starting : " << v1 << "\t end: " << v2 << endl;
+    // // for_each(weg.begin(),weg.end(),outputVertex);
+    // PruefeWeg(Bsp,weg);
 
 
 // *************************************************************
@@ -350,9 +350,11 @@ int main()
     //     for(VertexT v2 = 0; v2 < coorG1.numVertices(); v2++)
     //     {
     //         list<VertexT> weg;
-    //         A_star(coorG1,v,v1,v2,weg);
-    //         // cout << "after a_star starting : " << v1 << "\t end: " << v2 << endl;
-    //         // for_each(weg.begin(),weg.end(),outputVertex);
+            
+    //         rv.setStartEnd(v1,v2);
+    //         A_star(coorG1,rv,v1,v2,weg);
+    //         cout << "after a_star starting : " << v1 << "\t end: " << v2 << endl;
+    //         for_each(weg.begin(),weg.end(),outputVertex);
     //         PruefeWeg(Bsp,weg);
     //     }
     // }
