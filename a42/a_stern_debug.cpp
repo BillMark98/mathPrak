@@ -122,9 +122,9 @@ int main()
     
     //testing read in files
     ifstream inFile;
-    // inFile.open("daten/Graph1.dat");
-    int Bsp = 10;
-    inFile.open("daten/Maze3.dat");
+    // inFile.open("daten/Graph3.dat");
+    int Bsp = 8;
+    inFile.open("daten/Maze4.dat");
     if(!inFile.is_open())
     {
         cout << "could not find the given files\n";
@@ -141,6 +141,7 @@ int main()
     // Bsp 9   Maze5
     MazeGraph coorG1;
     // DistCoordGraph coorG1;
+    
     inFile >> coorG1;
     
     if(inFile.eof())
@@ -248,7 +249,10 @@ int main()
     // before calling setNeighbors, have to resize neighbour_vector
     vector<CellType> labyrinth = ErzeugeLabyrinth(256,256,15);
 
-    // // cout << "Vector labyrinth successfully created\n";
+// Maze Visualizer
+
+
+    // // // cout << "Vector labyrinth successfully created\n";
     MazeGraph coorG3(256*256,labyrinth,256,256);
     MazeVisualizer v1(coorG3,1300,1000);
     VertexT start = coorG3.getStart();
@@ -257,7 +261,14 @@ int main()
     v1.setStartEnd(start,dest);
     list<VertexT> weg10;
     A_star(coorG3,v1,start,dest,weg10);
-    PruefeWeg(Bsp,weg10);
+    // PruefeWeg(Bsp,weg10);
+
+
+
+
+
+
+
     // Bsp 5   Maze1   StartZielPaare
     // Bsp 6   Maze2   StartZielPaare: 2
     // Bsp 7   Maze3   StartZielPaare: 1

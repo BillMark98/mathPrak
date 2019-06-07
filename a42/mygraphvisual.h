@@ -84,9 +84,15 @@ class MazeVisualizer : public GraphVisualizer
         size_t charsize;
         vector<VertexT> predecessors;
         mPath mapPath;
+        // count the number of times the draw() function is called
+        int count;
+        // indicates how many times the draw() function is muted 
+        int mute;
+        // indicates whether the Path is found
+        bool PathFound;
     public:
-        MazeVisualizer(MazeGraph & mz, VertexT & st, VertexT & end,unsigned int modeWidth = 800,unsigned int modeHeight = 600);
-        MazeVisualizer(MazeGraph & mz,unsigned int modeWidth = 800,unsigned int modeHeight = 600);
+        MazeVisualizer(MazeGraph & mz, VertexT & st, VertexT & end,unsigned int modeWidth = 800,unsigned int modeHeight = 600,int Mute = 0);
+        MazeVisualizer(MazeGraph & mz,unsigned int modeWidth = 800,unsigned int modeHeight = 600,int Mute = 0);
         ~MazeVisualizer(){}
 
         void setStartEnd(VertexT & st, VertexT & end);
@@ -154,9 +160,14 @@ class RouteVisualizer : public GraphVisualizer
         // size_t textsize;
         vector<VertexT> predecessors;
         mPath mapPath;
+        int count;
+        // indicates how many times the draw() function is muted 
+        int mute;
+        // indicates whether the Path is found
+        bool PathFound;
     public:
-        RouteVisualizer(CoordinateGraph & cg, VertexT & st, VertexT & end,unsigned int modeWidth = 800,unsigned int modeHeight = 600);
-        RouteVisualizer(CoordinateGraph & cg,unsigned int modeWidth = 800,unsigned int modeHeight = 600);
+        RouteVisualizer(CoordinateGraph & cg, VertexT & st, VertexT & end,unsigned int modeWidth = 800,unsigned int modeHeight = 600,int Mute = 0);
+        RouteVisualizer(CoordinateGraph & cg,unsigned int modeWidth = 800,unsigned int modeHeight = 600,int Mute = 0);
         void InitializeVectEI();
         void setStartEnd(VertexT & st, VertexT & end);
         // set the vectInfo

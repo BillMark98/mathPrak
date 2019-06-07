@@ -24,9 +24,9 @@ mapRGB MazeVisualizer::colormap =
     {"Route",sf::Color(250,250,100)},
     {"Text",sf::Color(135,250,250)}
 };
-MazeVisualizer::MazeVisualizer(MazeGraph & mz, VertexT & st, VertexT & end,unsigned int modeWidth,unsigned int modeHeight)
+MazeVisualizer::MazeVisualizer(MazeGraph & mz, VertexT & st, VertexT & end,unsigned int modeWidth,unsigned int modeHeight,int Mute)
 : mainWindow(sf::VideoMode(modeWidth,modeHeight),"mywindow"),mzGraph(mz),start(st),destination(end),windowWidth(modeWidth),
-windowHeight(modeHeight),predecessors(mzGraph.numVertices(),NOTVISITED)
+windowHeight(modeHeight),predecessors(mzGraph.numVertices(),NOTVISITED),mute(Mute),count(0),PathFound(false)
     
 {
     mainWindow.clear(colormap["LightBlack"]);
@@ -39,9 +39,9 @@ windowHeight(modeHeight),predecessors(mzGraph.numVertices(),NOTVISITED)
     charsize = (size_t)MIN(rectShape.first,rectShape.second);
 
 }
-MazeVisualizer::MazeVisualizer(MazeGraph & mz,unsigned int modeWidth,unsigned int modeHeight)
+MazeVisualizer::MazeVisualizer(MazeGraph & mz,unsigned int modeWidth,unsigned int modeHeight,int Mute)
 : mainWindow(sf::VideoMode(modeWidth,modeHeight),"mywindow"),mzGraph(mz),windowWidth(modeWidth),
-    windowHeight(modeHeight),predecessors(mzGraph.numVertices(),NOTVISITED)
+    windowHeight(modeHeight),predecessors(mzGraph.numVertices(),NOTVISITED),mute(Mute),count(0),PathFound(false)
 {
     mainWindow.clear(colormap["LightBlack"]);
     vectInfo.resize(mzGraph.numVertices());
@@ -114,14 +114,31 @@ void MazeVisualizer::updateVertex(VertexT vertex, double cost, double estimate, 
 // // Zeichne den aktuellen Zustand des Graphen.
 void MazeVisualizer::draw()
 {
-    bool PathFound = false;
+    if(vectInfo[destination].first == VertexStatus::Done)
+    {
+        PathFound = true;
+    }
+    // if the draw is muted, the number of call of draw is
+    // smaller than the mute and the Path is not found
+    if((mute && count < mute) && !PathFound)
+    {
+        // if mute > 0 and count < mute
+        // just update the count and return
+        count++;
+        return;
+    }
+    else if(mute)
+    {
+        // means count = mute;
+        // reset count to 0
+        count = 0;
+    }
     // Combined with the a-star algo
     // this is the case when destination is the top
     // of the openlist, i.e the algo terminates and have found
     // the path
     if(vectInfo[destination].first == VertexStatus::Done)
     {
-        PathFound = true;
         VertexT platform = destination;
         size_t count = 0;
         size_t UpperBound = mzGraph.numVertices();
@@ -331,25 +348,40 @@ void MazeVisualizer::draw()
     if(!PathFound)
     {
         mainWindow.display();
-        // sf::sleep(sf::seconds(0.001));
+        if(mute)
+        {
+            // don't sleep since the user may already 
+            // find it time consuming plotting let alone 
+            // sleep for a while
+            return;
+        }
+        sf::sleep(sf::seconds(0.1));
         // sf::sleep(sf::microseconds(1));
     }
     else
     {
         // display the window until user close it
         mainWindow.display();
-        // sf::sleep(sf::seconds(2));
-        // cout << "sleep ends, now the while loop\n";
-        while(mainWindow.isOpen())
+        if(mute)
         {
-            sf::Event event;
-            while (mainWindow.pollEvent(event)) // event loop
+            // the user may only wants to see the end result
+            // so here keep the image until the user closes it
+            while(mainWindow.isOpen())
             {
-                // "close requested" event: we close the window
-                if (event.type == sf::Event::Closed)
-                    mainWindow.close();
+                sf::Event event;
+                while (mainWindow.pollEvent(event)) // event loop
+                {
+                    // "close requested" event: we close the window
+                    if (event.type == sf::Event::Closed)
+                        mainWindow.close();
+                }
             }
         }
+        else
+        {
+            sf::sleep(sf::seconds(1));
+        }
+        
     }
     
 }
@@ -413,9 +445,9 @@ mapRGB RouteVisualizer::colormap =
 };
 
 
-RouteVisualizer::RouteVisualizer(CoordinateGraph & cg, VertexT & st, VertexT & end,unsigned int modeWidth,unsigned int modeHeight) 
+RouteVisualizer::RouteVisualizer(CoordinateGraph & cg, VertexT & st, VertexT & end,unsigned int modeWidth,unsigned int modeHeight,int Mute) 
 : coorG(cg),mainWindow(sf::VideoMode(modeWidth,modeHeight),"mywindow"),start(st),destination(end),windowWidth(modeWidth),
-windowHeight(modeHeight),predecessors(coorG.numVertices(),NOTVISITED)
+windowHeight(modeHeight),predecessors(coorG.numVertices(),NOTVISITED),mute(Mute),count(0),PathFound(false)
 {
     mainWindow.clear(colormap["LightWhite"]);
     vectInfo.resize(cg.numVertices());
@@ -425,8 +457,9 @@ windowHeight(modeHeight),predecessors(coorG.numVertices(),NOTVISITED)
     // rectShape = shapeSize(len,hei);
     // charsize = (size_t)MIN(rectShape.first,rectShape.second);
 }
-RouteVisualizer::RouteVisualizer(CoordinateGraph & cg,unsigned int modeWidth,unsigned int modeHeight)
-: coorG(cg),mainWindow(sf::VideoMode(modeWidth,modeHeight),"mywindow"),windowWidth(modeWidth),windowHeight(modeHeight),predecessors(coorG.numVertices(),NOTVISITED)
+RouteVisualizer::RouteVisualizer(CoordinateGraph & cg,unsigned int modeWidth,unsigned int modeHeight,int Mute)
+: coorG(cg),mainWindow(sf::VideoMode(modeWidth,modeHeight),"mywindow"),windowWidth(modeWidth),windowHeight(modeHeight),predecessors(coorG.numVertices(),NOTVISITED),
+mute(Mute),count(0),PathFound(false)
 {
     mainWindow.clear(colormap["LightWhite"]);
     vectInfo.resize(cg.numVertices());
@@ -468,7 +501,7 @@ void RouteVisualizer::CircInitialize()
     float upx = (float)SIDE_FACTOR * windowWidth;
     float upy = (float)SIDE_FACTOR * windowHeight;
     float bound2 = MIN(upx,upy)/2.0;
-    circShape = MIN(bound1,bound2);
+    circShape = MIN(bound1,bound2)/2;
     // cout << "The circShape is: " << circShape << endl;
     // set the charsize
     charsize = circShape * TEXT_SCALE;
@@ -1124,6 +1157,25 @@ void RouteVisualizer::drawVertex(VertexT v,VertexStatus vSt,CostTgh cGH)
 // Zeichne den aktuellen Zustand des Graphen.
 void RouteVisualizer::draw()
 {
+    if(vectInfo[destination].first == VertexStatus::Done)
+    {
+        PathFound = true;
+    }
+    // if the draw is muted, the number of call of draw is
+    // smaller than the mute and the Path is not found
+    if((mute && count < mute) && !PathFound)
+    {
+        // if mute > 0 and count < mute
+        // just update the count and return
+        count++;
+        return;
+    }
+    else if(mute)
+    {
+        // means count = mute;
+        // reset count to 0
+        count = 0;
+    }
     mainWindow.clear(colormap["LightWhite"]);
      bool PathFound = false;
     // Combined with the a-star algo
@@ -1179,9 +1231,17 @@ void RouteVisualizer::draw()
         }
         
     }
+    
      if(!PathFound)
     {
         mainWindow.display();
+        if(mute)
+        {
+            // don't sleep since the user may already 
+            // find it time consuming plotting let alone 
+            // sleep for a while
+            return;
+        }
         sf::sleep(sf::seconds(0.1));
         // sf::sleep(sf::microseconds(10));
     }
@@ -1189,19 +1249,25 @@ void RouteVisualizer::draw()
     {
         // display the window until user close it
         mainWindow.display();
-        // sf::sleep(sf::seconds(2));
-        // cout << "sleep ends, now the while loop\n";
-        // while(mainWindow.isOpen())
-        // {
-        //     sf::Event event;
-        //     while (mainWindow.pollEvent(event)) // event loop
-        //     {
-        //         // "close requested" event: we close the window
-        //         if (event.type == sf::Event::Closed)
-        //             mainWindow.close();
-        //     }
-        // }
-        sf::sleep(sf::seconds(2));
+        if(mute)
+        {
+            // the user may only wants to see the end result
+            // so here keep the image until the user closes it
+            while(mainWindow.isOpen())
+            {
+                sf::Event event;
+                while (mainWindow.pollEvent(event)) // event loop
+                {
+                    // "close requested" event: we close the window
+                    if (event.type == sf::Event::Closed)
+                        mainWindow.close();
+                }
+            }
+        }
+        else
+        {
+            sf::sleep(sf::seconds(1));
+        }
     }
 }
 // draw the protetype of the maze
