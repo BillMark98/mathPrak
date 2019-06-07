@@ -480,7 +480,12 @@ CostT MazeGraph::estimatedCost( VertexT from, VertexT to) const
 
     double cost_hori = abs(mzC1.first - mzC2.first);
     double cost_verti = abs(int(mzC1.second - mzC2.second));
-    return cost_hori + cost_verti;
+    // use a different version
+    double total = cost_hori + cost_verti;
+
+    // use a wrong heuristik a scaled two norm
+    // double total = 1000*sqrt(pow(cost_hori,2) + pow(cost_verti,2));
+    return total;
 }
 
 // to fulfill
