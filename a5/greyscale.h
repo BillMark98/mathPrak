@@ -5,6 +5,7 @@ using std::pair;
 typedef pair<int,int> XYCoord;
 
 #define SIZE_MISMATCH 2
+#define EVEN_SIZE_MASK 3
 class GreyScale
 {
     private:
@@ -42,7 +43,7 @@ class GreyScale
         GreyScale Blur() const;
         GreyScale Clamp() const;
         GreyScale Contrast() const;
-        GreyScale Convolve(const float mask[],int size = 3);
+        GreyScale Convolve(const float mask[],int size = 3) const;
         GreyScale Kirsch() const;
         GreyScale Laplace() const;
         GreyScale LinTrans(float a, float b) const;
