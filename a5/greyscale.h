@@ -1,11 +1,14 @@
 #include <iostream>
-
+#include <vector>
+#include <algorithm>
+#include <cmath>
 using namespace std;
 using std::pair;
 typedef pair<int,int> XYCoord;
 
-#define SIZE_MISMATCH 2
-#define EVEN_SIZE_MASK 3
+#define SIZE_MISMATCH 22
+#define EVEN_SIZE_MASK 23
+#define UNEXPECTED_CHAR 24
 class GreyScale
 {
     private:
@@ -50,5 +53,12 @@ class GreyScale
         GreyScale Invert() const;
         GreyScale Median() const;
         GreyScale Sobel() const;
+
+        // help functions
+        float pixelMedian(int index) const;
+
+        // IO function
+        friend istream & operator>>(istream & is, GreyScale & gs);
+        friend ostream & operator<<(ostream & os, const GreyScale & gs);
 
 };

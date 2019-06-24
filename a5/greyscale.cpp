@@ -234,9 +234,27 @@ GreyScale GreyScale::Clamp() const
 }
 GreyScale GreyScale::Contrast() const
 {
-    
+    // min of the value transformed to 0 maximum to 1
+    int sBild = width * height;
+    float max = pixels[0];
+    float min = pixels[0];
+    for(int index = 0; index < sBild; index++)
+    {
+        float temp = pixels[index];
+        if(temp < min)
+        {
+            min = temp;
+        }
+        else if(temp > max)
+        {
+            max = temp;
+        }
+    }
+    float a = 1/(max - min);
+    float b = -min/(max - min);
+    return LinTrans(a,b);
 }
-GreyScale GreyScale::Convolve(const float mask[],int size = 3) const
+GreyScale GreyScale::Convolve(const float mask[],int size) const
 {
     GreyScale gs(width,height);
     int sizeBild = width * height;
@@ -313,11 +331,70 @@ GreyScale GreyScale::Invert() const
 }
 GreyScale GreyScale::Median() const
 {
-    
+    GreyScale gs(width,height);
+    int sizeBild = width * height;
+    if(!sizeBild)
+    {
+        return gs;
+    }
+    for(int index = 0; index < sizeBild; index++)
+    {
+        gs.pixels[index] = pixelMedian(index);
+    }
+    return gs;
 }
 GreyScale GreyScale::Sobel() const
 {
-
+    GreyScale gs(width,height);
+    int sizeBild = width * height;
+    if(!sizeBild)
+    {
+        return gs;
+    }
+    float DX[9] =
+    {
+        -1,0,1,-2,0,2,-1,0,1
+    };
+    float DY[9] =
+    {
+        1,2,1,0,0,0,-1,-2,-1
+    };
+    int bound = 1;
+    int size = 3;
+    for(int index = 0; index < sizeBild; index++)
+    {
+        float sum1 = 0,sum2 = 0;
+        XYCoord xyco = VecCoord2XY(index);
+        int x_val = xyco.first;
+        int y_val = xyco.second;
+        for(int i = -bound; i <= bound; i++)
+        {
+            for(int j = -bound; j <= bound; j++)
+            {
+                int maskIndex = MaskCoord2Vec(i,j,size);
+                sum1 += (*this)(x_val + i,y_val + j) * DX[maskIndex];
+                sum2 += (*this)(x_val + i,y_val + j) * DY[maskIndex];
+            }
+        }
+        gs.pixels[index] = sqrt(pow(sum1,2) + pow(sum2,2));
+    }
+    return gs;
+}
+float GreyScale::pixelMedian(int index) const
+{
+    vector<float> neighbours;
+    XYCoord xycod = VecCoord2XY(index);
+    int xcord = xycod.first;
+    int ycord = xycod.second;
+    for(int i = -1; i <= 1; i++)
+    {
+        for(int j = -1; j <= 1; j++)
+        {
+            neighbours.push_back((*this)(xcord,ycord));
+        }
+    }
+    sort(neighbours.begin(),neighbours.end());
+    return neighbours[4];
 }
 
 
@@ -337,4 +414,78 @@ int MaskCoord2Vec(int i, int j,int size)
         exit(EVEN_SIZE_MASK);
     }
     
+}
+
+istream & operator>>(istream & is, GreyScale & gs)
+{
+    // char ch = is.peek();
+    // while(ch != EOF)
+    // {
+    //   if()
+    // }
+    string name;
+    getline(is,name);
+    is >> ws;
+    char ch = is.peek();
+    int width,height,colorstep;
+    if(ch == '#')
+    {
+        while((ch = is.get()) != '\n')
+            continue;
+    }
+    else if(!isdigit(ch))
+    {
+        cout << "Unexpected character in the input\n";
+        cout << "The char is " << ch << endl;
+        exit(UNEXPECTED_CHAR);
+    }
+    is >> width >> height;
+    gs.Resize(width,height);
+    is >> colorstep;
+    // colorstep; // e.g read in 255 then there are 256 steps of colors
+    int sizeBild = width * height;
+    float colors;
+    for( int index = 0; index < sizeBild; index++)
+    {
+        is >> colors;
+        gs.pixels[index] = ((float)colors)/colorstep;
+    }
+    is >> ch; // should read in EOF
+    return is;
+}
+ostream & operator<<(ostream & os, const GreyScale & gs)
+{
+    int sBild = gs.width * gs.height;
+    if(!sBild)
+    {
+        cout << "The picture has no image cause it has dimension less than 2\n";
+        return os;
+    }
+    int count = 0;
+    cout << "*************************************\n";
+    cout << "First the integer version (rounded to 255)\n";
+    for(int index = 0; index < sBild; index++)
+    {
+        // colorstep is assumed to be 255
+        short d = 255;
+        os.width(4);
+        float res = gs.pixels[index] * d;
+        os << (short) res << '\t';
+        if(count % gs.width == gs.width - 1)
+        {
+            os << endl;
+        }
+    }
+    cout << "\n Next the original grey scale\n";
+    cout << "*************************************\n";
+    for(int index = 0; index < sBild; index++)
+    {
+        os.width(4);
+        os << gs.pixels[index] << '\t';
+        if(count % gs.width == gs.width - 1)
+        {
+            os << endl;
+        }
+    }
+    return os;
 }

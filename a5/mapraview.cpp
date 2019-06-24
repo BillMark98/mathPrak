@@ -7,10 +7,8 @@
 *  Datum      : Jun '00                                             *
 ********************************************************************/
 
-#include <cmath>
-#include <fstream>
-#include <vector>
 
+#include <fstream>
 #include "greyscale.h"
 #include "unit.h"
 
@@ -260,7 +258,20 @@ int main()
     cout << "Enter Command (h for help): ";
     cin  >> c;
 
-  } while (c!='q'); // Quit
+  } while (c!='q'); // 
 
+
+
+  // test function for io
+  // ifstream inFile;
+  // inFile.open("bilder/leaf.pgm");
+  // if(!inFile.is_open())
+  // {
+  //   cout << "cant open the file\n";
+  //   exit(1);
+  // }
+  // inFile >> pic;
+  // cout << "The file read in, the pixel picture is\n";
+  // cout << pic << endl;
   return 0;
 }

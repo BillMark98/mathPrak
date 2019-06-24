@@ -4,7 +4,7 @@ CFLAGS = -g -Wall -std=c++11
 CXXFLAGS = -std=c++11 -Wall -pedantic -Wextra -g -O0 -Ilib/SFML-2.5.1/include/ -fPIC
 LIBS = -Llib/SFML-2.5.1/lib/ -lsfml-graphics -lsfml-window -lsfml-system
 
-SOURCE = a_stern_debug.cpp mygraph.o unit.o mygraphvisual.o
+SOURCE = a_stern.cpp mygraph.o unit.o mygraphvisual.o
 SOURCE1 = mygraph.cpp
 
 
@@ -13,7 +13,7 @@ sfml_test: sfml_test.o
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LIBS)
 sfml_test.o: sfml_test.cpp
 	$(CXX) $(CXXFLAGS) -c $<
-start: a_stern_debug.cpp mygraph.o mygraphvisual.o mygraph.h unit.o unit.h mygraph.h mygraphvisual.h 
+start: a_stern.cpp mygraph.o mygraphvisual.o mygraph.h unit.o unit.h mygraph.h mygraphvisual.h 
 	$(CC) $(CXXFLAGS) -o $@ $(SOURCE) $(LIBS)
 mygraph.o: mygraph.cpp unit.o mygraph.h unit.h
 	$(CC) $(CFLAGS) -c $(SOURCE1)
