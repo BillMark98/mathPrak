@@ -423,8 +423,7 @@ istream & operator>>(istream & is, GreyScale & gs)
     // {
     //   if()
     // }
-    string name;
-    getline(is,name);
+    getline(is,gs.magicNumber);
     is >> ws;
     char ch = is.peek();
     int width,height,colorstep;
@@ -462,8 +461,11 @@ ostream & operator<<(ostream & os, const GreyScale & gs)
         return os;
     }
     int count = 0;
-    cout << "*************************************\n";
-    cout << "First the integer version (rounded to 255)\n";
+    os << gs.magicNumber << endl;
+    os << gs.width << '\t' << gs.height << endl;
+    os << 255<< endl;
+    // cout << "*************************************\n";
+    // cout << "First the integer version (rounded to 255)\n";
     for(int index = 0; index < sBild; index++)
     {
         // colorstep is assumed to be 255
@@ -476,16 +478,16 @@ ostream & operator<<(ostream & os, const GreyScale & gs)
             os << endl;
         }
     }
-    cout << "\n Next the original grey scale\n";
-    cout << "*************************************\n";
-    for(int index = 0; index < sBild; index++)
-    {
-        os.width(4);
-        os << gs.pixels[index] << '\t';
-        if(count % gs.width == gs.width - 1)
-        {
-            os << endl;
-        }
-    }
+    // cout << "\n Next the original grey scale\n";
+    // cout << "*************************************\n";
+    // for(int index = 0; index < sBild; index++)
+    // {
+    //     os.width(4);
+    //     os << gs.pixels[index] << '\t';
+    //     if(count % gs.width == gs.width - 1)
+    //     {
+    //         os << endl;
+    //     }
+    // }
     return os;
 }

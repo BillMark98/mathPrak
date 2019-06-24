@@ -2,6 +2,7 @@
 #include <vector>
 #include <algorithm>
 #include <cmath>
+#include <string>
 using namespace std;
 using std::pair;
 typedef pair<int,int> XYCoord;
@@ -14,7 +15,7 @@ class GreyScale
     private:
         int     width,height;
         float   *pixels;
-
+        string  magicNumber;
     public:
         GreyScale(int w = 0, int h = 0);
         GreyScale(const GreyScale &);
