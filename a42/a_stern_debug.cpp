@@ -1,5 +1,6 @@
 
 #include "text_visualizer.h"
+#include "mygraphvisual.h"
 #include "unit.h"
 #include "mygraph.h"
 #include <set>
@@ -9,9 +10,9 @@
 // Ein Graph, der Koordinaten von Knoten speichert.
 
 #define FILE_OPEN_ERROR 4
-#define NOTVISITED 10000000
+
 #define FOURTH_CASE 6
-// #define DRAW 1
+#define DRAW 1
 using std::set;
 using std::vector;
 using std::map;
@@ -35,10 +36,10 @@ typedef set<pairVC,ComparePair()> setVC;
 typedef DistanceGraph::NeighborT neighbourVector;
 // typedef neighbourVector::iterator neighborVecIter; global-scope qualifier (leading '::') is not allowed
 
-// the pair used for saving g and h in the f = g + h for a star algo
-typedef pair<CostT,CostT> CostTgh;
-// the vertex and the corresponding (g,h) value
-typedef pair<VertexT,CostTgh> VertexT_f; 
+// // the pair used for saving g and h in the f = g + h for a star algo
+// typedef pair<CostT,CostT> CostTgh;
+// // the vertex and the corresponding (g,h) value
+// typedef pair<VertexT,CostTgh> VertexT_f; 
 // map of two vertices
 typedef map<VertexT, VertexT> map2V;
 // vectors of VertexT_f
@@ -52,10 +53,10 @@ struct CompareVertexTf
         CostT d2 = v2.second.first + v2.second.second;
         // minimum heap
         // if d1 < d2 then the largest element will be at front i.e maximum heap
-        cout << "The VertexT v1: " << v1.first << endl;
-        cout << "The VertexT v2: " << v2.first << endl;
-        cout << "v1s two values: " << v1.second.first << "\t" << v1.second.second << endl;
-        cout << "v2s two values: " << v2.second.first << "\t" << v2.second.second << endl;
+        // cout << "The VertexT v1: " << v1.first << endl;
+        // cout << "The VertexT v2: " << v2.first << endl;
+        // cout << "v1s two values: " << v1.second.first << "\t" << v1.second.second << endl;
+        // cout << "v2s two values: " << v2.second.first << "\t" << v2.second.second << endl;
         // the problem of the maximums heap
         // is that we can only ensure that the largest of 
         // all elements are at the top
@@ -121,9 +122,9 @@ int main()
     
     //testing read in files
     ifstream inFile;
-    inFile.open("daten/Graph1.dat");
-    int Bsp = 1;
-    // inFile.open("daten/Maze5.dat");
+    // inFile.open("daten/Graph3.dat");
+    int Bsp = 8;
+    inFile.open("daten/Maze4.dat");
     if(!inFile.is_open())
     {
         cout << "could not find the given files\n";
@@ -138,7 +139,9 @@ int main()
     // Bsp 7   Maze3
     // Bsp 8   Maze4
     // Bsp 9   Maze5
-    DistCoordGraph coorG1;
+    MazeGraph coorG1;
+    // DistCoordGraph coorG1;
+    
     inFile >> coorG1;
     
     if(inFile.eof())
@@ -153,9 +156,16 @@ int main()
     {
         cout << "Input terminated by unkown reasons.\n";
     }
-    // a graph visualizer
-    TextVisualizer v;
+    // a graph visualizer for maze
+    MazeVisualizer v(coorG1,800,600);
+    // v.draw_raw();
     // cout << coorG1;
+
+
+    // a graph visualizer for route graph
+    // RouteVisualizer rv(coorG1,1500,1000);
+    // rv.draw_raw();
+
 
     // cout << "Test in main\n";
     // vector<CellType> vcell;
@@ -237,32 +247,58 @@ int main()
     // Segmentation fault of the vector<CellType>?
     // because in the constructor
     // before calling setNeighbors, have to resize neighbour_vector
-    // vector<CellType> labyrinth = ErzeugeLabyrinth(256,256,15);
+    vector<CellType> labyrinth = ErzeugeLabyrinth(256,256,15);
 
-    // // cout << "Vector labyrinth successfully created\n";
-    // MazeGraph coorG3(256*256,labyrinth,256,256);
-    // VertexT start = coorG3.getStart();
-    // VertexT dest = coorG3.getDestination();
-    // cout << "The start: " << start << " the desti: " << dest << endl;
-    // list<VertexT> weg10;
-    // A_star(coorG3,v,start,dest,weg10);
-    // PruefeWeg(10,weg10);
-    // Bsp 5   Maze1
-    // Bsp 6   Maze2
-    // Bsp 7   Maze3
-    // Bsp 8   Maze4
-    // Bsp 9   Maze5
-    // for ( auto pair : StartZielPaare(10)) 
+// Maze Visualizer
+
+
+    // // // cout << "Vector labyrinth successfully created\n";
+    MazeGraph coorG3(256*256,labyrinth,256,256);
+    MazeVisualizer v1(coorG3,1300,1000);
+    VertexT start = coorG3.getStart();
+    VertexT dest = coorG3.getDestination();
+    cout << "The start: " << start << " the desti: " << dest << endl;
+    v1.setStartEnd(start,dest);
+    list<VertexT> weg10;
+    A_star(coorG3,v1,start,dest,weg10);
+    // PruefeWeg(Bsp,weg10);
+
+
+
+
+
+
+
+    // Bsp 5   Maze1   StartZielPaare
+    // Bsp 6   Maze2   StartZielPaare: 2
+    // Bsp 7   Maze3   StartZielPaare: 1
+    // Bsp 8   Maze4   StartZielPaare: 1
+    // Bsp 9   Maze5   StartZielPaare: 4 the fourth path doesn't exist
+    // for ( auto pair : StartZielPaare(Bsp)) 
     // {
     //     auto start = pair.first;
     //     auto goal  = pair.second;
     //     cout << "The start: " << start << " the goal: " << goal << endl;
+    //     v.setStartEnd(start,goal);
     //     list<VertexT> weg_maze;
-    //     A_star(coorG2,v,start,goal,weg_maze);
+    //     A_star(coorG1,v,start,goal,weg_maze);
     //     cout << "The path\n";
     //     outWegMaze(coorG1,weg_maze);
-    //     PruefeWeg(10,weg_maze);
+    //     PruefeWeg(Bsp,weg_maze);
     // }
+
+
+    // for visualizer test single pair test
+    // vector<VertexTwilling> v_stEnd = StartZielPaare(Bsp);
+    // VertexTwilling StEnd =  v_stEnd[0];
+    // VertexT start = StEnd.first;
+    // VertexT end = StEnd.second;
+    // cout << "The start: " << start << " the goal: " << end << endl;
+    // list<VertexT> weg_maze;
+    // v.setStartEnd(start,end);
+    // A_star(coorG1,v,start,end,weg_maze);
+    // cout << "The path\n";
+    // outWegMaze(coorG1,weg_maze);
 
 // *************************************************************
 
@@ -291,26 +327,53 @@ int main()
     // cout << maptest[1] << endl;
     // cout << maptest[0] << endl;
 
+
+//  *************************************************************
+
+// Testing RouteVisualizer
+// Graph1  Start: 1   Desti: 2
+// Graph2  Start: 2   Desti: 8
+// Graph2  Start: 2   Desti: 7
+// Graph2  Start: 1   Desti: 5
+// Graph3  Start: 0   Desti: 9
+
+// Graph4  Start: 10  Desti: 20
+    // VertexT start = 2;
+    // VertexT desti = 8;
+    // rv.setStartEnd(start,desti);
+    // list<VertexT> weg;
+    // A_star(coorG1,rv,start,desti,weg);
+    // // cout << "after a_star starting : " << v1 << "\t end: " << v2 << endl;
+    // // for_each(weg.begin(),weg.end(),outputVertex);
+    // PruefeWeg(Bsp,weg);
+
+
+// *************************************************************
+
+
+
 // *************************************************************
 
 // Testing a star algo
     
-    for(VertexT v1 = 0; v1 < coorG1.numVertices(); v1++)
-    {
-        for(VertexT v2 = 0; v2 < coorG1.numVertices(); v2++)
-        {
-            list<VertexT> weg;
-            A_star(coorG1,v,v1,v2,weg);
-            // cout << "after a_star starting : " << v1 << "\t end: " << v2 << endl;
-            // for_each(weg.begin(),weg.end(),outputVertex);
-            PruefeWeg(Bsp,weg);
-        }
-    }
+    // for(VertexT v1 = 0; v1 < coorG1.numVertices(); v1++)
+    // {
+    //     for(VertexT v2 = 0; v2 < coorG1.numVertices(); v2++)
+    //     {
+    //         list<VertexT> weg;
+            
+    //         rv.setStartEnd(v1,v2);
+    //         A_star(coorG1,rv,v1,v2,weg);
+    //         cout << "after a_star starting : " << v1 << "\t end: " << v2 << endl;
+    //         for_each(weg.begin(),weg.end(),outputVertex);
+    //         PruefeWeg(Bsp,weg);
+    //     }
+    // }
 
 // **********************************************************************
 // Testing Heuristik
-    cout << "Test heuristik\n";
-    PruefeHeuristik(coorG1);
+    // cout << "Test heuristik\n";
+    // PruefeHeuristik(coorG1);
 
 // **********************************************************************
 
@@ -544,8 +607,8 @@ bool A_star(const DistanceGraph& g,GraphVisualizer& v, VertexT start, VertexT de
     openlist.push_back(VertexT_f(start,CostTgh(0,g.estimatedCost(start,destination))));
 
 
-    cout << "Initializing openlist\n";
-    for_each(openlist.begin(),openlist.end(),outputVertexTf);
+    // cout << "Initializing openlist\n";
+    // for_each(openlist.begin(),openlist.end(),outputVertexTf);
 
 
     while(!openlist.empty())
@@ -554,12 +617,29 @@ bool A_star(const DistanceGraph& g,GraphVisualizer& v, VertexT start, VertexT de
         // VertexT_f firstVTf = openlist.back();
         // cout << "The firstVTf: " << firstVTf.first << endl;
 #ifdef DRAW
-        v.markVertex(firstVTf.first,VertexStatus::Active);
+        v.markVertex(firstVTf.first,VertexStatus::Done);
+        // at the first loop the start will be extracted 
+        // in this case predecessors[start] is not well defined
+        if(firstVTf.first != start)
+        {
+
+             v.markEdge(EdgeT(predecessor[firstVTf.first],firstVTf.first),EdgeStatus::Optimal);
+        }
+       
         v.draw();
 #endif
         if(firstVTf.first == destination)
         {
             traceback(start,destination,weg,predecessor);
+// #ifdef DRAW
+//             // already marked the destination above 
+//             // after the while loop
+//             // can't call draw again, because
+//             // now the predecessors have to enter value 
+//             // at predecessors[ON_PATH] ---> Segmentation fault
+//             v.markVertex(firstVTf.first,VertexStatus::Done);
+//             v.draw();
+// #endif
             return true;
         }
         // get all the successors of firstVTf.first
@@ -568,33 +648,42 @@ bool A_star(const DistanceGraph& g,GraphVisualizer& v, VertexT start, VertexT de
         // three cases
         neighbourVector::iterator iter;
 
-        cout << "The bestVertex: " << bestVertex << endl;
-        cout << "The neighbours\n";
-        for_each(neV.begin(),neV.end(),outputVC);
+        // cout << "The bestVertex: " << bestVertex << endl;
+        // cout << "The neighbours\n";
+        // for_each(neV.begin(),neV.end(),outputVC);
         for(iter = neV.begin(); iter != neV.end(); iter++)
         {
+            // checking whether the currentNode is updated
+            // if not need extra v.markVertex to change it to InQueue
+            bool updated = false; 
             VertexT currentNode = iter -> first;
             // VertexT_f * p_VertexTf = isIn(currentNode,openlist);
             v_VertexTf::iterator p_VertexTf = isIn(iter,openlist);
             CostT distToNode = firstVTf.second.first + (iter -> second);
+#ifdef DRAW
+            v.markVertex(currentNode,VertexStatus::Active);
+            v.markEdge(EdgeT(bestVertex,currentNode),EdgeStatus::Active);
+            v.draw();
+#endif
 
-
-            cout << "The currentNode: " << currentNode << endl;
-            cout << "The distToNode: " << distToNode << endl;
+            // cout << "The currentNode: " << currentNode << endl;
+            // cout << "The distToNode: " << distToNode << endl;
 
             CostT estiCost = g.estimatedCost(currentNode,destination);
             // first case if the node not ever visited
             if((p_VertexTf == openlist.end()) && predecessor[currentNode] == NOTVISITED)
             {
-                cout << "In the first case\n";
+                // cout << "In the first case\n";
                 // CostT estiCost = g.estimatedCost(currentNode,destination);
                 openlist.push_back(VertexT_f(currentNode,CostTgh(distToNode,estiCost)));
                 predecessor[currentNode] = bestVertex;
 #ifdef DRAW
-                v.updateVertex(currentNode,distToNode,estiCost,bestVertex,VertexStatus::InQueue);
+               v.markEdge(EdgeT(bestVertex,currentNode),EdgeStatus::Visited);
+               v.updateVertex(currentNode,distToNode,estiCost,bestVertex,VertexStatus::InQueue);
+                updated = true;
 #endif
-                cout << "The predecessor maxtirx\n";
-                for_each(predecessor.begin(),predecessor.end(),outputVertexTwilling);
+                // cout << "The predecessor maxtirx\n";
+                // for_each(predecessor.begin(),predecessor.end(),outputVertexTwilling);
             }
             else if((p_VertexTf != openlist.end()))
             {
@@ -606,7 +695,9 @@ bool A_star(const DistanceGraph& g,GraphVisualizer& v, VertexT start, VertexT de
                     (*p_VertexTf).second.first = distToNode;
                     predecessor[currentNode] = bestVertex;
 #ifdef DRAW
+                    v.markEdge(EdgeT(bestVertex,currentNode),EdgeStatus::Visited);
                     v.updateVertex(currentNode,distToNode,estiCost,bestVertex,VertexStatus::InQueue);
+                    updated = true;
 #endif
                 }
             }
@@ -632,7 +723,9 @@ bool A_star(const DistanceGraph& g,GraphVisualizer& v, VertexT start, VertexT de
                         openlist.push_back(vTfNew);
                         predecessor[currentNode] = bestVertex;
 #ifdef DRAW
+                        v.markEdge(EdgeT(bestVertex,currentNode),EdgeStatus::Visited);
                         v.updateVertex(currentNode,distToNode,estiCost,bestVertex,VertexStatus::InQueue);
+                        updated = true;
 #endif
                     }
                 }
@@ -643,32 +736,40 @@ bool A_star(const DistanceGraph& g,GraphVisualizer& v, VertexT start, VertexT de
                     exit(FOURTH_CASE);
                 }
             }
+#ifdef DRAW
+            if(!updated)
+            {
+                v.markEdge(EdgeT(bestVertex,currentNode),EdgeStatus::Visited);
+                v.markVertex(currentNode,VertexStatus::InQueue);
+                v.draw();
+            }
+#endif
         }
         // all the neighbours coverd delete the vertex from the openlist and push it in the closelist
         // cout << "end of the for loop\n";
         // cout << "the closelist\n";
 
         closelist.push_back(firstVTf);
-#ifdef DRAW
-        v.markVertex(bestVertex,VertexStatus::Done);
-#endif
-        cout << "\nThe closelist\n";
-        for_each(closelist.begin(),closelist.end(),outputVertexTf);
-        // openlist.erase(openlist.begin());
-        cout << "The openlist before pop\n";
-        for_each(openlist.begin(),openlist.end(),outputVertexTf);
-        // actually should first erase the begin
-        // the making heap
+// #ifdef DRAW
+//         v.markVertex(bestVertex,VertexStatus::Done);
+// #endif
+        // cout << "\nThe closelist\n";
+        // for_each(closelist.begin(),closelist.end(),outputVertexTf);
+        // // openlist.erase(openlist.begin());
+        // cout << "The openlist before pop\n";
+        // for_each(openlist.begin(),openlist.end(),outputVertexTf);
+        // // actually should first erase the begin
+        // // the making heap
         
 
         // openlist.pop_back();
         openlist.erase(openlist.begin());
-        cout << "The openlist after erasing first\n";
-        for_each(openlist.begin(),openlist.end(),outputVertexTf);
+        // cout << "The openlist after erasing first\n";
+        // for_each(openlist.begin(),openlist.end(),outputVertexTf);
 
         make_heap(openlist.begin(),openlist.end(),CompareVertexTf());
-        cout << "After making heap\n";
-        for_each(openlist.begin(),openlist.end(),outputVertexTf);
+        // cout << "After making heap\n";
+        // for_each(openlist.begin(),openlist.end(),outputVertexTf);
 #ifdef DRAW        
         v.draw();
 #endif

@@ -1,8 +1,14 @@
+#ifndef MYGRAPH_H
+#define MYGRAPH_H
+
 #include "unit.h"
 #include <iostream>
 #include <fstream>
 #include <map>
 #include <cmath>
+
+
+
 
 #define WRONG_VERTEX_INDEX 3
 #define INITIALIZING_ERROR 5
@@ -19,6 +25,9 @@ using std::ostream;
 using std::size_t;
 using std::ifstream;
 using std::ofstream;
+using std::pair;
+using std::map;
+using std::vector;
 // the earth radius 6371 km
 #define EARTH_RADIUS 6371
 #define pi 3.1415926
@@ -33,6 +42,17 @@ typedef std::pair<VertexT, CellType> p_vertexCell;
 // vectors of pair of vertex and cell type
 typedef std::vector<p_vertexCell> v_vertexCell;
 typedef std::vector<CellType> v_Cell;
+
+
+// the pair used for saving g and h in the f = g + h for a star algo
+typedef pair<CostT,CostT> CostTgh;
+// the vertex and the corresponding (g,h) value
+typedef pair<VertexT,CostTgh> VertexT_f; 
+typedef std::pair<VertexStatus,CostTgh> VertexInfo;
+typedef std::vector<VertexInfo> v_vtInfo;
+
+// CoordinateGraph be a ABC or just a class?
+// if ABC then RouteVisualiser can't have a object of this type
 class CoordinateGraph : public DistanceGraph {
 protected:
     // vectors of NeighborT each element is a vector which holds the 
@@ -54,13 +74,21 @@ public:
         : DistanceGraph(num_verts){};
     const NeighborT& getNeighbors( VertexT v) const override;
     
-    virtual CostT estimatedCost( VertexT from, VertexT to) const override = 0;
+    // virtual CostT estimatedCost( VertexT from, VertexT to) const override = 0;
+    // change the coordinateGraph to a class instead of ABC for the purpose of 
+    // being able to create an object for the RouteVisualizer
+    virtual CostT estimatedCost( VertexT from, VertexT to) const override {return cost(from,to);}
     
     CostT cost( VertexT from, VertexT to) const override;
 
     friend istream & operator>>(istream & is, CoordinateGraph & coorGraph);
     // naive implementation of output
     friend ostream & operator<<(ostream & os, CoordinateGraph & coorGraph); 
+    double getMaxXcoord() const;
+    double getMinXcoord() const;
+    double getMaxYcoord() const;
+    double getMinYcoord() const;
+    coordinate getCoordinate(VertexT v) const {return vcMap.at(v);}
     ~CoordinateGraph(){};
 };
 
@@ -116,18 +144,31 @@ public:
     VertexT getStart() const;
     // get the destination
     VertexT getDestination() const;
+    // get the maze size information: the width
+    size_t getWidth() const{ return width;}
+    // get the maze size information: the height
+    size_t getHeight() const{return height;}
     const NeighborT& getNeighbors( VertexT v) const override;
     void setNeighbors();
     CostT estimatedCost( VertexT from, VertexT to) const override;
     CostT cost( VertexT from, VertexT to) const override;
     bool isEmpty() const {return height < 1 || width < 1 || vertexCount <= 0;}
-    bool isValid(VertexT v) const{ return v >= 0 && v < vertexCount;}
+    // bool isValid(VertexT v) const{ return v >= 0 && v < vertexCount;}
+    bool isValid(VertexT v) const{ return v < vertexCount;}
     bool isBorder(VertexT v) const;
     bool isLeftBorder(VertexT v) const;
     bool isRightBorder(VertexT v) const;
     bool isUpBorder(VertexT v) const;
     bool isCorner(VertexT v) const;
     bool isUpCorner(VertexT v) const;
+
+    // for the graph visualizer
+    bool setVectInfo(v_vtInfo & vtInfo)const;
+
+    // give back the type of the vertex
+
+    CellType getCellType(VertexT &v) const{return v_vC[v];}
+
     mzCoord Vertex2mzCoord(VertexT v) const;
     // mzCoord in primitive version, i.e two size_t
     VertexT mzCoord2VertexT(size_t w, size_t h) const;
@@ -142,3 +183,5 @@ public:
     friend ostream & operator<<(ostream & os, MazeGraph & mz);
 
 };
+
+#endif

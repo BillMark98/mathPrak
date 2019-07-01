@@ -18,6 +18,62 @@ void outCellType(ostream & os,CellType & ct)
         os << "Other type\n";
     }
 }
+double CoordinateGraph::getMaxXcoord() const
+{
+    VertexCoord::const_iterator iter;
+    double max = 0;
+    for(iter = vcMap.begin();iter != vcMap.end();iter++)
+    {
+        double temp = (*iter).second.first;
+        if(temp > max)
+        {
+            max = temp;
+        }
+    }
+    return max;
+}
+double CoordinateGraph::getMinXcoord() const
+{
+    VertexCoord::const_iterator iter;
+    double min = (vcMap.at(0)).first;
+    for(iter = vcMap.begin();iter != vcMap.end();iter++)
+    {
+        double temp = (*iter).second.first;
+        if(temp < min)
+        {
+            min = temp;
+        }
+    }
+    return min;
+}
+double CoordinateGraph::getMaxYcoord() const
+{
+    VertexCoord::const_iterator iter;
+    double max = 0;
+    for(iter = vcMap.begin();iter != vcMap.end();iter++)
+    {
+        double temp = (*iter).second.second;
+        if(temp > max)
+        {
+            max = temp;
+        }
+    }
+    return max;
+}
+double CoordinateGraph::getMinYcoord() const
+{
+    VertexCoord::const_iterator iter;
+    double min = (vcMap.at(0)).second;
+    for(iter = vcMap.begin();iter != vcMap.end();iter++)
+    {
+        double temp = (*iter).second.second;
+        if(temp < min)
+        {
+            min = temp;
+        }
+    }
+    return min;
+}
 const DistanceGraph::NeighborT& CoordinateGraph::getNeighbors( VertexT v) const
 {
     if(v < 0 || v > vertexCount)
@@ -424,8 +480,20 @@ CostT MazeGraph::estimatedCost( VertexT from, VertexT to) const
 
     double cost_hori = abs(mzC1.first - mzC2.first);
     double cost_verti = abs(int(mzC1.second - mzC2.second));
-    return cost_hori + cost_verti;
+    // use a different version
+    double total = cost_hori + cost_verti;
+
+    // use a wrong heuristik a scaled two norm
+    // double total = 1000*sqrt(pow(cost_hori,2) + pow(cost_verti,2));
+    return total;
 }
+
+// to fulfill
+bool MazeGraph::setVectInfo(v_vtInfo & vtInfo)const
+{
+    return false;
+}   
+
 CostT MazeGraph::cost( VertexT from, VertexT to) const
 {
     if(!isValid(from) || !isValid(to))

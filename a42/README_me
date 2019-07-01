@@ -1,0 +1,58 @@
+debug 时 一开始，undefined reference to main
+Makefile 中 -g -O3 改为-O0就解决了
+但还有后续的错误如 undefined reference to GraphVisualizer ..
+再看Makefile中，start: ...依赖文件中缺少相应的头文件，补齐就可以了
+再debug
+报错:
+ Executing task: /usr/bin/g++ -g /home/bill/Desktop/mathPrak/a42/Makefile -o /home/bill/Desktop/mathPrak/a42/Makefile <
+
+g++: fatal error: input file ‘/home/bill/Desktop/mathPrak/a42/Makefile’ is the same as output file
+compilation terminated.
+The terminal process terminated with exit code: 1
+
+Terminal will be reused by tasks, press any key to close it.
+
+删除了tasks.json 然后debug 
+cannot find g++ build tasks file 选择debug anyway 
+
+bill@bill-ThinkPad-E560:~/Desktop/mathPrak/a42$ ./start &> result.txt 
+bash: result.txt: cannot overwrite existing file
+
+
+Solution:  set +o noclobber
+
+RouteVisualizer RouteVisualizer::(blablabla)
+error: expected unqualified-id before ‘(’ token
+ RouteVisualizer RouteVisualizer::(CoordinateGraph & cg, VertexT & st, VertexT & end,unsigned int modeWidth,unsigned int modeHeight)
+
+Reason: Quite simple 
+because it's RouteVisualizer::RouteVisualizer !!!!!!!!!
+
+
+
+
+
+In file included from mygraphvisual.cpp:1:0:
+mygraphvisual.h: In constructor ‘RouteVisualizer::RouteVisualizer(CoordinateGraph&, VertexT&, VertexT&, unsigned int, unsigned int)’:
+mygraphvisual.h:121:27: warning: ‘RouteVisualizer::coorG’ will be initialized after [-Wreorder]
+         CoordinateGraph & coorG;
+                           ^~~~~
+mygraphvisual.h:120:26: warning:   ‘sf::RenderWindow RouteVisualizer::mainWindow’ [-Wreorder]
+         sf::RenderWindow mainWindow;
+                          ^~~~~~~~~~
+mygraphvisual.cpp:413:1: warning:   when initialized here [-Wreorder]
+ RouteVisualizer::RouteVisualizer(CoordinateGraph & cg, VertexT & st, VertexT & end,unsigned int modeWidth,unsigned int modeHeight)
+ ^~~~~~~~~~~~~~~
+In file included from mygraphvisual.cpp:1:0:
+mygraphvisual.h: In constructor ‘RouteVisualizer::RouteVisualizer(CoordinateGraph&, unsigned int, unsigned int)’:
+mygraphvisual.h:121:27: warning: ‘RouteVisualizer::coorG’ will be initialized after [-Wreorder]
+         CoordinateGraph & coorG;
+                           ^~~~~
+mygraphvisual.h:120:26: warning:   ‘sf::RenderWindow RouteVisualizer::mainWindow’ [-Wreorder]
+         sf::RenderWindow mainWindow;
+                          ^~~~~~~~~~
+mygraphvisual.cpp:425:1: warning:   when initialized here [-Wreorder]
+ RouteVisualizer::RouteVisualizer(CoordinateGraph & cg,unsigned int modeWidth,unsigned int modeHeight)
+
+有时出现emacs ctrl+P ctrl+N 在移动cursor的时候会选中，因为当前的模式
+是选择模式，可能时之前按了ctrl+space solution： ctrl + g 清除模式
