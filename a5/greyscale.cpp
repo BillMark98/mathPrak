@@ -289,16 +289,16 @@ GreyScale GreyScale::Convolve(const float mask[],int size) const
             int z = 0,s = 0;
             for(int i = -bound; i <= bound; i++)
             {
-                s = 0;
+                z = 0;
                 for(int j = -bound; j <= bound; j++)
                 {
                     // int maskIndex = MaskCoord2Vec(i,j,size);
 
                     // sum += (*this)(x_val + i,y_val + j) * mask[maskIndex];
                     sum += (*this)(x_val + i,y_val + j) * mask[z * size + s];
-                    s++;
+                    z++;
                 }
-                z++;
+                s++;
                 
             }
             gs.pixels[index] = sum;
@@ -486,13 +486,15 @@ ostream & operator<<(ostream & os, const GreyScale & gs)
     os << 255<< endl;
     // cout << "*************************************\n";
     // cout << "First the integer version (rounded to 255)\n";
-    int nextline = (gs.width < 10) ? gs.width : 10;
+    // int nextline = (gs.width < 10) ? gs.width : 10;
+    int nextline = gs.width;
+    GreyScale neu = gs.Clamp();
     for(int index = 0; index < sBild; index++)
     {
         // colorstep is assumed to be 255
         short d = 255;
         os.width(4);
-        float res = gs.pixels[index] * d;
+        float res = std::rint(neu.pixels[index] * d);
         os << (short) res << '\t';
         if(count % nextline == nextline - 1)
         {
