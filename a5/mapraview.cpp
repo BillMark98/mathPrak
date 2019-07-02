@@ -24,7 +24,8 @@ bool Show=true;  // Bild anzeigen oder nicht
 // und der Funktion "ShowImage" aus "unit7". Hier wird der Datentyp "float"
 // in den Datentyp "byte" (inclusive Clamping) umgewandelt. Je nach dem Wert
 // von "ZoomFac" werden aus einem "float"-Pixel ein oder mehrere "byte"-Pixel.
-
+template<class T>
+void MyShow(T a){cout.width(4); cout << (short)a;}
 void Display ( const GreyScale &Pic, int Id, const char Text[] )
 {
   if (!Show) return;                           // Bild nicht anzeigen
@@ -34,7 +35,9 @@ void Display ( const GreyScale &Pic, int Id, const char Text[] )
   for ( int j=0; j<Pic.GetHeight(); j++ )      // Fuer alle Bildpunkte ...
     for ( int i=0; i<Pic.GetWidth(); i++ )
     {
+      // cout << "\nThe i: " << i << " the j : " << j << "\tPic(i,j)= " << Pic(i,j) << endl;
       float gr=std::rint(Pic(i,j)*255);        // [0,1] auf [0,255] skalieren
+      // cout << "The gr is " << gr << "\t the byte(gr) " << (short)byte(gr) << endl;
       if (gr>255) gr=255; else if (gr<0) gr=0; // clampen
       if (ZoomFac==1)                          // behandle den Fall ZoomFac==1
         Pixel[i+j*Pic.GetWidth()]=byte(gr);    // der Effizienz wegen einzeln
@@ -43,7 +46,34 @@ void Display ( const GreyScale &Pic, int Id, const char Text[] )
           for ( int l=0; l<ZoomFac; l++ )
             Pixel[(i*ZoomFac+k)+(j*ZoomFac+l)*Pic.GetWidth()*ZoomFac]=byte(gr);
     }
+  // cout << "The Pixel array: \n";
 
+
+
+  //   int sBild = Pic.GetWidth() * Pic.GetHeight() * ZoomFac*ZoomFac;
+  //   int count = 0;
+  //   // cout << "*************************************\n";
+  //   // cout << "First the integer version (rounded to 255)\n";
+  //   int nextline = (Pic.GetWidth() < 10) ? Pic.GetWidth() : 10;
+  //   for(int index = 0; index < sBild ; index++)
+  //   {
+  //       // colorstep is assumed to be 255
+  //       cout << "\nThe index : " << index << endl;
+  //       short d = 255;
+  //       cout.width(4);
+  //       float res = Pixel[index];
+  //       cout << (short) res << '\t';
+  //       if(count % nextline == nextline - 1)
+  //       {
+  //           cout << endl;
+  //       }
+  //       count++;
+  //       cout << "The count is " << count << endl;
+  //       // assume the Zoom Factor is 1
+  //       cout << "The i, j : " << Pic.VecCoord2XY(index).first << ',' << Pic.VecCoord2XY(index).second << endl;
+  //   }
+  // cout << "All values diaplayed\n";
+  // cout << endl;
   ShowImage(Pic.GetWidth()*ZoomFac, Pic.GetHeight()*ZoomFac,
             Pixel.data(), Id, Text);
 }
@@ -264,7 +294,7 @@ int main()
 
   // test function for io
   // ifstream inFile;
-  // inFile.open("bilder/leaf.pgm");
+  // inFile.open("bilder/dom.pgm");
   // if(!inFile.is_open())
   // {
   //   cout << "cant open the file\n";
@@ -273,5 +303,12 @@ int main()
   // inFile >> pic;
   // cout << "The file read in, the pixel picture is\n";
   // cout << pic << endl;
+  // newpic=pic.Median();
+  // ofstream outFile("result3.pgm");
+  // outFile << newpic;
+  // Display(pic,0,"TexT");
+  // std::vector<byte>  Pixel(1);
+  // cout << "\n\n 0 vector created\n";
+  //           Display(newpic,1,"");
   return 0;
 }

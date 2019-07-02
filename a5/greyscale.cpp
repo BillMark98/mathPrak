@@ -8,19 +8,23 @@ width(w),height(h)
 {
     if(width * height)
     {
-        pixels = new float[width * height];
+        // pixels = new float[width * height];
+        pixels.resize(width * height);
     }
 }
 GreyScale::GreyScale(const GreyScale & gs)
 {
     width = gs.width;
     height = gs.height;
-    if(pixels != nullptr)
-    {
-        delete [] pixels;
-    }
-    pixels = new float [width * height];
+    // if(pixels != nullptr)
+    // {
+    //     delete [] pixels;
+    // }
+    // pixels.clear();
+    // pixels = new float [width * height];
     int sizeBild = width * height;
+    pixels.clear();
+    pixels.resize(width * height);
     for(int i = 0; i < sizeBild; i++)
     {
         pixels[i] = gs.pixels[i];
@@ -28,29 +32,31 @@ GreyScale::GreyScale(const GreyScale & gs)
 }
 GreyScale::~GreyScale()
 {
-    if(pixels != nullptr)
-    {
-        delete [] pixels;
-    }
+    // if(pixels != nullptr)
+    // {
+    //     delete [] pixels;
+    // }
 }
 
 void GreyScale::Resize(int w, int h)
 {
-    if(pixels != nullptr)
-    {
-        delete [] pixels;
-    }
+    // if(pixels != nullptr)
+    // {
+    //     delete [] pixels;
+    // }
+    pixels.clear();
     width = w;
     height = h;
-    if(width * height)
+    if(width * height > 0)
     {
-        pixels = new float[width * height];
+        // pixels = new float[width * height];
+        pixels.resize(width * height);
     }
 }
 
 float GreyScale::operator()(int i, int j) const
 {
-    // the point outside the picture return 0
+    // the point outside the picture return the neighouring valid point
     if(i < 0)
     {
         if(j < 0)
@@ -87,10 +93,16 @@ float GreyScale::operator()(int i, int j) const
     {
         return pixels[i];
     }
-    else
+    else if(j > height -1)
     {
         return pixels[XYCoord2Vec(i,height - 1)];
     }
+    else
+    {
+        // valid point
+        return pixels[XYCoord2Vec(i,j)];
+    }
+    
     
     int index = XYCoord2Vec(i,j);
     return pixels[index];
@@ -113,11 +125,12 @@ GreyScale & GreyScale::operator=(const GreyScale & gs)
     {
         return *this;
     }
-    delete [] pixels; // safe to delete nullptr so dont check that
-
+    // delete [] pixels; // safe to delete nullptr so dont check that
+    pixels.clear();
     width = gs.width;
     height = gs.height;
-    pixels = new float[width * height];
+    // pixels = new float[width * height];
+    pixels.resize(width * height);
     int sizeBild = width * height;
     for(int i = 0; i < sizeBild; i++)
     {
@@ -273,13 +286,20 @@ GreyScale GreyScale::Convolve(const float mask[],int size) const
             XYCoord xyco = VecCoord2XY(index);
             int x_val = xyco.first;
             int y_val = xyco.second;
+            int z = 0,s = 0;
             for(int i = -bound; i <= bound; i++)
             {
+                s = 0;
                 for(int j = -bound; j <= bound; j++)
                 {
-                    int maskIndex = MaskCoord2Vec(i,j,size);
-                    sum += (*this)(x_val + i,y_val + j) * mask[maskIndex];
+                    // int maskIndex = MaskCoord2Vec(i,j,size);
+
+                    // sum += (*this)(x_val + i,y_val + j) * mask[maskIndex];
+                    sum += (*this)(x_val + i,y_val + j) * mask[z * size + s];
+                    s++;
                 }
+                z++;
+                
             }
             gs.pixels[index] = sum;
         }
@@ -390,7 +410,7 @@ float GreyScale::pixelMedian(int index) const
     {
         for(int j = -1; j <= 1; j++)
         {
-            neighbours.push_back((*this)(xcord,ycord));
+            neighbours.push_back((*this)(xcord + i,ycord + j));
         }
     }
     sort(neighbours.begin(),neighbours.end());
@@ -466,6 +486,7 @@ ostream & operator<<(ostream & os, const GreyScale & gs)
     os << 255<< endl;
     // cout << "*************************************\n";
     // cout << "First the integer version (rounded to 255)\n";
+    int nextline = (gs.width < 10) ? gs.width : 10;
     for(int index = 0; index < sBild; index++)
     {
         // colorstep is assumed to be 255
@@ -473,21 +494,43 @@ ostream & operator<<(ostream & os, const GreyScale & gs)
         os.width(4);
         float res = gs.pixels[index] * d;
         os << (short) res << '\t';
-        if(count % gs.width == gs.width - 1)
+        if(count % nextline == nextline - 1)
         {
             os << endl;
         }
+        count++;
     }
+
     // cout << "\n Next the original grey scale\n";
     // cout << "*************************************\n";
+    // cout << "First using the vector index\n";
+    // count = 0;
     // for(int index = 0; index < sBild; index++)
     // {
     //     os.width(4);
     //     os << gs.pixels[index] << '\t';
-    //     if(count % gs.width == gs.width - 1)
+    //     if(count % nextline == nextline - 1)
     //     {
     //         os << endl;
     //     }
+    //     count++;
+    // }
+    // cout << "*************************************\n";
+    // cout << "Next using the Pic index\n";
+    // count = 0;
+    // for(int i = 0; i < gs.width; i++)
+    // {
+    //     for(int j = 0; j < gs.height; j++)
+    //     {
+    //         os.width(4);
+    //         os << gs(i,j)<< '\t';
+    //         if(count % nextline == nextline - 1)
+    //         {
+    //             os << endl;
+    //         }
+    //         count++;
+    //     }
+        
     // }
     return os;
 }

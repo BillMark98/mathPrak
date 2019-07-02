@@ -6,7 +6,7 @@
 using namespace std;
 using std::pair;
 typedef pair<int,int> XYCoord;
-
+typedef vector<float> vPixels;
 #define SIZE_MISMATCH 22
 #define EVEN_SIZE_MASK 23
 #define UNEXPECTED_CHAR 24
@@ -14,7 +14,8 @@ class GreyScale
 {
     private:
         int     width,height;
-        float   *pixels;
+        // float   *pixels;
+        vPixels pixels;
         string  magicNumber;
     public:
         GreyScale(int w = 0, int h = 0);
