@@ -1,110 +1,73 @@
- 
-/*****************************************************************
-*  Name       : sfml_test.cpp                                    *
-*  Verwendung : Warmwerden mit der SFML-Bibliothek               *
-*  Autor      : Sven Gross, Hauke Sass, Johannes Stemick,        *
-*               IGPM RWTH Aachen                                 *
-*  Datum      : Mai 2018                                         *
-*****************************************************************/
-
 #include <SFML/Graphics.hpp>
 #include <iostream>
 using namespace std;
 int main()
 {
-    // create the window
-    sf::RenderWindow window(sf::VideoMode(800, 600), "My window");
+    sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
+    // sf::CircleShape shape(100.f);
+    // shape.setFillColor(sf::Color::Green);
+    // sf::RenderWindow window1(sf::VideoMode(800,600),"Window2");
     sf::Font font;
-    if(!font.loadFromFile("font/BebasNeue-Regular.ttf"))
+    if(!font.loadFromFile("arial.ttf"))
     {
-        cout << "the file could not found\n";
+        cout << "cant read file\n";
         exit(1);
     }
     sf::Text text;
     text.setFont(font);
-    text.setString("Hi there");
+    text.setString("Hello there\n");
+    text.setCharacterSize(24);
+    text.setFillColor(sf::Color::Blue);
 
-    window.setFramerateLimit(6);
-
-    // run the program as long as the window is open
     while (window.isOpen())
     {
-
-        // check all the window's events that were triggered since the last iteration of the loop
         sf::Event event;
-        while (window.pollEvent(event)) // event loop
+        while (window.pollEvent(event))
         {
-            // "close requested" event: we close the window
             if (event.type == sf::Event::Closed)
                 window.close();
+            if (event.type == sf::Event::GainedFocus)
+            {
+                cout << "window 1 gained focus\n";
+            }    
+            if (event.type == sf::Event::LostFocus)
+            {
+                cout << "window 1 lost focus\n";
+            }    
+            
         }
 
-        // start the current frame: clear the window with black color
-        window.clear(sf::Color::Black);
-
-        // defines a circle
-        sf::CircleShape shape(100);
-
-        // set the shape color to green
-        shape.setFillColor(sf::Color(100, 250, 50));
-        
-        shape.setOutlineThickness(10); // creates an outline around the circle
-        shape.setOutlineColor(sf::Color(250, 150, 100)); // outline color is orange
-        
-        // The coordinates, which can be used to set the position of a circle are by default the top left corner of the
-        // smallest square containing the circle. Using setOrigin, we can move these coordinates to the center of the circle.
-        
-        // shape.setOrigin(shape.getRadius(), shape.getRadius()); 
-
-        //sets the (absolute) position of the circle, (0,0) is the top-left corner.
-        shape.setPosition(0,0); // positioning the circle 200 units right from the top left corner
-        
-        window.draw(shape); // draws the shape, a green circle with an orange outline
-
-        shape.move(0,300); // moves the position 300 units down from the previous position (-> circle is drawn at (200,300))
-        
-        window.draw(shape); // draws the shape, another green circle with an orange outline
-        
-        // defines a line between the position of the circle and the coordinates (800,600)
-        sf::Vertex line[] =
-        {
-            sf::Vertex(sf::Vector2f(shape.getPosition()),sf::Color::Magenta),
-            sf::Vertex(sf::Vector2f(800,600),sf::Color::Cyan)
-        };
-
-        window.draw(line, 2, sf::Lines); //draws the line
-        
-        // Before working on the visualizer for your A*-algorithm, try to draw your own stuff here! 
-        // For instance: 
-
-        // - Use the font given in Font/BebasNeue-Regular.ttf to create texts
-        // - Add different shapes and sprites and figure out more transforming entities
-
-        // See https://www.sfml-dev.org/tutorials/2.5/#graphics-module for a good tutorial!
-
-
-        // end the current frame
-        text.setOrigin(40,30);
-        text.setPosition(300,200);
-        text.setScale(2.f,3.f);
-        // text.rotate(45.f);
+        window.clear(sf::Color::White);
+        // window.draw(shape);
         window.draw(text);
-
-
-        // a polygon 
-        sf::ConvexShape polygon;
-        polygon.setPointCount(3);
-        polygon.setPoint(0, sf::Vector2f(100, 50));
-        polygon.setPoint(1, sf::Vector2f(150, 100));
-        polygon.setPoint(2, sf::Vector2f(125, 300));
-        polygon.setOutlineColor(sf::Color::Red);
-        polygon.setFillColor(sf::Color::Yellow);
-        polygon.setOutlineThickness(5);
-        // polygon.setPosition(100, 200);
-        window.draw(polygon);
-
         window.display();
     }
+
+// the second loop wont be entered until the first one is ended
+    // while (window1.isOpen())
+    // {
+    //     sf::Event event;
+    //     while (window1.pollEvent(event))
+    //     {
+    //         if (event.type == sf::Event::Closed)
+    //             window1.close();
+    //         if (event.type == sf::Event::GainedFocus)
+    //         {
+    //             cout << "window 2 gained focus\n";
+    //         }    
+    //         if (event.type == sf::Event::LostFocus)
+    //         {
+    //             cout << "window 2 lost focus\n";
+    //         }     
+            
+    //     }
+
+    //     window1.clear();
+    //     // window.draw(shape);
+    //     window1.display();
+    // }
+
+
 
 
     return 0;

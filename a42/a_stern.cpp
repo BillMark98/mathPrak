@@ -1,4 +1,3 @@
-
 #include "text_visualizer.h"
 #include "mygraphvisual.h"
 #include "unit.h"
