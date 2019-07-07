@@ -1,0 +1,7 @@
+Teil1
+1.注意output greyscale 的时候 要使用 rint 将float转化为int 直接
+(int) typecast 会产生误差
+然后要在输出时 使用 Contrast 把pixels 中的float的 Wertebereich 变成
+[0,1]. 否则在输出时也会有问题
+2. 一开始用int 数组 (dynamic 分配）结果总是会在运行时出错，core dumped,
+or double free or corruption(out) Aborted(core dumped) or segmentation fault
