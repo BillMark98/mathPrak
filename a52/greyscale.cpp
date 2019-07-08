@@ -3,30 +3,64 @@
 // help function for the Convolve()
 int MaskCoord2Vec(int i, int j,int size);
 int MaskSize;
+vec_Codes vec_C;
 
 // help function for the min heap building in the BuildTree
 struct CompareMyTree
 {
+    // bool operator()(const MyTree & lTree, const MyTree & rTree) const
+    // {
+    //     if(lTree.GetFrequency() > rTree.GetFrequency())
+    //     {
+    //         return true;
+    //     }
+    //     else if(lTree.GetFrequency() == rTree.GetFrequency())
+    //     {
+    //         if(lTree.GetGreyValue() > rTree.GetGreyValue())
+    //         {
+    //             return true;
+    //         }
+    //     }
+    //     else
+    //     {
+    //         return false;
+    //     }
+    // }
+
     bool operator()(const MyTree & lTree, const MyTree & rTree) const
     {
-        if(lTree.GetFrequency() > rTree.GetFrequency())
+        cout << "The left freq: " << lTree.GetFrequency() << endl;
+        cout << "The left grey va: " << lTree.GetGreyValue() << endl;
+        cout << "The right freq: " << rTree.GetFrequency() << endl;
+        cout << "The right grey va: " << rTree.GetGreyValue() << endl;
+        if(lTree.GetFrequency() < rTree.GetFrequency())
         {
+            cout << "True returned\n";
             return true;
         }
         else if(lTree.GetFrequency() == rTree.GetFrequency())
         {
-            if(lTree.GetGreyValue() > rTree.GetGreyValue())
+            if(lTree.GetGreyValue() < rTree.GetGreyValue())
             {
+                cout << "True returned\n";
                 return true;
             }
         }
         else
         {
+            cout << "False returned\n";
             return false;
         }
     }
-};
+}myCompare;
+// bool sortCompareTree(const MyTree & lTree, const MyTree & rTree)
 
+void SwapTree(MyTree & lTree, MyTree & rTree)
+{
+    MyTree temp = lTree;
+    lTree = rTree;
+    rTree = temp;
+}
 
 int GreyScale::Format = 0;
 GreyScale::GreyScale(int w, int h,string name):
@@ -700,6 +734,30 @@ ostream & operator<<(ostream & os, const GreyScale & gs)
     return os;
 }
 
+void GreyScale::HuffmanCoding()
+{
+    BuildTree();
+    BuildMap(TrColFreq);
+    cout << "*******************************\n";
+    cout << "The coding is:\n";
+    map_codingColor::const_iterator iter;
+    cout << "   color      |   code " << endl;
+    for(iter = mpColCd.begin(); iter != mpColCd.end(); iter++)
+    {
+        cout.width(8);
+        cout << iter -> first << iter -> second << endl;
+    }
+    cout << "*******************************\n";
+    cout << "The inverse is:\n";
+    map_codingColor::const_iterator iter2;
+    cout << "   code       |  color " << endl;
+    for(iter2 = mpCdCol.begin(); iter2 != mpCdCol.end(); iter2++)
+    {
+        cout.width(8);
+        cout << iter2 -> first << iter2 -> second << endl;
+    }
+}
+
 
 void GreyScale::BuildTree()
 {
@@ -708,53 +766,174 @@ void GreyScale::BuildTree()
         cout << "The mapColFreq is empty! cant build the tree\n";
         exit(MAP_COL_FREQ_EMPtY);
     }
+    
+    
+
     vector_myTree v_myT;
     map_colorFreq::iterator iter;
+
+    cout << "In the Build Tree, the mapColFreq:\n";
+    cout << "color  |  freq\n";
+    for(iter = mapColFreq.begin();iter != mapColFreq.end(); iter++)
+    {
+        cout.width(6);
+        cout << iter -> first << "\t" <<  iter -> second << endl;
+    }
     // build first the container for the sorted array, each element
     // is a color-frequency pair
     for(iter = mapColFreq.begin();iter != mapColFreq.end(); iter++)
     {
         unsigned int col = iter -> first;
         unsigned int freq = iter -> second;
-        MyTree pcF(col,freq);
+        MyTree pcF(freq,col);
         v_myT.push_back(pcF);
     }
 
     // build the min heap, that is the root is the smallest element
     // the next small element is one of the two sons of the root so v_myT[1] or v_myT[2]
-    make_heap(v_myT.begin(),v_myT.end(),CompareMyTree());
-    TrColFreq = v_myT[0];  //*(v_myT.begin());
-    v_myT.erase(v_myT.begin());
+
+    // sorting first instead of heap making
+    sort(v_myT.begin(),v_myT.end(),myCompare);
+
+    // TrColFreq = v_myT[0];  //*(v_myT.begin());
+    // v_myT.erase(v_myT.begin());
+    // make_heap(v_myT.begin(),v_myT.end(),CompareMyTree());
+    // MyTree TempTree;
+    vector_myTree::const_iterator outMyTree;
+    cout << "After heap making\n";
+    for(outMyTree = v_myT.begin(); outMyTree != v_myT.end(); outMyTree++)
+    {
+        cout << (outMyTree -> GetFrequency()) << "\t" << (outMyTree -> GetGreyValue()) << endl;
+
+    }
+
     while(!v_myT.empty())
     {
         MyTree minTre(v_myT[0]);
+        cout << "The min Tre is \n";
+        cout << minTre.GetFrequency() << "\t" << minTre.GetGreyValue() << endl;
+        cout << "The begin is \n";
+        cout << v_myT.begin() -> GetFrequency() << "\t" << v_myT.begin() -> GetGreyValue() << endl;
         v_myT.erase(v_myT.begin());
 
-        MyTree min2Tre;
-        if(v_myT[1] < v_myT[2])
+        cout << "After erasing\n";
+        for(outMyTree = v_myT.begin(); outMyTree != v_myT.end(); outMyTree++)
         {
-            min2Tre = v_myT[1];
-        }
-        else if(v_myT[1] > v_myT[2])
-        {
-            min2Tre = v_myT[2];
-        }
-        else
-        {
-            cout << "The two trees are idendical impossible\n";
-            exit(IDENTICAL_TREE);
-        }
-        MyTree mergeTree = TreeMerge(minTre,min2Tre);
-        
-    }
+            cout << (outMyTree -> GetFrequency()) << "\t" << (outMyTree -> GetGreyValue()) << endl;
 
+        }
+
+        if(!v_myT.empty())
+        {
+            if(v_myT.size() >= 2)
+            {
+                MyTree min2Tre;
+                if(v_myT[0] > v_myT[1])
+                {
+                    // swap the two elements so that v_myT[0] is the second smallest
+                    SwapTree(v_myT[0],v_myT[1]);
+                }
+                else if(! (v_myT[0] < v_myT[1]))
+                {
+                    cout << "The two trees are idendical impossible\n";
+                    exit(IDENTICAL_TREE);
+                }
+                min2Tre = v_myT[0];
+
+                
+                TrColFreq = TreeMerge(minTre,min2Tre);
+                v_myT.erase(v_myT.begin());
+                v_myT.push_back(TrColFreq);
+
+                // using sort first
+                sort(v_myT.begin(),v_myT.end(),myCompare);
+                // make_heap(v_myT.begin(),v_myT.end(),CompareMyTree());
+            }
+            else if(v_myT.size() == 1)
+            {
+                // just one element left merge it
+                TrColFreq = TreeMerge(minTre,v_myT[0]);
+                break;
+            }
+            
+        }
+        cout << "After heap making\n";
+        for(outMyTree = v_myT.begin(); outMyTree != v_myT.end(); outMyTree++)
+        {
+            cout << (outMyTree -> GetFrequency()) << "\t" << (outMyTree -> GetGreyValue()) << endl;
+
+        }
+        TrColFreq = minTre;
+    }
+    // initialize the vec_C
+    vec_C.clear();
 }
 
 
+void GreyScale::BuildMap(const MyTree & myT)
+{
+    // if(TrColFreq.isempty())
+    // {
+
+    // }
+    MyTree * lTree = myT.GetLeft();
+    MyTree * rTree = myT.GetRight();
+    if(lTree == nullptr)
+    {
+        if(rTree != nullptr)
+        {
+            // actually mustn't be nullptr
+            // since one branch will be assigned 1 and one 0
+            cout << "lTree is nullptr while right isn't\n";
+            exit(UNBALANCED_BRANCH);
+        }
+        // is a leaf
+        if(!vec_C.empty())
+        {
+            codes theCode = Vect2Codes(vec_C);
+            mpColCd[myT.GetGreyValue()] = theCode;
+            mpCdCol[theCode] = myT.GetGreyValue();
+            vec_C.pop_back();
+            return;
+        }
+        else
+        {
+            // the only case is that there is only one color
+            mpColCd[myT.GetGreyValue()] = 0;
+            mpCdCol[0] = myT.GetGreyValue();
+            return;
+        }
+        
+    }
+    else
+    {
+        if(rTree == nullptr)
+        {
+            // the analog case
+            // unbalanced tree impossible
+            cout << "lTree is not nullptr while right is\n";
+            exit(UNBALANCED_BRANCH);
+        }
+        vec_C.push_back(0);
+        BuildMap(*lTree);
+        vec_C.push_back(1);
+        BuildMap(*rTree);
+    }
+    
+}
 
 
-
-
+codes Vect2Codes(vec_Codes & veC)
+{
+    int vecSize = veC.size();
+    codes mycode = 0;
+    for(int index = 0; index < vecSize; index++)
+    {
+        mycode << 1;
+        mycode += veC[index];
+    }
+    return mycode;
+}
 
  MyTree::MyTree():
  Frequency(0),GreyValue(0),LeftTree(nullptr),RightTree(nullptr)
@@ -767,6 +946,30 @@ LeftTree(nullptr),RightTree(nullptr)
     Frequency = freq;
     GreyValue = grey;
 }
+MyTree::MyTree(const MyTree & tr)
+{
+    Frequency = tr.Frequency;
+    GreyValue = tr.GreyValue;
+    LeftTree = tr.LeftTree;
+    RightTree = tr.RightTree;
+}
+        // I think no need to write an explicit copy constructor
+MyTree MyTree::operator=(const MyTree & tr)
+{
+    if(this == &tr)
+    {
+        return (*this);
+    }
+    else
+    {
+        MyTree temp(tr.Frequency,tr.GreyValue);
+        temp.LeftTree = tr.LeftTree;
+        temp.RightTree = tr.RightTree;
+        return temp;
+    }
+    
+}
+
 void MyTree::SetLeft(MyTree & lTree)
 {
     LeftTree = &lTree;

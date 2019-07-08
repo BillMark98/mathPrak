@@ -12,6 +12,7 @@ using std::pair;
 
 typedef unsigned int freQuency;
 typedef unsigned int greyValue;
+typedef unsigned int codes;
 
 typedef pair<int,int> XYCoord;
 typedef vector<float> vPixels;
@@ -20,7 +21,8 @@ typedef map<unsigned int,unsigned int> map_colorFreq;
 typedef map<unsigned int, unsigned int> map_colorCoding;
 typedef map<unsigned int, unsigned int> map_codingColor;
 typedef vector<pa_colorFreq> vector_colFreq;
-typedef vector<MyTree> vector_myTree;
+
+typedef vector<unsigned int> vec_Codes;
 
 #define SIZE_MISMATCH 22
 #define EVEN_SIZE_MASK 23
@@ -28,6 +30,7 @@ typedef vector<MyTree> vector_myTree;
 #define IDENTICAL_TREE 25
 #define WRONG_FORMAT 26
 #define MAP_COL_FREQ_EMPtY 27
+#define UNBALANCED_BRANCH 28
 class MyTree
 {
     private:
@@ -38,8 +41,10 @@ class MyTree
     public:
         MyTree();
         MyTree(freQuency freq, greyValue grey);
-
+        MyTree(const MyTree & tr);
         // I think no need to write an explicit copy constructor
+        MyTree operator=(const MyTree & tr);
+
         void SetLeft(MyTree & lTree);
         void SetRight(MyTree & rTree);
         // bool operator< (const MyTree & rTree) const;
@@ -49,12 +54,16 @@ class MyTree
         // Get Functions
         freQuency GetFrequency() const { return Frequency;}
         greyValue GetGreyValue() const { return GreyValue;}
+        MyTree * GetLeft() const { return LeftTree;}
+        MyTree * GetRight() const { return RightTree;}
 
         friend bool operator< (const MyTree & lTree,const MyTree & rTree);
         friend bool operator> (const MyTree & lTree, const MyTree & rTree);
         friend MyTree TreeMerge(MyTree & lTree, MyTree & rTree);
 };
 
+
+typedef deque<MyTree> vector_myTree;
 class GreyScale
 {
     private:
@@ -72,7 +81,7 @@ class GreyScale
         MyTree TrColFreq;
         map_colorCoding mpColCd;
         map_codingColor mpCdCol;
-
+        
     public:
         GreyScale(int w = 0, int h = 0,string name = "P2");
         GreyScale(const GreyScale &);
@@ -122,6 +131,7 @@ class GreyScale
         // for the compression
         void HuffmanCoding();
         void BuildTree();
+        void BuildMap(const MyTree & myT);
 
         // IO function
         friend istream & operator>>(istream & is, GreyScale & gs);
@@ -129,3 +139,7 @@ class GreyScale
 
 };
 
+// help functions
+// convert the vec_Codes vec to a unsigned int
+// for example vec = {0,1,0,0,1} convert it to 9
+codes Vect2Codes(vec_Codes & veC);

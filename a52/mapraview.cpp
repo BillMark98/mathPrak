@@ -20,6 +20,7 @@ int  ZoomFac=1;  // Vergroesserungsfaktor
 bool Show=true;  // Bild anzeigen oder nicht
 
 #define SET_FORMAT 1
+#define DEBUG 1
 // Die Funktion "Display" dient als Verbindung zwischen der "Greyscale"-Klasse
 // und der Funktion "ShowImage" aus "unit7". Hier wird der Datentyp "float"
 // in den Datentyp "byte" (inclusive Clamping) umgewandelt. Je nach dem Wert
@@ -88,6 +89,9 @@ int main()
 {
   GreyScale pic, newpic;
   char      name[200], c='h';
+
+#ifndef DEBUG
+
 #ifdef SET_FORMAT
   int       frmt;
 #endif
@@ -290,7 +294,7 @@ int main()
 
   } while (c!='q'); // 
 
-
+#endif
 
   // test function for io
   // ifstream inFile;
@@ -310,5 +314,19 @@ int main()
   // std::vector<byte>  Pixel(1);
   // cout << "\n\n 0 vector created\n";
   //           Display(newpic,1,"");
+
+  
+
+
+  // test function for huffman coding
+  ifstream inFile;
+  inFile.open("huftest.pgm");
+  if(!inFile.is_open())
+  {
+    cout << "Can't open the file\n";
+    exit(1);
+  }
+  inFile >> pic;
+  pic.HuffmanCoding();
   return 0;
 }
