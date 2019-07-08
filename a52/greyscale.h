@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <deque>
 #include <algorithm>
 #include <map>
 #include <cmath>
@@ -9,16 +10,51 @@
 using namespace std;
 using std::pair;
 
+typedef unsigned int freQuency;
+typedef unsigned int greyValue;
+
 typedef pair<int,int> XYCoord;
 typedef vector<float> vPixels;
-typedef pair<unsigned int,int> pa_colorFreq;
-typedef map<unsigned int,int> map_colorFreq;
+typedef pair<unsigned int,unsigned int> pa_colorFreq;
+typedef map<unsigned int,unsigned int> map_colorFreq;
+typedef map<unsigned int, unsigned int> map_colorCoding;
+typedef map<unsigned int, unsigned int> map_codingColor;
+typedef vector<pa_colorFreq> vector_colFreq;
+typedef vector<MyTree> vector_myTree;
 
 #define SIZE_MISMATCH 22
 #define EVEN_SIZE_MASK 23
 #define UNEXPECTED_CHAR 24
 #define IDENTICAL_TREE 25
 #define WRONG_FORMAT 26
+#define MAP_COL_FREQ_EMPtY 27
+class MyTree
+{
+    private:
+        freQuency Frequency;
+        greyValue GreyValue;
+        MyTree * LeftTree;
+        MyTree * RightTree;
+    public:
+        MyTree();
+        MyTree(freQuency freq, greyValue grey);
+
+        // I think no need to write an explicit copy constructor
+        void SetLeft(MyTree & lTree);
+        void SetRight(MyTree & rTree);
+        // bool operator< (const MyTree & rTree) const;
+        // bool operator==
+        // friend MyTree TreeMerge(const MyTree & lTree, const MyTree & rTree);
+
+        // Get Functions
+        freQuency GetFrequency() const { return Frequency;}
+        greyValue GetGreyValue() const { return GreyValue;}
+
+        friend bool operator< (const MyTree & lTree,const MyTree & rTree);
+        friend bool operator> (const MyTree & lTree, const MyTree & rTree);
+        friend MyTree TreeMerge(MyTree & lTree, MyTree & rTree);
+};
+
 class GreyScale
 {
     private:
@@ -33,6 +69,10 @@ class GreyScale
         static int Format;
         // save the frequencies of the color ( color is in unsigned int)
         map_colorFreq mapColFreq;
+        MyTree TrColFreq;
+        map_colorCoding mpColCd;
+        map_codingColor mpCdCol;
+
     public:
         GreyScale(int w = 0, int h = 0,string name = "P2");
         GreyScale(const GreyScale &);
@@ -79,30 +119,13 @@ class GreyScale
         // help functions
         float pixelMedian(int index) const;
 
+        // for the compression
+        void HuffmanCoding();
+        void BuildTree();
+
         // IO function
         friend istream & operator>>(istream & is, GreyScale & gs);
         friend ostream & operator<<(ostream & os, const GreyScale & gs);
 
 };
 
-class MyTree
-{
-    private:
-        int Frequency;
-        int GreyValue;
-        MyTree * LeftTree;
-        MyTree * RightTree;
-    public:
-        MyTree();
-        MyTree(int freq, int grey);
-        void SetLeft(MyTree & lTree);
-        void SetRight(MyTree & rTree);
-        // bool operator< (const MyTree & rTree) const;
-        // bool operator==
-        // friend MyTree TreeMerge(const MyTree & lTree, const MyTree & rTree);
-
-
-        friend bool operator< (const MyTree & lTree,const MyTree & rTree);
-        friend bool operator> (const MyTree & lTree, const MyTree & rTree);
-        friend MyTree TreeMerge(MyTree & lTree, MyTree & rTree);
-};

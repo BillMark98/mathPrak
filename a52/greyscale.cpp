@@ -4,6 +4,30 @@
 int MaskCoord2Vec(int i, int j,int size);
 int MaskSize;
 
+// help function for the min heap building in the BuildTree
+struct CompareMyTree
+{
+    bool operator()(const MyTree & lTree, const MyTree & rTree) const
+    {
+        if(lTree.GetFrequency() > rTree.GetFrequency())
+        {
+            return true;
+        }
+        else if(lTree.GetFrequency() == rTree.GetFrequency())
+        {
+            if(lTree.GetGreyValue() > rTree.GetGreyValue())
+            {
+                return true;
+            }
+        }
+        else
+        {
+            return false;
+        }
+    }
+};
+
+
 int GreyScale::Format = 0;
 GreyScale::GreyScale(int w, int h,string name):
 width(w),height(h),magicNumber(name)
@@ -675,12 +699,69 @@ ostream & operator<<(ostream & os, const GreyScale & gs)
     // }
     return os;
 }
+
+
+void GreyScale::BuildTree()
+{
+    if(mapColFreq.empty())
+    {
+        cout << "The mapColFreq is empty! cant build the tree\n";
+        exit(MAP_COL_FREQ_EMPtY);
+    }
+    vector_myTree v_myT;
+    map_colorFreq::iterator iter;
+    // build first the container for the sorted array, each element
+    // is a color-frequency pair
+    for(iter = mapColFreq.begin();iter != mapColFreq.end(); iter++)
+    {
+        unsigned int col = iter -> first;
+        unsigned int freq = iter -> second;
+        MyTree pcF(col,freq);
+        v_myT.push_back(pcF);
+    }
+
+    // build the min heap, that is the root is the smallest element
+    // the next small element is one of the two sons of the root so v_myT[1] or v_myT[2]
+    make_heap(v_myT.begin(),v_myT.end(),CompareMyTree());
+    TrColFreq = v_myT[0];  //*(v_myT.begin());
+    v_myT.erase(v_myT.begin());
+    while(!v_myT.empty())
+    {
+        MyTree minTre(v_myT[0]);
+        v_myT.erase(v_myT.begin());
+
+        MyTree min2Tre;
+        if(v_myT[1] < v_myT[2])
+        {
+            min2Tre = v_myT[1];
+        }
+        else if(v_myT[1] > v_myT[2])
+        {
+            min2Tre = v_myT[2];
+        }
+        else
+        {
+            cout << "The two trees are idendical impossible\n";
+            exit(IDENTICAL_TREE);
+        }
+        MyTree mergeTree = TreeMerge(minTre,min2Tre);
+        
+    }
+
+}
+
+
+
+
+
+
+
  MyTree::MyTree():
  Frequency(0),GreyValue(0),LeftTree(nullptr),RightTree(nullptr)
  {
 
  }
-MyTree::MyTree(int freq, int grey):
+MyTree::MyTree(freQuency freq, greyValue grey):
 LeftTree(nullptr),RightTree(nullptr)
 {
     Frequency = freq;
