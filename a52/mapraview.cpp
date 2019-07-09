@@ -320,36 +320,55 @@ int main()
 
   // test function for huffman coding
   ifstream inFile;
-  inFile.open("bilder/bauteil.pgm");
+  inFile.open("bilder/roentgen.pgm");
   if(!inFile.is_open())
   {
     cout << "Can't open the file\n";
     exit(1);
   }
+  GreyScale::SetFormat(2);
   inFile >> pic;
   pic.HuffmanCoding();
-  cout << "Testing the string lenth\n";
-
-  cout << "pic.mpColCd[117]: " << pic.mpColCd[117] << "  has length " << pic.mpColCd[117].size() << endl;
-
-  cout << "Test the substring \n";
-  codes theC = pic.mpColCd[133];
-  int pos = 3;
-
-  cout << "The code is " << theC ;
-  theC = theC.substr((size_t)pos,theC.size());
-  cout << "  begis at 3 is " << theC << endl;
-
-  cout << "Testing the for loop, whether continue will miss the ++ \n";
-  for(int i = 0; i < 10; i++)
+  ofstream outFile;
+  GreyScale::SetFormat(2);
+  outFile.open("result13.pgm");
+  if(!outFile.is_open())
   {
-    cout << i << endl;
-    if(i == 3)
-    {
-      cout << "In the if branch i will be 7\n";
-      i = 7;
-      continue;
-    }
+    cout << "can't open file\n";
+    exit(1);
   }
+  outFile<<pic;
+
+  // cout << "Testing the string lenth\n";
+
+  // cout << "pic.mpColCd[117]: " << pic.mpColCd[117] << "  has length " << pic.mpColCd[117].size() << endl;
+
+  // cout << "Test the substring \n";
+  // codes theC = pic.mpColCd[133];
+  // int pos = 3;
+
+  // cout << "The code is " << theC ;
+  // theC = theC.substr((size_t)pos,theC.size());
+  // cout << "  begis at 3 is " << theC << endl;
+
+  // cout << "Testing the for loop, whether continue will miss the ++ \n";
+  // for(int i = 0; i < 10; i++)
+  // {
+  //   cout << i << endl;
+  //   if(i == 3)
+  //   {
+  //     cout << "In the if branch i will be 7\n";
+  //     i = 7;
+  //     continue;
+  //   }
+  // }
+
+  // cout << "Test whether shift will change the value\n";
+  // unsigned int vara = 788999978;
+
+  // cout << "the value a is: " << vara << "  a >> 4" << (vara >> 4) << "  vara: " << vara << endl;
+
+  // cout << "Testing the slicing: ";
+  // pic.outFreq32Bit(cout,vara);  
   return 0;
 }

@@ -609,8 +609,8 @@ istream & operator>>(istream & is, GreyScale & gs)
     // colorstep; // e.g read in 255 then there are 256 steps of colors
     int sizeBild = width * height;
     // float colors;
-    vec_C.clear();
-    vec_C.resize(sizeBild);
+    gs.vec_gV.clear();
+    gs.vec_gV.resize(sizeBild);
     switch(GreyScale::Format)
     {
         case 0:
@@ -622,7 +622,7 @@ istream & operator>>(istream & is, GreyScale & gs)
             {
                 
                 is >> colors;
-                vec_C[index] = colors;
+                gs.vec_gV[index] = colors;
                 // cout << "index : " << index << "\t color: " << colors << endl;
                 gs.pixels[index] = ((float)colors)/colorstep;
                 it = gs.mapColFreq.find(colors);
@@ -650,7 +650,7 @@ istream & operator>>(istream & is, GreyScale & gs)
                 gs.pixels[index] = ((float)p5_char)/colorstep;
                 greyValue col = (greyValue) p5_char;
 
-                vec_C[index] = col;
+                gs.vec_gV[index] = col;
 
                 it = gs.mapColFreq.find(col);
                 if(it != gs.mapColFreq.end())
@@ -688,6 +688,9 @@ ostream & operator<<(ostream & os, const GreyScale & gs)
     GreyScale neu = gs.Clamp();
     // cout << "The Format number is: " << GreyScale::Format<< endl;
     // cout << "Using the local format: " << gs.Format << endl;
+    cout << "The format is now: " << GreyScale::Format << endl;
+
+
     switch(GreyScale::Format)
     {
         case 0:
@@ -737,10 +740,21 @@ ostream & operator<<(ostream & os, const GreyScale & gs)
             byte byteHeightLow = theHeight % 256;
             os << byteWidthHigh << byteWidthLow << byteHeightHigh << byteHeightLow;
             // now the histogramm
+            // cout << "The size of vec_gV is " << gs.vec_gV.size();
             for(int index = 0; index < sBild; index++)
             {
-                
+                greyValue greV = gs.vec_gV[index];
+                map_colorFreq::const_iterator iter = gs.mapColFreq.find(greV);
+                freQuency freq = 0;
+                if(iter != gs.mapColFreq.end())
+                {
+                    freq = (iter -> second);
+                }
+                gs.outFreq32Bit(os,freq);
             }
+            // now the huffman code
+            WriteHuffCode(os,gs);
+            break;
         }
         default:
         {
@@ -795,10 +809,14 @@ void GreyScale::HuffmanCoding()
 
 
     // BuildMap(TrColFreq);
+#ifdef OUTDEBUG
     cout << "*******************************\n";
     cout << "The coding is:\n";
+
     map_colorCoding::const_iterator iter;
+
     cout << "   color      |   code " << endl;
+
     for(iter = mpColCd.begin(); iter != mpColCd.end(); iter++)
     {
         cout.width(8);
@@ -814,6 +832,7 @@ void GreyScale::HuffmanCoding()
         cout << iter2 -> first << "\t" << iter2 -> second << endl;
     }
     cout << "The huff completed\n";
+#endif
 }
 
 
@@ -829,7 +848,7 @@ void GreyScale::BuildTree()
     priority_queue<MyTree *, vector<MyTree*>, CompareMyTree> minHeap;
     vector_myTree v_myT;
     map_colorFreq::iterator iter;
-
+#ifdef OUTDEBUG
     cout << "In the Build Tree, the mapColFreq:\n";
     cout << "color  |  freq\n";
     for(iter = mapColFreq.begin();iter != mapColFreq.end(); iter++)
@@ -837,6 +856,7 @@ void GreyScale::BuildTree()
         cout.width(6);
         cout << iter -> first << "\t" <<  iter -> second << endl;
     }
+#endif
     // build first the container for the sorted array, each element
     // is a color-frequency pair
     for(iter = mapColFreq.begin();iter != mapColFreq.end(); iter++)
@@ -952,13 +972,19 @@ void GreyScale::BuildTree()
     //     // TrColFreq = minTre;
 
         lTree = minHeap.top();
+
+#ifdef OUTDEBUG
         cout << "The top of the min heap is: \n";
         cout << *lTree;
+#endif
         minHeap.pop();
 
         rTree = minHeap.top();
+#ifdef OUTDEBUG
         cout << "The second min is :\n";
         cout << *rTree;
+#endif
+
         minHeap.pop();
         int freq = lTree -> Frequency + rTree -> Frequency;
         // int grey = ((lTree -> GreyValue) < (rTree -> GreyValue)) ? (lTree -> GreyValue) : (rTree -> GreyValue);
@@ -966,9 +992,11 @@ void GreyScale::BuildTree()
         topTree = new MyTree(freq, grey);
         topTree -> LeftTree = lTree;
         topTree -> RightTree = rTree;
+
+#ifdef OUTDEBUG
         cout << "After merging the top\n";
         cout << *topTree;
-
+#endif
         minHeap.push(topTree);
     }
 
@@ -988,10 +1016,12 @@ void GreyScale::BuildMap(const MyTree & myT)
     // {
 
     // }
+#ifdef OUTDEBUG
     cout << "The tree being tested\n";
     cout << myT << endl;
     cout << "The vec_C content: \n";
     cout << vec_C << endl;
+#endif
     MyTree * lTree = myT.GetLeft();
     MyTree * rTree = myT.GetRight();
     if(lTree == nullptr)
@@ -1006,9 +1036,14 @@ void GreyScale::BuildMap(const MyTree & myT)
         // is a leaf
         if(!vec_C.empty())
         {
+#ifdef OUTDEBUG
             cout << "at leaf, the color is: " << myT.GetGreyValue() << "\t freq: " << myT.GetFrequency() << endl;
+#endif
+
             codes theCode = Vect2Codes(vec_C);
+#ifdef OUTDEBUG
             cout << "The code is: " << theCode << endl;
+#endif            
             mpColCd[myT.GetGreyValue()] = theCode;
             mpCdCol[theCode] = myT.GetGreyValue();
             vec_C.pop_back();
@@ -1133,13 +1168,16 @@ codes Vect2Codes(vec_Codes & veC)
 {
     int vecSize = veC.size();
     // codes mycode = 0;
+#ifdef OUTDEBUG
     vec_Codes::const_iterator iter;
+
     cout << "The veC content\n";
     for(iter = veC.begin(); iter != veC.end(); iter++)
     {
         cout << *iter << '\t';
     }
     cout << endl;
+#endif
     // for(int index = 0; index < vecSize; index++)
     // {
     //     mycode << 1;
@@ -1160,10 +1198,27 @@ byte Codes2Byte(codes & str_code)
     int len = str_code.size();
     for(int i = 0; i < len; i++)
     {
-        result << 1;
+        result = result << 1;
         result += str_code[i] - '0';
     }
     return result;
+}
+
+ostream & GreyScale::outFreq32Bit(ostream & os, const freQuency & freq) const
+{
+    byte toWrite;
+    for(int i = 3; i > 0; i--)
+    {
+        toWrite =  freq >> 8 * i;
+        // cout << "The toWrite is \n";
+        // cout << (unsigned short) toWrite << endl;
+        os << toWrite;
+    }
+    toWrite = (byte) freq % 256;
+    // cout << "The toWrite is \n";
+    // cout <<  (unsigned short) toWrite << endl;
+    os << toWrite;
+    return os;
 }
 
  MyTree::MyTree():
@@ -1204,6 +1259,7 @@ MyTree& MyTree::operator=(const MyTree & tr)
         LeftTree = tr.LeftTree;
         RightTree = tr.RightTree;
         TreeCount = tr.TreeCount;
+        return (*this);
     }
     
 }

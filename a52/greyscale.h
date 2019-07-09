@@ -43,7 +43,7 @@ typedef string vec_Codes;
 #define UNBALANCED_BRANCH 28
 // when the code to be converted to byte is not 8 byte long
 #define DECODE_LEN_MISMATCH 29
-
+// #define OUTDEBUG 1
 // for testing and debug, if set all class member is public
 #define TEST 1
 class MyTree
@@ -165,6 +165,9 @@ class GreyScale
         friend istream & operator>>(istream & is, GreyScale & gs);
         friend ostream & operator<<(ostream & os, const GreyScale & gs);
 
+        // output the frequency in 32 Bit number
+        // friend ostream & outFreq32Bit(ostream & os, const freQuency & freq);
+        ostream & outFreq32Bit(ostream & os, const freQuency & freq) const;
 };
 
 // help functions
@@ -173,5 +176,4 @@ class GreyScale
 codes Vect2Codes(vec_Codes & veC);
 // convert the code(string) to unsigned char
 byte Codes2Byte(codes & str_code);
-// output the frequency in 32 Bit number
-void outFreq32Bit(const freQuency & freq);
+
