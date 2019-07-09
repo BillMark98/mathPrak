@@ -328,5 +328,28 @@ int main()
   }
   inFile >> pic;
   pic.HuffmanCoding();
+  cout << "Testing the string lenth\n";
+
+  cout << "pic.mpColCd[117]: " << pic.mpColCd[117] << "  has length " << pic.mpColCd[117].size() << endl;
+
+  cout << "Test the substring \n";
+  codes theC = pic.mpColCd[133];
+  int pos = 3;
+
+  cout << "The code is " << theC ;
+  theC = theC.substr((size_t)pos,theC.size());
+  cout << "  begis at 3 is " << theC << endl;
+
+  cout << "Testing the for loop, whether continue will miss the ++ \n";
+  for(int i = 0; i < 10; i++)
+  {
+    cout << i << endl;
+    if(i == 3)
+    {
+      cout << "In the if branch i will be 7\n";
+      i = 7;
+      continue;
+    }
+  }
   return 0;
 }

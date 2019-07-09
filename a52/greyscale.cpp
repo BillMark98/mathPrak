@@ -609,18 +609,20 @@ istream & operator>>(istream & is, GreyScale & gs)
     // colorstep; // e.g read in 255 then there are 256 steps of colors
     int sizeBild = width * height;
     // float colors;
-    
+    vec_C.clear();
+    vec_C.resize(sizeBild);
     switch(GreyScale::Format)
     {
         case 0:
         {
-            unsigned int colors;
+            greyValue colors;
             map_colorFreq::iterator it;
             // cout << "the case 0\n";
             for( int index = 0; index < sizeBild; index++)
             {
                 
                 is >> colors;
+                vec_C[index] = colors;
                 // cout << "index : " << index << "\t color: " << colors << endl;
                 gs.pixels[index] = ((float)colors)/colorstep;
                 it = gs.mapColFreq.find(colors);
@@ -646,7 +648,10 @@ istream & operator>>(istream & is, GreyScale & gs)
             {
                 is >> p5_char;
                 gs.pixels[index] = ((float)p5_char)/colorstep;
-                unsigned int col = (unsigned int) p5_char;
+                greyValue col = (greyValue) p5_char;
+
+                vec_C[index] = col;
+
                 it = gs.mapColFreq.find(col);
                 if(it != gs.mapColFreq.end())
                 {
@@ -674,9 +679,8 @@ ostream & operator<<(ostream & os, const GreyScale & gs)
         return os;
     }
     int count = 0;
-    os << gs.magicNumber << endl;
-    os << gs.width << '\t' << gs.height << endl;
-    os << 255<< endl;
+    
+    
     // cout << "*************************************\n";
     // cout << "First the integer version (rounded to 255)\n";
     // int nextline = (gs.width < 10) ? gs.width : 10;
@@ -688,6 +692,9 @@ ostream & operator<<(ostream & os, const GreyScale & gs)
     {
         case 0:
         {
+            os << gs.magicNumber << endl;
+            os << gs.width << '\t' << gs.height << endl;
+            os << 255<< endl;
             // cout << "In the case 0\n";
             for(int index = 0; index < sBild; index++)
             {
@@ -706,6 +713,9 @@ ostream & operator<<(ostream & os, const GreyScale & gs)
         }
         case 1:
         {
+            os << gs.magicNumber << endl;
+            os << gs.width << '\t' << gs.height << endl;
+            os << 255<< endl;
             // cout << "In the case 1\n";
             for(int index = 0; index < sBild; index++)
             {
@@ -714,6 +724,23 @@ ostream & operator<<(ostream & os, const GreyScale & gs)
                 os << y;
             }
             break;
+        }
+        case 2:
+        {
+            os << gs.magicNumber;
+            unsigned int theWidth = gs.width;
+            unsigned int theHeight = gs.height;
+            byte byteWidthHigh = theWidth >> 8;
+            byte byteWidthLow = theWidth % 256;
+
+            byte byteHeightHigh = theHeight >> 8;
+            byte byteHeightLow = theHeight % 256;
+            os << byteWidthHigh << byteWidthLow << byteHeightHigh << byteHeightLow;
+            // now the histogramm
+            for(int index = 0; index < sBild; index++)
+            {
+                
+            }
         }
         default:
         {
@@ -814,8 +841,8 @@ void GreyScale::BuildTree()
     // is a color-frequency pair
     for(iter = mapColFreq.begin();iter != mapColFreq.end(); iter++)
     {
-        unsigned int col = iter -> first;
-        unsigned int freq = iter -> second;
+        greyValue col = iter -> first;
+        freQuency freq = iter -> second;
         // MyTree pcF(freq,col);
         // v_myT.push_back(pcF);
         minHeap.push(new MyTree(freq,col));
@@ -1015,6 +1042,92 @@ void GreyScale::BuildMap(const MyTree & myT)
     
 }
 
+ostream & WriteHuffCode(ostream & os,const GreyScale & gs)
+{
+    int sizeBild = gs.width * gs.height;
+    // indicates how many bits have to be 'borrowed' from the next
+    // code to be a multiple of 8 bits
+    int overflow = 0;
+    for(int index = 0; index < sizeBild ; index++)
+    {
+        greyValue greyV = gs.vec_gV[index];
+        codes theCode = gs.mpColCd.at(greyV);
+        if(overflow)
+        {
+            theCode = theCode.substr((size_t)overflow,theCode.size());
+        }
+        int len = theCode.size();
+        if(len == 0)
+        {
+            continue;
+        }
+        int segment = len / 8;
+        overflow = len % 8;
+        codes temp;
+        for(int i = 0; i < segment; i++)
+        {
+            // temp is the byte wise slice of the code
+            temp = theCode.substr(i*8,8);
+            byte toWrite = Codes2Byte(temp);
+            os << toWrite;
+        }
+        if(overflow)
+        {
+            // the index need to be added, until we can fill the gap
+            int up = 1;
+            // the gap to be filled
+            int toBeFillled = 8-overflow;
+            // the rest term
+            codes restTerm = theCode.substr(segment * 8,overflow);
+            codes merged = restTerm;
+
+            codes glued;
+            // indicating whether already written to the file
+            bool written = false;
+            // glue the next code if it exists
+            while(index + up < sizeBild)
+            {
+                codes nextCode = gs.mpColCd.at(gs.vec_gV[index + up]);
+                int nexLen = nextCode.size();
+                if(nexLen >= toBeFillled)
+                {
+                    glued = nextCode.substr(0,toBeFillled);
+                    overflow = nexLen - toBeFillled;
+                    merged = restTerm + glued;
+                    byte toWrite = Codes2Byte(merged);
+                    os << toWrite;
+                    index += up - 1;
+                    written = true;
+                    break;
+                }
+                else
+                {
+                    toBeFillled -= nexLen;
+                    restTerm += nextCode;
+                    up++;
+                }
+            }
+            if(written)
+            {
+                continue;
+            }
+            else
+            {
+                // have to pad with 0
+                for(int i = 0; i < toBeFillled; i++)
+                {
+                    restTerm.push_back('0');
+                }
+                byte toWrite = Codes2Byte(restTerm);
+                os << toWrite;
+                index += up - 1;
+            }
+            
+        }
+    }
+    return os;
+}
+
 
 codes Vect2Codes(vec_Codes & veC)
 {
@@ -1034,6 +1147,23 @@ codes Vect2Codes(vec_Codes & veC)
     // }
     codes mycode = veC;
     return mycode;
+}
+byte Codes2Byte(codes & str_code)
+{
+    if(str_code.size() != 8)
+    {
+        cout << "The str_code size is not 8\n";
+        exit(DECODE_LEN_MISMATCH);
+
+    }
+    byte result = 0;
+    int len = str_code.size();
+    for(int i = 0; i < len; i++)
+    {
+        result << 1;
+        result += str_code[i] - '0';
+    }
+    return result;
 }
 
  MyTree::MyTree():
@@ -1172,24 +1302,24 @@ ostream & operator<<(ostream & os,const MyTree & tr)
     {
         if(tr.RightTree != nullptr)
         {
-            cout << "the tree's left null while right not!\n";
+            os << "the tree's left null while right not!\n";
 
         }
         else
         {
-            cout << "it's a leaf\n";
+            os << "it's a leaf\n";
         }
         
     }
     else if(tr.RightTree == nullptr)
     {
-        cout << "the tree's right null while left not\n";
+        os << "the tree's right null while left not\n";
     }
     else
     {
-        cout << "it's a inner node\n";
+        os << "it's a inner node\n";
     }
-
+    return os;
 }
 
 void deleteTree(MyTree * tr)

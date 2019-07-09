@@ -8,6 +8,8 @@
 #include <string>
 #include "unit.h"
 
+
+
 using namespace std;
 using std::pair;
 
@@ -15,16 +17,19 @@ typedef unsigned int freQuency;
 typedef unsigned int greyValue;
 // typedef unsigned int codes;
 typedef string codes;
+typedef unsigned char Color;
+
 
 typedef pair<int,int> XYCoord;
 typedef vector<float> vPixels;
 typedef pair<unsigned int,unsigned int> pa_colorFreq;
-typedef map<unsigned int,unsigned int> map_colorFreq;
+typedef map<greyValue,unsigned int> map_colorFreq;
 // typedef map<unsigned int, unsigned int> map_colorCoding;
 // typedef map<unsigned int, unsigned int> map_codingColor;
-typedef map<unsigned int, string> map_colorCoding;
-typedef map<string, unsigned int> map_codingColor;
+typedef map<greyValue, string> map_colorCoding;
+typedef map<string, greyValue> map_codingColor;
 typedef vector<pa_colorFreq> vector_colFreq;
+typedef vector<greyValue> vector_greyValue;
 
 // typedef vector<unsigned int> vec_Codes;
 typedef string vec_Codes;
@@ -36,6 +41,11 @@ typedef string vec_Codes;
 #define WRONG_FORMAT 26
 #define MAP_COL_FREQ_EMPtY 27
 #define UNBALANCED_BRANCH 28
+// when the code to be converted to byte is not 8 byte long
+#define DECODE_LEN_MISMATCH 29
+
+// for testing and debug, if set all class member is public
+#define TEST 1
 class MyTree
 {
     public:
@@ -75,10 +85,17 @@ void deleteTree(MyTree * tr);
 typedef deque<MyTree> vector_myTree;
 class GreyScale
 {
+
+#ifndef TEST
     private:
+#else
+    public:
+#endif
         int     width,height;
         // float   *pixels;
         vPixels pixels;
+        // save the original grey value (a value from 0-255)
+        vector_greyValue vec_gV;
         string  magicNumber;
         // Format 0 --- PGM 
         //        1 --- PGM-RAW
@@ -141,7 +158,9 @@ class GreyScale
         void HuffmanCoding();
         void BuildTree();
         void BuildMap(const MyTree & myT);
-
+        
+        // write the Huffman coded pixel value into the file
+        friend ostream & WriteHuffCode(ostream & os,const GreyScale & gs);
         // IO function
         friend istream & operator>>(istream & is, GreyScale & gs);
         friend ostream & operator<<(ostream & os, const GreyScale & gs);
@@ -152,3 +171,7 @@ class GreyScale
 // convert the vec_Codes vec to a unsigned int
 // for example vec = {0,1,0,0,1} convert it to 9
 codes Vect2Codes(vec_Codes & veC);
+// convert the code(string) to unsigned char
+byte Codes2Byte(codes & str_code);
+// output the frequency in 32 Bit number
+void outFreq32Bit(const freQuency & freq);
