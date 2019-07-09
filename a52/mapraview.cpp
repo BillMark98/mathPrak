@@ -320,7 +320,7 @@ int main()
 
   // test function for huffman coding
   ifstream inFile;
-  inFile.open("huftest.pgm");
+  inFile.open("bilder/bauteil.pgm");
   if(!inFile.is_open())
   {
     cout << "Can't open the file\n";

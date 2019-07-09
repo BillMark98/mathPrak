@@ -2,6 +2,7 @@
 #include <vector>
 #include <deque>
 #include <algorithm>
+#include <queue>
 #include <map>
 #include <cmath>
 #include <string>
@@ -12,17 +13,21 @@ using std::pair;
 
 typedef unsigned int freQuency;
 typedef unsigned int greyValue;
-typedef unsigned int codes;
+// typedef unsigned int codes;
+typedef string codes;
 
 typedef pair<int,int> XYCoord;
 typedef vector<float> vPixels;
 typedef pair<unsigned int,unsigned int> pa_colorFreq;
 typedef map<unsigned int,unsigned int> map_colorFreq;
-typedef map<unsigned int, unsigned int> map_colorCoding;
-typedef map<unsigned int, unsigned int> map_codingColor;
+// typedef map<unsigned int, unsigned int> map_colorCoding;
+// typedef map<unsigned int, unsigned int> map_codingColor;
+typedef map<unsigned int, string> map_colorCoding;
+typedef map<string, unsigned int> map_codingColor;
 typedef vector<pa_colorFreq> vector_colFreq;
 
-typedef vector<unsigned int> vec_Codes;
+// typedef vector<unsigned int> vec_Codes;
+typedef string vec_Codes;
 
 #define SIZE_MISMATCH 22
 #define EVEN_SIZE_MASK 23
@@ -33,18 +38,20 @@ typedef vector<unsigned int> vec_Codes;
 #define UNBALANCED_BRANCH 28
 class MyTree
 {
-    private:
+    public:
         freQuency Frequency;
         greyValue GreyValue;
         MyTree * LeftTree;
         MyTree * RightTree;
+        // for the test whether the subtree is all deleted
+        int TreeCount;
     public:
         MyTree();
         MyTree(freQuency freq, greyValue grey);
         MyTree(const MyTree & tr);
         // I think no need to write an explicit copy constructor
-        MyTree operator=(const MyTree & tr);
-
+        MyTree & operator=(const MyTree & tr);
+        bool IsLeaf() const;
         void SetLeft(MyTree & lTree);
         void SetRight(MyTree & rTree);
         // bool operator< (const MyTree & rTree) const;
@@ -60,8 +67,10 @@ class MyTree
         friend bool operator< (const MyTree & lTree,const MyTree & rTree);
         friend bool operator> (const MyTree & lTree, const MyTree & rTree);
         friend MyTree TreeMerge(MyTree & lTree, MyTree & rTree);
+        friend ostream & operator<<(ostream & os,const MyTree & tr);
+        // friend void deleteTree(MyTree * tr);
 };
-
+void deleteTree(MyTree * tr);
 
 typedef deque<MyTree> vector_myTree;
 class GreyScale
