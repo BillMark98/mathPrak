@@ -965,6 +965,58 @@ ostream & operator<<(ostream & os, const GreyScale & gs)
             WriteHuffCode(os,gs);
             break;
         }
+        case 3:
+        {
+            os << "MHb";
+            gs.GreyTransform();
+            unsigned int theWidth = gs.width;
+            unsigned int theHeight = gs.height;
+            byte byteWidthHigh = theWidth >> 8;
+            byte byteWidthLow = theWidth % 256;
+
+            byte byteHeightHigh = theHeight >> 8;
+            byte byteHeightLow = theHeight % 256;
+            os << byteWidthHigh << byteWidthLow << byteHeightHigh << byteHeightLow;
+            // now the histogramm
+            // cout << "The size of vec_gV is " << gs.vec_gV.size();
+            // os << "The histogram\n";
+            // for(int index = 0; index < sBild; index++)
+            // {
+            //     greyValue greV = gs.vec_gV[index];
+            //     os << "cl:"<< greV << endl;
+            //     map_colorFreq::const_iterator iter = gs.mapColFreq.find(greV);
+            //     freQuency freq = (freQuency) 0;
+            //     if(iter != gs.mapColFreq.end())
+            //     {
+            //         freq = (iter -> second);
+            //     }
+            //     gs.outFreq32Bit(os,freq);
+            // }
+            
+#ifdef OUTDEBUG
+            cout << "in the operator << , output the map_colorFreq\n";
+#endif                    
+            for(greyValue greV = 0; greV < 256; greV++)
+            {
+
+                // os << "cl:"<< greV << endl;
+
+                map_colorFreq::const_iterator iter = gs.mapColFreq.find(greV);
+                freQuency freq = (freQuency) 0;
+                if(iter != gs.mapColFreq.end())
+                {
+                    freq = (iter -> second);
+                }
+#ifdef OUTDEBUG                
+                cout << "color : " << greV << " frequency is " << freq << endl;
+#endif                
+                gs.outFreq32Bit(os,freq);
+            }
+            // now the huffman code
+            // os << "The huffman\n";
+            WriteHuffCode(os,gs);
+            break;
+        }
         default:
         {
             cout << "No such format\n";
@@ -1290,6 +1342,153 @@ void GreyScale::BuildMap(MyTree & myT)
     vec_C.pop_back();
     
 }
+
+
+void GreyScale::GreyTransform()
+{
+    vtrans_gV.clear();
+    vtrans_gV.resize(width * height);
+    for(int j = height - 1; j >= 0; j--)
+    {
+        for(int i = width -1; i >= 0; i--)
+        {
+            greyValue temp = DiffNeighbor(i,j);
+            int index = XYCoord2Vec(i,j);
+            vtrans_gV[index] = temp;
+        }
+    }
+}
+
+void GreyScale::InverseGreyTransform()
+{
+    vec_gV.clear();
+    vec_gV.resize(width * height);
+    for(int j = 0; j < height; j++)
+    {
+        for(int i = 0; i < width; i++)
+        {
+            greyValue temp = SumNeighbor(i,j);
+            int index = XYCoord2Vec(i,j);
+            vec_gV[index] = temp;
+        }
+    }
+}
+
+greyValue GreyScale::DiffNeighbor(int i, int j)
+{
+    // assume i,j is valid
+    // i is width, j is height
+    // and assume width >= 2 height >= 2
+    if(i == width - 1)
+    {
+        if(j >= 1)
+        {
+            int sum = vec_gV[XYCoord2Vec(i,j-1)] + vec_gV[XYCoord2Vec(i-1,j)] 
+                        + vec_gV[XYCoord2Vec(i-1,j-1)];
+            sum /= 3;
+            int diff = (vec_gV[XYCoord2Vec(i,j)] - sum) % 256;
+            greyValue result = (greyValue) diff;
+            return result;
+        }
+        else
+        {
+            int sum = vec_gV[XYCoord2Vec(i-1,j)];
+            int diff = (vec_gV[XYCoord2Vec(i,j)] - sum) % 256;
+            greyValue result = (greyValue) diff;
+            return result;
+        }
+    }
+    if(i == 0)
+    {
+        if(j >= 1)
+        {
+            int sum = vec_gV[XYCoord2Vec(i,j-1)] + vec_gV[XYCoord2Vec(i+1,j-1)];
+            sum /= 2;
+            int diff = (vec_gV[XYCoord2Vec(i,j)] - sum) % 256;
+            greyValue result = (greyValue) diff;
+            return result;
+        }
+        else
+        {
+            // the (0,0) return itself
+            return (vec_gV[0]);
+        }
+    }
+    if(j == 0)
+    {
+        //  1 <= i <= width - 2
+            int sum = vec_gV[XYCoord2Vec(i-1,j)];
+            int diff = (vec_gV[XYCoord2Vec(i,j)] - sum) % 256;
+            greyValue result = (greyValue) diff;
+            return result;
+    }
+    // this case is that the point is in the middle
+    int sum = vec_gV[XYCoord2Vec(i,j-1)] + vec_gV[XYCoord2Vec(i+1,j-1)]
+                + vec_gV[XYCoord2Vec(i-1,j)] + vec_gV[XYCoord2Vec(i-1,j-1)];
+    sum /= 4;
+    int diff = (vec_gV[XYCoord2Vec(i,j)] - sum) % 256;
+    greyValue result = (greyValue) diff;
+    return result;
+}
+
+
+greyValue GreyScale::SumNeighbor(int i, int j)
+{
+    // assume i,j is valid
+    // i is width, j is height
+    // and assume width >= 2 height >= 2
+    if(i == width - 1)
+    {
+        if(j >= 1)
+        {
+            int sum = vec_gV[XYCoord2Vec(i,j-1)] + vec_gV[XYCoord2Vec(i-1,j)] 
+                        + vec_gV[XYCoord2Vec(i-1,j-1)];
+            sum /= 3;
+            int invdiff = (vec_gV[XYCoord2Vec(i,j)] + sum) % 256;
+            greyValue result = (greyValue) invdiff;
+            return result;
+        }
+        else
+        {
+            int sum = vec_gV[XYCoord2Vec(i-1,j)];
+            int invdiff = (vec_gV[XYCoord2Vec(i,j)] + sum) % 256;
+            greyValue result = (greyValue) invdiff;
+            return result;
+        }
+    }
+    if(i == 0)
+    {
+        if(j >= 1)
+        {
+            int sum = vec_gV[XYCoord2Vec(i,j-1)] + vec_gV[XYCoord2Vec(i+1,j-1)];
+            sum /= 2;
+            int invdiff = (vec_gV[XYCoord2Vec(i,j)] + sum) % 256;
+            greyValue result = (greyValue) invdiff;
+            return result;
+        }
+        else
+        {
+            // the (0,0) return itself
+            return (vec_gV[0]);
+        }
+    }
+    if(j == 0)
+    {
+        //  1 <= i <= width - 2
+            int sum = vec_gV[XYCoord2Vec(i-1,j)];
+            int invdiff = (vec_gV[XYCoord2Vec(i,j)] + sum) % 256;
+            greyValue result = (greyValue) invdiff;
+            return result;
+    }
+    // this case is that the point is in the middle
+    int sum = vec_gV[XYCoord2Vec(i,j-1)] + vec_gV[XYCoord2Vec(i+1,j-1)]
+                + vec_gV[XYCoord2Vec(i-1,j)] + vec_gV[XYCoord2Vec(i-1,j-1)];
+    sum /= 4;
+    int invdiff = (vec_gV[XYCoord2Vec(i,j)] + sum) % 256;
+    greyValue result = (greyValue) invdiff;
+    return result;
+}
+
 
 ostream & WriteHuffCode(ostream & os,const GreyScale & gs)
 {

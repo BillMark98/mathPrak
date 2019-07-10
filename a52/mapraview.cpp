@@ -343,7 +343,7 @@ int main()
 
 #ifdef HUF
   ifstream inFile;
-  inFile.open("bilder/roentgen.pgm");
+  inFile.open("bilder/shuttle.pgm");
   // inFile.open("huftest.pgm");
   if(!inFile.is_open())
   {
@@ -364,7 +364,7 @@ int main()
   
 
 
-  outFile.open("result13.pgm");
+  outFile.open("result16.pgm");
   if(!outFile.is_open())
   {
     cout << "can't open file\n";
@@ -377,7 +377,7 @@ int main()
 #ifndef HUF
   cout << "Test the huff read\n";
   ifstream inFile2;
-  inFile2.open("result13.pgm");
+  inFile2.open("result16.pgm");
   if(!inFile2.is_open())
   {
     cout << "Can't open the file\n";
@@ -389,7 +389,7 @@ int main()
   ofstream outFile;
   GreyScale::SetFormat(0);
   outFile.clear();
-  outFile.open("testHufroentgen.pgm");
+  outFile.open("testHufshuttle.pgm");
   if(!outFile.is_open())
   {
     cout << "can't open file\n";

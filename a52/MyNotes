@@ -282,3 +282,9 @@ OK!
 
 
 YEAH!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+.
+gs.GreyTransform() not allowed
+since it will change gs
+GreyTransform make it a friend 

@@ -102,6 +102,9 @@ class GreyScale
         vPixels pixels;
         // save the original grey value (a value from 0-255)
         vector_greyValue vec_gV;
+        // save the transformed greyvalue
+        vector_greyValue vtrans_gV;
+
         string  magicNumber;
         // Format 0 --- PGM 
         //        1 --- PGM-RAW
@@ -161,11 +164,20 @@ class GreyScale
         // help functions
         float pixelMedian(int index) const;
 
-        // for the compression
+        // for the huffman
         void HuffmanCoding();
         void BuildTree();
         void BuildMap(MyTree & myT);
         
+        // for the compression using transformation
+        // transform the greyValue matrix saving the value in vtrans_gV
+        void GreyTransform();
+        // Inverse transfrom the matrix to the original
+        void InverseGreyTransform();
+        // calculate the new diff value given the position i,j
+        greyValue DiffNeighbor(int i, int j);
+        // calculate the new sum value given the position i,j
+        greyValue SumNeighbor(int i, int j);
         // write the Huffman coded pixel value into the file
         friend ostream & WriteHuffCode(ostream & os,const GreyScale & gs);
         // read in the Huffman coded pixel value into GreyScale
