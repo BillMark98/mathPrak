@@ -22,7 +22,7 @@ bool Show=true;  // Bild anzeigen oder nicht
 #define SET_FORMAT 1
 #define DEBUG 1
 
-#define HUF 1
+// #define HUF 1
 
 
 

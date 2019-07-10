@@ -1291,6 +1291,8 @@ ostream & WriteHuffCode(ostream & os,const GreyScale & gs)
         int len = theCode.size();
         if(len == 0)
         {
+            // have to update the overflow
+            overflow = 0;
             continue;
         }
         int segment = len / 8;
@@ -1324,16 +1326,32 @@ ostream & WriteHuffCode(ostream & os,const GreyScale & gs)
             // indicating whether already written to the file
             bool written = false;
             // glue the next code if it exists
+#ifdef OUTDEBUG
+            cout << "begin while loop\n";
+            cout << "the restTerm is : " << restTerm << endl;
+#endif
             while(index + up < sizeBild)
             {
                 codes nextCode = gs.mpColCd.at(gs.vec_gV[index + up]);
+
+#ifdef OUTDEBUG
+                cout << "the nextCode is : " << nextCode << endl;
+#endif
                 int nexLen = nextCode.size();
                 if(nexLen >= toBeFillled)
                 {
                     glued = nextCode.substr(0,toBeFillled);
-                    overflow = nexLen - toBeFillled;
+                    // this caculates the len remained 
+                    // overflow = nexLen - toBeFillled;
+                    overflow = toBeFillled;
                     merged = restTerm + glued;
+
                     byte toWrite = Codes2Byte(merged);
+#ifdef OUTDEBUG
+                    cout << "nextCode cann fill the gap.\n";
+                    cout << "the glued " << glued << " the merged: " << merged << endl;
+                    cout << "the overflow " << overflow << "  the toWrite:  " << (unsigned short) toWrite << endl;
+#endif
                     os << toWrite;
                     index += up - 1;
                     written = true;
@@ -1343,6 +1361,11 @@ ostream & WriteHuffCode(ostream & os,const GreyScale & gs)
                 {
                     toBeFillled -= nexLen;
                     restTerm += nextCode;
+
+#ifdef OUTDEBUG
+                    cout << " the nextCode fails to fill \n";
+                    cout << "the restTerm now is " << restTerm << "  toBeFilled is " << toBeFillled << endl;
+#endif
                     up++;
                 }
             }

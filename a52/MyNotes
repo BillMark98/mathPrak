@@ -71,3 +71,13 @@ In file included from /usr/include/c++/7/iostream:40:0,
 可见 在第2个byte 开始 1000 0000 1011  中间的一个1 被吃掉了
 
 而 测试的时候 若是输出 P2模式 正确
+
+writeHuff 中有一处 应该 是 overflow = toBeFilled 而不是 nexLen - toBeFilled
+改好之后 再运行， Aborted
+分析 之后， 发现 是 因为 在 正好 下一个 code 完全fill the gap
+之后 new loop if(len == 0) continue
+will not update the overflow
+so next time the next next code will be substracted the overflow len char
+which is untrue since it should be primitive (without chaning anyting) ,since the previous
+one cover the gap. the deficit is 0 已经前一辈 还好了债，
+下一辈 仍要 还， 不厚道啊
