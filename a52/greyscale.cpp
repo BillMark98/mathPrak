@@ -1240,6 +1240,7 @@ ostream & WriteHuffCode(ostream & os,const GreyScale & gs)
                 byte toWrite = Codes2Byte(restTerm);
                 os << toWrite;
                 index += up - 1;
+                // I think could use break here
             }
             
         }
@@ -1251,6 +1252,125 @@ istream & ReadHuffCode(istream & is, GreyScale gs)
 {
     // idea, read in a bunch of bytes then convert each bit to a byte
     // the slice it to form a string to which a code corresponds 
+    byte readIn;
+    codes theCode;
+    theCode.clear();
+    // indicates the bits borrowed from the next complete byte
+    int overflow = 0;
+    // indicates the code left from the previous one
+    codes prevLeftCode;
+    prevLeftCode.clear();
+    // indicates the accumulated code
+    codes accumulated;
+    accumulated.clear();
+
+    int sizeBild = gs.width * gs.height;
+    map_codingColor::iterator iter;
+    greyValue grey;
+    for(int index = 0; index < sizeBild; index++)
+    {
+        // first test whether the prevLeftCode includes code
+        int prevLClen = prevLeftCode.size();
+        codes prevSubCode;
+        prevSubCode.clear();
+        // flag indicating whether we have read in a greyvalue
+        bool readGrey = false;
+        int plen;
+        for( plen = 1; plen <= prevLClen; plen++)
+        {
+            prevSubCode = prevLeftCode.substr(0,plen);
+            iter = gs.mpCdCol.find(prevSubCode);
+            if(iter != gs.mpCdCol.end())
+            {
+                // the subCode is valid code
+                grey = (iter -> second);
+                gs.vec_gV[index] = grey;
+                gs.pixels[index] = ((float)grey)/255;
+                readGrey = true;
+                break;
+            }
+        }
+        if(readGrey)
+        {
+            prevSubCode = prevSubCode.substr(plen,prevLClen);
+            accumulated = prevSubCode;
+            continue; 
+        }
+        is >> readIn;
+        theCode = Byte2Codes(readIn);
+        if(prevLClen > 0)
+        {
+            theCode = prevLeftCode + theCode;
+        }
+        if(overflow)
+        {
+            theCode = theCode.substr(overflow,8);
+        }
+        codes subCode;
+        
+        int theCodeBound = theCode.size();
+        // as long as we can read
+        // read as many bits as possible until we find
+        // the corresponding code
+        // since the prevLeftCode is examined before and
+        // we are sure that the prevLeftCode doesnt include 
+        // the code so we begin the substring length of prevLClen + 1
+        // note this is also true if prevLeftCode is nullstring
+        // in which we case we simply start at the len 1
+        for(int j = (prevLClen + 1); j <= theCodeBound; j++)
+        {
+            subCode = theCode.substr(0,j);
+            iter = gs.mpCdCol.find(subCode);
+            if(iter != gs.mpCdCol.end())
+            {
+                // the subCode is valid code
+                grey = (iter -> second);
+                gs.vec_gV[index] = grey;
+                gs.pixels[index] = ((float)grey)/255;
+                readGrey = true;
+                prevLeftCode = theCode.substr(j,theCodeBound);
+                break;
+            }
+        }
+        if(readGrey)
+        {
+            continue;
+        }
+        else
+        {
+            while(is.good())
+            {   
+
+                is >> readIn;
+                theCode = Byte2Codes(readIn);
+                if(overflow)
+                {
+                    theCode = theCode.substr(overflow,8);
+                }
+                codes subCode;
+                int theCodeBound = theCode.size();
+                for(int j = 1; j <= theCodeBound; j++)
+                {
+                    subCode = theCode.substr(0,j);
+                    iter = gs.mpCdCol.find(subCode);
+                    if(iter != gs.mpCdCol.end())
+                    {
+                        // the subCode is valid code
+                        grey = (iter -> second);
+                        gs.vec_gV[index] = grey;
+                        gs.pixels[index] = ((float)grey)/255;
+                        readGrey = true;
+
+                        break;
+                    }
+                }
+            }
+        }
+        
+        
+        
+
+    }
 }
 
 codes Vect2Codes(vec_Codes & veC)
