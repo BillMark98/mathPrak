@@ -1234,8 +1234,8 @@ void GreyScale::BuildMap(MyTree & myT)
             mpColCd[myT.GetGreyValue()] = theCode;
             mpCdCol[theCode] = myT.GetGreyValue();
 #ifdef OUTDEBUG
-            cout << "mpCdCol[theCode] = " << mpCdCol[theCode]<<endl;
-            cout << "mpCdCol[11] = " << mpCdCol["11"] << endl;
+            // cout << "mpCdCol[theCode] = " << mpCdCol[theCode]<<endl;
+            // cout << "mpCdCol[11] = " << mpCdCol["11"] << endl;
 #endif
             vec_C.pop_back();
             return;
@@ -1447,11 +1447,12 @@ istream & ReadHuffCode(istream & is, GreyScale & gs)
             if(iter != gs.mpCdCol.end())
             {
                 // the subCode is valid code
+                grey = (iter -> second);
 #ifdef OUTDEBUG
                 cout << "The valid preSubCode is " << prevSubCode << endl;
                 cout << "The color is : " << grey << endl;
 #endif
-                grey = (iter -> second);
+                
                 gs.vec_gV[index] = grey;
                 gs.pixels[index] = ((float)grey)/255;
                 readGrey = true;
@@ -1509,11 +1510,11 @@ istream & ReadHuffCode(istream & is, GreyScale & gs)
         
 
 #ifdef OUTDEBUG
-            if(subCode == "11")
-            {
-                cout << " the 11 code is " << gs.mpCdCol["11"] << endl;
-                cout << "the subCode mpCdCol is " <<  gs.mpCdCol[subCode] << endl;
-            }
+            // if(subCode == "11")
+            // {
+            //     cout << " the 11 code is " << gs.mpCdCol["11"] << endl;
+            //     cout << "the subCode mpCdCol is " <<  gs.mpCdCol[subCode] << endl;
+            // }
 
 #endif
             if(iter != gs.mpCdCol.end())

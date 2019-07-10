@@ -81,3 +81,136 @@ so next time the next next code will be substracted the overflow len char
 which is untrue since it should be primitive (without chaning anyting) ,since the previous
 one cover the gap. the deficit is 0 已经前一辈 还好了债，
 下一辈 仍要 还， 不厚道啊
+
+
+8. 
+original first line
+138 139 140 139 139 136 134 131 134 139 138 136 133 131 132 134
+
+read in  then write in huffman then read and write in P2模式
+
+138	139 140 139 139 136 134	0 96	  93	  66	 139	 138	 136	 133	   0	  96	  94	  92	 134	 132	 132	   0	  96	  60	   0	   0	  94	  78	 125	   0	 125	   0	  88	  63	  63	  65	  62	  76	   0	  95	  91	  91	  93	  63	  80	  91	   0	  63	  63	 135	  76	 134	 132	 127	 126	   0	  96	  93	  66	   0	   0	  48	   0	   0	  98	   0	  96	  58	  76	   0	  96	  93	  59	   0	  61	   0	   0	  48	   0	  96	  99	   0	   0	  96	  48	   0	   0	  98	   0	   0	  48	   0	  96	  64	  48	   0	   0	  48	   0	   0	  48	 126	   0	 111	   0	 111	   0	 111	   0	   0	  48	 132	   0	   0	  98	 126	 126	 126	 127	 132	   0	   0	  48	 124	   0	   0	 102	  48	 102	  94	  63	  99	   0	  63	  63	   0	   0	  96	  48	  96	  98	 127	 125	 125	 124	   0	   0	  96	   0	  89	   0	 111	   0	  96	   0	   0	  89	   0	   0	 102	  63	  74	  48	 138	  40	  48	 101	  59	 112	   0	   0	  98	 126	   0	   0	 102	  63	 101	  75	 137	  89	 119	 124	   0	   0	  48	   0	  96	 102	  94	  63	   0	   0	   0	 102	  63	   0	   0	   0	  96	   0	  63	   0	 111	 125	 124	 125	   0	   0	  48	 125	 119	   0	  96	   0	  63	   0	   0	   0	  96	  63	   0	 124	 124	   0	   0	 102	   0	  63	 119	 118	   0	   0	  96	   0	  63	 117	 118	 118	 117	 118	 118	 117	 119	   0	  96	 143	  85	  67	  37	 116	  59	  59	 100	 117	 116	 113	 114	 114	 112	 112	 115	 119	 118	 112	 112	 114	 113	 111	 112	 113	 115	 114	 111	 110	 111	 110	 110	 115	 113	   0	  77	   0	  40	   0	 104	  79	   0	  58	  91	   0	 101	  60	  85	  48	  63	  98	 114	  89	  36	  75	   0	 104	  89	  86	  94	   0	  58	  94	   0	 100	  96	  65	  98	 109	 110	 110	 109	   0	  94	   0	  49	 110	  62	  40	  98	   0	  94	  98	   0	  65	   0	 100	  99	  96	  90	  49	  49	  49	  58	   0	  59	 103	  99	  99	  99	  89	  89	  99	 103	  59	  59	  89	  67	  67	  67	  67	 103	 103	  67	  59	  67	  59	  61	   0	  68	  76	  75	  75	 104	  76	  79	  68	  65	 157	  48	 101	  68	  49	 101	  68	  49	  68	  89	  90	  86	  48	  48	 101	  68	  49	  58	  63	  63	  63	  86	  86	 101	  58	  86	  48	  99	  86	  48	  58	  80	 108	  94	  92	  93	  90	  93	  95	  97	  94	  94	  96	  93	  93	  93	  92	  92	  90	  93	  92	  91	  91	  92	  90	  88	  89	  90	  94	  93	
+
+05  80 b9 52 01 70 2e 82 0e  |..........R.p...|
+00000410  9e 7a e9 82 e0 59 04 1d  2c f6 5a 74 e5 a9 6b 3d  |.z...Y..,.Zt..k=|
+00000420  cf 65 b8 2f 05 ee 9e 78  e9 4b 59 e7 97 9e 67 b9  |.e./...x.KY...g.|
+00000430  e7 96 e9 3a 72 d3 a1 5
+
+138    0000 0101 100
+139    0000 0101 110
+140    0101 0100 1000
+136    1000 0010 000
+134    0111 0100 11
+131    1100 1111 01
+
+so the code should be 
+              139 begins     140             139            139
+0000 0101 100|0 0000 1011 10|01 0101 0010 00|00 0001 0111 0|000 0010 1110
+
+  0    5    8    0    b     9    5     2    0     1    7    0     2    e
+
+136           134           131          134           139
+1000 0010 000|0 1110 1001 1|110 0111 101|0 1110 1001 1|000 0010 1110
+
+ 8     2    0    e     9    e     7    a    e    9      8   2     e
+
+
+            00000410   9    e     7    a    e    9
+输入(writeHuf)没有问题，所以应该 是 读取时 ReadHuf 的问题
+
+
+
+
+
+看 对应的 result2.txt
+
+color is 136
+the prevLeftC is 01110
+the prevLeftCode : 01110
+the code is 10011110
+Before theCodeBOund loop the prevLCLen is: 5
+In the for loop theCodeBound: subCode
+011101
+In the for loop theCodeBound: subCode
+0111010
+In the for loop theCodeBound: subCode
+01110100
+In the for loop theCodeBound: subCode
+011101001
+In the for loop theCodeBound: subCode
+0111010011
+The valid code is: 0111010011
+The color is: 134
+the prevLeftCode : 110
+The valid preSubCode is 11
+The color is : 0
+the prevLeftCode : 0
+the code is 01111010
+Before theCodeBOund loop the prevLCLen is: 1
+In the for loop theCodeBound: subCode
+00
+In the for loop theCodeBound: subCode
+001
+In the for loop theCodeBound: subCode
+0011
+In the for loop theCodeBound: subCode
+00111
+In the for loop theCodeBound: subCode
+001111
+The valid code is: 001111
+
+
+
+其中 134 开始之前 可检查的都是对的， 说明 读取 没有问题，
+然后 发现 11  就对应的code 
+但是检查  mpColCd output 中 没有 对应的：
+
+The coding is:
+   color      |   code 
+      32	000001011011010
+      33	00000101011
+      34	1100111010
+      35	111100110
+      36	10101001
+      37	0011101
+      38	1000000
+      39	1010101
+      40	1011001
+      41	1011010
+      42	1011011
+      43	1011000
+
+可见从32 开始 (同时一可见 map 是如何 排序 key 的 即 此处按大小)
+显然没有 0 的位置
+
+但是 mpCdCol 中有一项
+
+ 1011000	43
+ 1011001	40
+ 1011010	41
+ 1011011	42
+  101110	88
+  101111	85
+      11	0
+  110000	83
+  110001	81
+
+所以 肯定 是哪里 引入的
+
+BuildMap 中:
+#ifdef OUTDEBUG
+            cout << "The code is: " << theCode << endl;
+            cout << "if code == 11 " << (theCode == "11") << endl;
+#endif            
+            mpColCd[myT.GetGreyValue()] = theCode;
+            mpCdCol[theCode] = myT.GetGreyValue();
+#ifdef OUTDEBUG
+            cout << "mpCdCol[theCode] = " << mpCdCol[theCode]<<endl;
+            cout << "mpCdCol[11] = " << mpCdCol["11"] << endl;
+#endif
+
+可能 是在 mpCdCol["11"]的时候 引入 mpCdCol["11"] = 0
+眼不见为净
+
+所以 也是 提醒， 没事不要 看map 的key 对应的value ，否则会引入
+不必要的error
