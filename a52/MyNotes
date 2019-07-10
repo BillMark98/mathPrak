@@ -250,3 +250,35 @@ Sorry, but your image differs up to 148 grey value(s) from the original!
 
 说明 我编的 huffman code decode 没有问题，因为可以闭环
 得到原来的文件， 所以 问题 出在 如何定义 code 的规则上
+
+一一开始 担心 是 min heap 的排序错了 所以改变了 compare function
+即 > 变 <   试着 跑了一下， write 还行 但是 read 会跑很久也没跑出来
+估计是 出现机率高的，此时反而被赋予 成的code 所以decode 要慢很多， 所以之前
+没有问题
+
+接着，仔细看hufman code  aufgabestellung 中说，
+merge 的 freq  是两个子树的之和 而greyvalue 为两者的min
+
+但code 中:
+int grey = lTree -> GreyValue;
+当时想当然尔， 认为lTree 是top rTree 是紧接的，所以lTree 对应的 小于 rTree的
+但是 可能是 freq left < freq right  while greyvalue left > greyvalue right
+
+所以改为
+ int grey = ((lTree -> GreyValue) < (rTree -> GreyValue)) ? (lTree -> GreyValue) : (rTree -> GreyValue);
+
+
+测试 结果：
+
+./bildtest -a13 result13.pgm 
+Reading image... 'bilder/roentgen.pgm'
+Format: PGM-ASCII
+Setting checking format...
+
+Reading image... 'result13.pgm'
+Format: Huffman
+Comparing...
+OK!
+
+
+YEAH!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

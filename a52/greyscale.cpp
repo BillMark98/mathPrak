@@ -27,6 +27,25 @@ struct CompareMyTree
         }
     }
 
+    // bool operator()(MyTree * lTree,  MyTree * rTree) const
+    // {
+    //     if(lTree -> GetFrequency() < rTree -> GetFrequency())
+    //     {
+    //         return true;
+    //     }
+    //     else if(lTree -> GetFrequency() == rTree -> GetFrequency())
+    //     {
+    //         if(lTree -> GetGreyValue() < rTree -> GetGreyValue())
+    //         {
+    //             return true;
+    //         }
+    //     }
+    //     else
+    //     {
+    //         return false;
+    //     }
+    // }
+
     // bool operator()(const MyTree & lTree, const MyTree & rTree) const
     // {
     //     if(lTree.GetFrequency() > rTree.GetFrequency())
@@ -1177,8 +1196,8 @@ void GreyScale::BuildTree()
 
         minHeap.pop();
         int freq = lTree -> Frequency + rTree -> Frequency;
-        // int grey = ((lTree -> GreyValue) < (rTree -> GreyValue)) ? (lTree -> GreyValue) : (rTree -> GreyValue);
-        int grey = lTree -> GreyValue;
+        int grey = ((lTree -> GreyValue) < (rTree -> GreyValue)) ? (lTree -> GreyValue) : (rTree -> GreyValue);
+        // int grey = lTree -> GreyValue;
         topTree = new MyTree(freq, grey);
         topTree -> LeftTree = lTree;
         topTree -> RightTree = rTree;

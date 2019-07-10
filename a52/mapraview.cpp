@@ -26,6 +26,22 @@ bool Show=true;  // Bild anzeigen oder nicht
 
 
 
+struct myComp
+{
+  bool operator()(const int & l, const int & r)
+  {
+    return l > r;
+  }
+};
+
+template<typename T> void print_queue(T& q) {
+    while(!q.empty()) {
+        std::cout << q.top() << " ";
+        q.pop();
+    }
+    std::cout << '\n';
+}
+
 // Die Funktion "Display" dient als Verbindung zwischen der "Greyscale"-Klasse
 // und der Funktion "ShowImage" aus "unit7". Hier wird der Datentyp "float"
 // in den Datentyp "byte" (inclusive Clamping) umgewandelt. Je nach dem Wert
@@ -327,7 +343,7 @@ int main()
 
 #ifdef HUF
   ifstream inFile;
-  inFile.open("bilder/rose.pgm");
+  inFile.open("bilder/roentgen.pgm");
   // inFile.open("huftest.pgm");
   if(!inFile.is_open())
   {
@@ -348,7 +364,7 @@ int main()
   
 
 
-  outFile.open("resultrose.pgm");
+  outFile.open("result13.pgm");
   if(!outFile.is_open())
   {
     cout << "can't open file\n";
@@ -361,7 +377,7 @@ int main()
 #ifndef HUF
   cout << "Test the huff read\n";
   ifstream inFile2;
-  inFile2.open("resultrose.pgm");
+  inFile2.open("result13.pgm");
   if(!inFile2.is_open())
   {
     cout << "Can't open the file\n";
@@ -373,7 +389,7 @@ int main()
   ofstream outFile;
   GreyScale::SetFormat(0);
   outFile.clear();
-  outFile.open("testHufrose.pgm");
+  outFile.open("testHufroentgen.pgm");
   if(!outFile.is_open())
   {
     cout << "can't open file\n";
@@ -418,6 +434,18 @@ int main()
   // byte tB = 0b010111;
   // codes theC = Byte2Codes(tB);
   // cout << "The code: " << theC<< endl;
-   
+
+  // priority_queue<int,vector<int>,myComp> myheap;
+  // // myheap.push(2);
+  // // myheap.push(1);
+  // // myheap.push(4);
+  // // myheap.push(5);
+  // // myheap.push(3);
+
+  // for(int n : {1,8,5,6,3,4,0,9,7,2})
+  //       myheap.push(n);
+
+  // print_queue(myheap);
+
   return 0;
 }

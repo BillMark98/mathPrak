@@ -7,6 +7,7 @@
 #include <map>
 #include <cmath>
 #include <string>
+#include <functional>
 #include "unit.h"
 
 
