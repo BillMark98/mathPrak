@@ -163,6 +163,8 @@ class GreyScale
         
         // write the Huffman coded pixel value into the file
         friend ostream & WriteHuffCode(ostream & os,const GreyScale & gs);
+        // read in the Huffman coded pixel value into GreyScale
+        friend istream & ReadHuffCode(istream & is, GreyScale gs);
         // IO function
         friend istream & operator>>(istream & is, GreyScale & gs);
         friend ostream & operator<<(ostream & os, const GreyScale & gs);
@@ -178,4 +180,5 @@ class GreyScale
 codes Vect2Codes(vec_Codes & veC);
 // convert the code(string) to unsigned char
 byte Codes2Byte(codes & str_code);
-
+// convert the byte to a code, each bit becomes one byte
+codes Byte2Codes(const byte & theByte);

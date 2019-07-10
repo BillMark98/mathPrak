@@ -332,13 +332,13 @@ int main()
   pic.HuffmanCoding();
   ofstream outFile;
   GreyScale::SetFormat(2);
-  outFile.open("result13.pgm");
-  if(!outFile.is_open())
-  {
-    cout << "can't open file\n";
-    exit(1);
-  }
-  outFile<<pic;
+  // outFile.open("result13.pgm");
+  // if(!outFile.is_open())
+  // {
+  //   cout << "can't open file\n";
+  //   exit(1);
+  // }
+  // outFile<<pic;
 
   // cout << "Testing the string lenth\n";
 
@@ -370,6 +370,12 @@ int main()
   // cout << "the value a is: " << vara << "  a >> 4" << (vara >> 4) << "  vara: " << vara << endl;
 
   // cout << "Testing the slicing: ";
-  // pic.outFreq32Bit(cout,vara);  
+  // pic.outFreq32Bit(cout,vara); 
+
+  cout << "test the byte 2 code:\n";
+  byte tB = 0b010111;
+  codes theC = Byte2Codes(tB);
+  cout << "The code: " << theC<< endl;
+   
   return 0;
 }

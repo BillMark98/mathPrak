@@ -645,7 +645,6 @@ istream & operator>>(istream & is, GreyScale & gs)
             gs.vec_gV.clear();
             gs.vec_gV.resize(sizeBild);
 
-            int sizeBild = width * height;
             // cout << "the case 0\n";
             for( int index = 0; index < sizeBild; index++)
             {
@@ -672,7 +671,7 @@ istream & operator>>(istream & is, GreyScale & gs)
         case 1:
         {
             greyValue colors;
-            map_colorFreq::iterator it;
+            
             is >> width >> height;
             is >> colorstep;
             int sizeBild = width * height;
@@ -725,10 +724,12 @@ istream & operator>>(istream & is, GreyScale & gs)
                 freQuency freq = (b1 << (24)) + (b2 << 16) + (b3 << 8) + b4;
                 if(freq)
                 {
-                    
+                    gs.mapColFreq[grev] = freq;
                 }
-            
             }
+            // build the huffman code
+            gs.HuffmanCoding();
+
             break;
         }
     }
@@ -1246,6 +1247,11 @@ ostream & WriteHuffCode(ostream & os,const GreyScale & gs)
     return os;
 }
 
+istream & ReadHuffCode(istream & is, GreyScale gs)
+{
+    // idea, read in a bunch of bytes then convert each bit to a byte
+    // the slice it to form a string to which a code corresponds 
+}
 
 codes Vect2Codes(vec_Codes & veC)
 {
@@ -1287,6 +1293,19 @@ byte Codes2Byte(codes & str_code)
     return result;
 }
 
+codes Byte2Codes(const byte & theByte)
+{
+    codes theCode;
+    byte copyByte = theByte;
+    theCode.clear();
+    for(int count = 7; count >= 0; count--)
+    {
+        byte theCharacter = (copyByte >> 7) + '0';
+        copyByte = copyByte << 1; 
+        theCode.push_back(theCharacter);
+    }
+    return theCode;
+}
 ostream & GreyScale::outFreq32Bit(ostream & os, const freQuency & freq) const
 {
     byte toWrite;
