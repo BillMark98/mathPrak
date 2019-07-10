@@ -587,17 +587,31 @@ istream & operator>>(istream & is, GreyScale & gs)
     // {
     //   if()
     // }
-    
-    
+#ifdef OUTDEBUG
+    cout << "*******************************\n";
+    cout << "in the reading The inverse is:\n";
+    map_codingColor::const_iterator iter2;
+    cout << "   code       |  color " << endl;
+    for(iter2 = gs.mpCdCol.begin(); iter2 != gs.mpCdCol.end(); iter2++)
+    {
+        cout.width(8);
+        cout << iter2 -> first << "\t" << iter2 -> second << endl;
+    }
+
+#endif
+    gs.magicNumber.clear();
     byte toRead;
     toRead = is.peek();
-    if(toRead == 'P')
+    // cout << "The toRead is \n" << toRead <<" int: " << (unsigned short) toRead <<endl;
+    if(toRead == (byte)('P'))
     {
         // the first two cases just read in the whole line
+        // cout << "to Read is P\n";
         getline(is,gs.magicNumber);
     }
     else if(toRead == 'M')
     {
+        // cout << "to Read is M\n";
         // read in M
         is >> toRead;  
         gs.magicNumber.push_back(toRead);
@@ -608,21 +622,30 @@ istream & operator>>(istream & is, GreyScale & gs)
         is >> toRead;
         gs.magicNumber.push_back(toRead);
     }
+    // cout << "The magic number is " << gs.magicNumber<< endl;
     gs.MagicSetFormat();
-    is >> ws;
-    char ch = is.peek();
+#ifdef TEST
+    cout << "The format is: " << GreyScale::Format << endl;
+#endif
     int width,height,colorstep;
-    if(ch == '#')
-    {
-        while((ch = is.get()) != '\n')
-            continue;
-    }
-    else if(!isdigit(ch))
-    {
-        cout << "Unexpected character in the input\n";
-        cout << "The char is " << ch << endl;
-        exit(UNEXPECTED_CHAR);
-    }
+
+
+    // is >> ws;
+    // char ch = is.peek();
+    
+    // if(ch == '#')
+    // {
+    //     while((ch = is.get()) != '\n')
+    //         continue;
+    // }
+    // else if(!isdigit(ch))
+    // {
+    //     cout << "Unexpected character in the input\n";
+    //     cout << "The char is " << ch << endl;
+    //     exit(UNEXPECTED_CHAR);
+    // }
+
+
     // is >> width >> height;
     // gs.Resize(width,height);
     // is >> colorstep;
@@ -637,7 +660,25 @@ istream & operator>>(istream & is, GreyScale & gs)
         case 0:
         {
             greyValue colors;
+
+            is >> ws;
+            char ch = is.peek();
+            int width,height,colorstep;
+            if(ch == '#')
+            {
+                while((ch = is.get()) != '\n')
+                    continue;
+            }
+            else if(!isdigit(ch))
+            {
+                cout << "Unexpected character in the input\n";
+                cout << "The char is " << ch << endl;
+                exit(UNEXPECTED_CHAR);
+            }
+
             map_colorFreq::iterator it;
+
+
             is >> width >> height;
             is >> colorstep;
             int sizeBild = width * height;
@@ -666,12 +707,28 @@ istream & operator>>(istream & is, GreyScale & gs)
                     gs.mapColFreq[colors] = 1;
                 }
             }
+            is >> ch; // should read in EOF
             break;
         }
         case 1:
         {
             greyValue colors;
             
+            is >> ws;
+            char ch = is.peek();
+            int width,height,colorstep;
+            if(ch == '#')
+            {
+                while((ch = is.get()) != '\n')
+                    continue;
+            }
+            else if(!isdigit(ch))
+            {
+                cout << "Unexpected character in the input\n";
+                cout << "The char is " << ch << endl;
+                exit(UNEXPECTED_CHAR);
+            }
+
             is >> width >> height;
             is >> colorstep;
             int sizeBild = width * height;
@@ -699,10 +756,12 @@ istream & operator>>(istream & is, GreyScale & gs)
                     gs.mapColFreq[col] = 1;
                 }
             }
+            is >> ch; // should read in EOF
             break;
         }
         case 2:
         {
+            // cout << "In the case"
             byte Highbits;
             byte Lowbits;
             // read in width
@@ -710,6 +769,7 @@ istream & operator>>(istream & is, GreyScale & gs)
             int width = (Highbits << 8) + Lowbits;
 
             // read in height
+            is >> Highbits >> Lowbits;
             int height = (Highbits << 8) + Lowbits;
             int sizeBild = width * height;
             gs.Resize(width,height);
@@ -718,10 +778,16 @@ istream & operator>>(istream & is, GreyScale & gs)
 
             byte b1,b2,b3,b4;
             // read in the histogram
-            for(greyValue grev; grev < 256; grev++)
+            for(greyValue grev = 0; grev < 256; grev++)
             {
                 is >> b1 >> b2 >> b3 >> b4;
+
                 freQuency freq = (b1 << (24)) + (b2 << 16) + (b3 << 8) + b4;
+#ifdef OUTDEBUG
+                cout << "The grey value " << grev << " The freq is " << freq;
+                cout <<  "the bs are " << (unsigned short) b1 << '\t' <<(unsigned short) b2 << "\t" 
+                    << (unsigned short)b3 << "\t" << (unsigned short) b4 << endl;
+#endif                    
                 if(freq)
                 {
                     gs.mapColFreq[grev] = freq;
@@ -729,12 +795,12 @@ istream & operator>>(istream & is, GreyScale & gs)
             }
             // build the huffman code
             gs.HuffmanCoding();
-
+            ReadHuffCode(is,gs);
             break;
         }
     }
     
-    is >> ch; // should read in EOF
+    
     return is;
 }
 ostream & operator<<(ostream & os, const GreyScale & gs)
@@ -762,7 +828,7 @@ ostream & operator<<(ostream & os, const GreyScale & gs)
     {
         case 0:
         {
-            os << gs.magicNumber << endl;
+            os << "P2" << endl;
             os << gs.width << '\t' << gs.height << endl;
             os << 255<< endl;
             // cout << "In the case 0\n";
@@ -783,7 +849,8 @@ ostream & operator<<(ostream & os, const GreyScale & gs)
         }
         case 1:
         {
-            os << gs.magicNumber << endl;
+            // os << gs.magicNumber << endl;
+            os << "P5" << endl;
             os << gs.width << '\t' << gs.height << endl;
             os << 255<< endl;
             // cout << "In the case 1\n";
@@ -797,7 +864,8 @@ ostream & operator<<(ostream & os, const GreyScale & gs)
         }
         case 2:
         {
-            os << gs.magicNumber;
+            // os << gs.magicNumber;
+            os << "MHa";
             unsigned int theWidth = gs.width;
             unsigned int theHeight = gs.height;
             byte byteWidthHigh = theWidth >> 8;
@@ -1094,7 +1162,7 @@ void GreyScale::BuildTree()
 }
 
 
-void GreyScale::BuildMap(const MyTree & myT)
+void GreyScale::BuildMap(MyTree & myT)
 {
     // if(TrColFreq.isempty())
     // {
@@ -1127,9 +1195,14 @@ void GreyScale::BuildMap(const MyTree & myT)
             codes theCode = Vect2Codes(vec_C);
 #ifdef OUTDEBUG
             cout << "The code is: " << theCode << endl;
+            cout << "if code == 11 " << (theCode == "11") << endl;
 #endif            
             mpColCd[myT.GetGreyValue()] = theCode;
             mpCdCol[theCode] = myT.GetGreyValue();
+#ifdef OUTDEBUG
+            cout << "mpCdCol[theCode] = " << mpCdCol[theCode]<<endl;
+            cout << "mpCdCol[11] = " << mpCdCol["11"] << endl;
+#endif
             vec_C.pop_back();
             return;
         }
@@ -1248,15 +1321,30 @@ ostream & WriteHuffCode(ostream & os,const GreyScale & gs)
     return os;
 }
 
-istream & ReadHuffCode(istream & is, GreyScale gs)
+istream & ReadHuffCode(istream & is, GreyScale & gs)
 {
     // idea, read in a bunch of bytes then convert each bit to a byte
     // the slice it to form a string to which a code corresponds 
+
+
+#ifdef OUTDEBUG
+    cout << "*******************************\n";
+    cout << "in the readhuff code The inverse is:\n";
+    map_codingColor::const_iterator iter2;
+    cout << "   code       |  color " << endl;
+    for(iter2 = gs.mpCdCol.begin(); iter2 != gs.mpCdCol.end(); iter2++)
+    {
+        cout.width(8);
+        cout << iter2 -> first << "\t" << iter2 -> second << endl;
+    }
+
+#endif
+
     byte readIn;
     codes theCode;
     theCode.clear();
     // indicates the bits borrowed from the next complete byte
-    int overflow = 0;
+    // int overflow = 0;
     // indicates the code left from the previous one
     codes prevLeftCode;
     prevLeftCode.clear();
@@ -1271,6 +1359,12 @@ istream & ReadHuffCode(istream & is, GreyScale gs)
     {
         // first test whether the prevLeftCode includes code
         int prevLClen = prevLeftCode.size();
+#ifdef OUTDEBUG
+        if(prevLClen > 0)
+        {
+            cout << "the prevLeftCode : " << prevLeftCode << endl;
+        }
+#endif
         codes prevSubCode;
         prevSubCode.clear();
         // flag indicating whether we have read in a greyvalue
@@ -1283,6 +1377,10 @@ istream & ReadHuffCode(istream & is, GreyScale gs)
             if(iter != gs.mpCdCol.end())
             {
                 // the subCode is valid code
+#ifdef OUTDEBUG
+                cout << "The valid preSubCode is " << prevSubCode << endl;
+                cout << "The color is : " << grey << endl;
+#endif
                 grey = (iter -> second);
                 gs.vec_gV[index] = grey;
                 gs.pixels[index] = ((float)grey)/255;
@@ -1293,39 +1391,72 @@ istream & ReadHuffCode(istream & is, GreyScale gs)
         if(readGrey)
         {
             prevSubCode = prevSubCode.substr(plen,prevLClen);
+            // do I need this one?
             accumulated = prevSubCode;
             continue; 
         }
         is >> readIn;
         theCode = Byte2Codes(readIn);
+#ifdef OUTDEBUG
+        cout << "the code is " << theCode << endl;
+#endif
         if(prevLClen > 0)
         {
             theCode = prevLeftCode + theCode;
         }
-        if(overflow)
-        {
-            theCode = theCode.substr(overflow,8);
-        }
+
+
+        // if(overflow)
+        // {
+        //     theCode = theCode.substr(overflow,8);
+        // }
+
+
         codes subCode;
         
         int theCodeBound = theCode.size();
-        // as long as we can read
-        // read as many bits as possible until we find
-        // the corresponding code
+        
         // since the prevLeftCode is examined before and
         // we are sure that the prevLeftCode doesnt include 
         // the code so we begin the substring length of prevLClen + 1
         // note this is also true if prevLeftCode is nullstring
         // in which we case we simply start at the len 1
+
+#ifdef OUTDEBUG
+        cout << "Before theCodeBOund loop the prevLCLen is: " << prevLClen << endl;
+#endif
         for(int j = (prevLClen + 1); j <= theCodeBound; j++)
         {
             subCode = theCode.substr(0,j);
+
+#ifdef OUTDEBUG
+            cout << "In the for loop theCodeBound: subCode\n";
+            cout << subCode << endl;
+
+#endif
             iter = gs.mpCdCol.find(subCode);
+        
+
+#ifdef OUTDEBUG
+            if(subCode == "11")
+            {
+                cout << " the 11 code is " << gs.mpCdCol["11"] << endl;
+                cout << "the subCode mpCdCol is " <<  gs.mpCdCol[subCode] << endl;
+            }
+
+#endif
             if(iter != gs.mpCdCol.end())
             {
                 // the subCode is valid code
+#ifdef OUTDEBUG                
+                cout << "The valid code is: " << subCode << endl;
+#endif                
                 grey = (iter -> second);
                 gs.vec_gV[index] = grey;
+
+#ifdef OUTDEBUG
+                cout << "The color is: " << grey << endl;
+#endif            
                 gs.pixels[index] = ((float)grey)/255;
                 readGrey = true;
                 prevLeftCode = theCode.substr(j,theCodeBound);
@@ -1338,18 +1469,28 @@ istream & ReadHuffCode(istream & is, GreyScale gs)
         }
         else
         {
+            accumulated = theCode;
+            // codes temp;
+
+            // as long as we can read
+            // read as many bits as possible until we find
+            // the corresponding code
             while(is.good())
             {   
 
                 is >> readIn;
                 theCode = Byte2Codes(readIn);
-                if(overflow)
-                {
-                    theCode = theCode.substr(overflow,8);
-                }
-                codes subCode;
-                int theCodeBound = theCode.size();
-                for(int j = 1; j <= theCodeBound; j++)
+                // if(overflow)
+                // {
+                //     theCode = theCode.substr(overflow,8);
+                // }
+                // codes subCode;
+                theCode = accumulated + theCode;
+                // the len of the string at which the search
+                // for code begin
+                int downBound = accumulated.size();
+                int tcBound = theCode.size();
+                for(int j = (downBound + 1); j <= tcBound; j++)
                 {
                     subCode = theCode.substr(0,j);
                     iter = gs.mpCdCol.find(subCode);
@@ -1360,17 +1501,35 @@ istream & ReadHuffCode(istream & is, GreyScale gs)
                         gs.vec_gV[index] = grey;
                         gs.pixels[index] = ((float)grey)/255;
                         readGrey = true;
-
+                        prevSubCode = theCode.substr(j,tcBound);
                         break;
                     }
                 }
+                if(readGrey)
+                {
+                    break;
+                }
+                else
+                {
+                    accumulated = theCode;
+                }
+                
+            }
+            if(!is.good())
+            {
+                cout << "cant decode fully\n";
+                exit(DECODE_ERROR);
             }
         }
-        
-        
-        
-
     }
+    // eat zero
+    char ch;
+    is >> ch;
+    while((ch = is.get()) != EOF)
+    {
+        continue;
+    }
+    return is;  
 }
 
 codes Vect2Codes(vec_Codes & veC)
@@ -1422,7 +1581,7 @@ codes Byte2Codes(const byte & theByte)
     {
         byte theCharacter = (copyByte >> 7) + '0';
         copyByte = copyByte << 1; 
-        theCode.push_back(theCharacter);
+        theCode.push_back((char)theCharacter);
     }
     return theCode;
 }

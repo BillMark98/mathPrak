@@ -5,3 +5,10 @@ Teil1
 [0,1]. 否则在输出时也会有问题
 2. 一开始用int 数组 (dynamic 分配）结果总是会在运行时出错，core dumped,
 or double free or corruption(out) Aborted(core dumped) or segmentation fault
+
+3. ReadHuf时时发现mdCdCol["11"] 没有值的但其实是有的，发现ReadHufCode 中
+调用的是GreyScale gs把不是 GreyScale & gs 所以问题出在 copy constructor 上
+因为 我写的 是没有copy 相关 map 的， 所以 就是 default 的空 map
+所会会 出 问题
+4.  一开始 输 frequency 发现 错位， 原因 是 读取 width 之后 忘了读取
+height  所以 错位

@@ -21,6 +21,8 @@ bool Show=true;  // Bild anzeigen oder nicht
 
 #define SET_FORMAT 1
 #define DEBUG 1
+
+// #define HUF 1
 // Die Funktion "Display" dient als Verbindung zwischen der "Greyscale"-Klasse
 // und der Funktion "ShowImage" aus "unit7". Hier wird der Datentyp "float"
 // in den Datentyp "byte" (inclusive Clamping) umgewandelt. Je nach dem Wert
@@ -318,7 +320,9 @@ int main()
   
 
 
-  // test function for huffman coding
+  // test function for huffman coding#
+
+#ifdef HUF
   ifstream inFile;
   inFile.open("bilder/roentgen.pgm");
   // inFile.open("huftest.pgm");
@@ -331,15 +335,50 @@ int main()
   inFile >> pic;
   pic.HuffmanCoding();
   ofstream outFile;
-  GreyScale::SetFormat(2);
-  // outFile.open("result13.pgm");
-  // if(!outFile.is_open())
-  // {
-  //   cout << "can't open file\n";
-  //   exit(1);
-  // }
-  // outFile<<pic;
+  cout << "outputting pic in format 0\n";
+  GreyScale::SetFormat(0);
+  cout << pic << endl;
 
+
+  GreyScale::SetFormat(2);
+
+  
+
+
+  outFile.open("result13.pgm");
+  if(!outFile.is_open())
+  {
+    cout << "can't open file\n";
+    exit(1);
+  }
+  outFile<<pic;
+  cout << "output res13 successfully"<<endl;
+#endif
+
+#ifndef HUF
+  cout << "Test the huff read\n";
+  ifstream inFile2;
+  inFile2.open("result13.pgm");
+  if(!inFile2.is_open())
+  {
+    cout << "Can't open the file\n";
+    exit(1);
+  }
+  inFile2 >> newpic;
+  cout << "The new pic read successfully\n"; 
+
+  ofstream outFile;
+  GreyScale::SetFormat(0);
+  outFile.clear();
+  outFile.open("testHufRead.pgm");
+  if(!outFile.is_open())
+  {
+    cout << "can't open file\n";
+    exit(1);
+  }
+  outFile<<newpic;
+
+#endif
   // cout << "Testing the string lenth\n";
 
   // cout << "pic.mpColCd[117]: " << pic.mpColCd[117] << "  has length " << pic.mpColCd[117].size() << endl;
@@ -372,10 +411,10 @@ int main()
   // cout << "Testing the slicing: ";
   // pic.outFreq32Bit(cout,vara); 
 
-  cout << "test the byte 2 code:\n";
-  byte tB = 0b010111;
-  codes theC = Byte2Codes(tB);
-  cout << "The code: " << theC<< endl;
+  // cout << "test the byte 2 code:\n";
+  // byte tB = 0b010111;
+  // codes theC = Byte2Codes(tB);
+  // cout << "The code: " << theC<< endl;
    
   return 0;
 }

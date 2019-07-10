@@ -44,7 +44,9 @@ typedef string vec_Codes;
 #define UNBALANCED_BRANCH 28
 // when the code to be converted to byte is not 8 byte long
 #define DECODE_LEN_MISMATCH 29
-// #define OUTDEBUG 1
+// when read in huffman code and cannot decode fully before we reach EOF
+#define DECODE_ERROR 30
+#define OUTDEBUG 1
 // for testing and debug, if set all class member is public
 #define TEST 1
 class MyTree
@@ -159,12 +161,12 @@ class GreyScale
         // for the compression
         void HuffmanCoding();
         void BuildTree();
-        void BuildMap(const MyTree & myT);
+        void BuildMap(MyTree & myT);
         
         // write the Huffman coded pixel value into the file
         friend ostream & WriteHuffCode(ostream & os,const GreyScale & gs);
         // read in the Huffman coded pixel value into GreyScale
-        friend istream & ReadHuffCode(istream & is, GreyScale gs);
+        friend istream & ReadHuffCode(istream & is, GreyScale & gs);
         // IO function
         friend istream & operator>>(istream & is, GreyScale & gs);
         friend ostream & operator<<(ostream & os, const GreyScale & gs);
