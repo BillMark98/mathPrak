@@ -1278,9 +1278,15 @@ ostream & WriteHuffCode(ostream & os,const GreyScale & gs)
     {
         greyValue greyV = gs.vec_gV[index];
         codes theCode = gs.mpColCd.at(greyV);
+#ifdef OUTDEBUG
+        cout << "The greyV: " << greyV << "  code: " << theCode << endl;
+#endif
         if(overflow)
         {
             theCode = theCode.substr((size_t)overflow,theCode.size());
+#ifdef OUTDEBUG
+        cout << "after modification the code : " << theCode << endl;
+#endif
         }
         int len = theCode.size();
         if(len == 0)
@@ -1289,12 +1295,19 @@ ostream & WriteHuffCode(ostream & os,const GreyScale & gs)
         }
         int segment = len / 8;
         overflow = len % 8;
+#ifdef OUTDEBUG
+        cout << "segment: " <<segment << "  overflow: " << overflow << endl;
+#endif    
         codes temp;
         for(int i = 0; i < segment; i++)
         {
             // temp is the byte wise slice of the code
             temp = theCode.substr(i*8,8);
             byte toWrite = Codes2Byte(temp);
+#ifdef OUTDEBUG
+            cout << "temp is: " << temp << endl;
+            cout << "the byte toWrite is " << (unsigned short) toWrite << endl;
+#endif
             os << toWrite;
         }
         if(overflow)
@@ -1424,7 +1437,7 @@ istream & ReadHuffCode(istream & is, GreyScale & gs)
         }
         if(readGrey)
         {
-            prevSubCode = prevSubCode.substr(plen,prevLClen);
+            prevLeftCode= prevLeftCode.substr(plen,prevLClen);
             // do I need this one?
             accumulated = prevSubCode;
             continue; 
@@ -1522,6 +1535,11 @@ istream & ReadHuffCode(istream & is, GreyScale & gs)
                 // }
                 // codes subCode;
                 theCode = accumulated + theCode;
+
+#ifdef OUTDEBUG
+                cout << "in the while " << endl;
+                cout << "The theCode " << theCode << endl;
+#endif
                 // the len of the string at which the search
                 // for code begin
                 int downBound = accumulated.size();
@@ -1533,11 +1551,23 @@ istream & ReadHuffCode(istream & is, GreyScale & gs)
                     if(iter != gs.mpCdCol.end())
                     {
                         // the subCode is valid code
+#ifdef OUTDEBUG
+                        cout << "the valid subcode: " <<endl;
+                        cout << subCode << endl;
+#endif
                         grey = (iter -> second);
                         gs.vec_gV[index] = grey;
+
+#ifdef OUTDEBUG
+                        cout << "color is " << grey << endl;
+#endif
                         gs.pixels[index] = ((float)grey)/255;
                         readGrey = true;
-                        prevSubCode = theCode.substr(j,tcBound);
+                        prevLeftCode = theCode.substr(j,tcBound);
+
+#ifdef OUTDEBUG
+                        cout << "the prevLeftC is " << prevLeftCode << endl;
+#endif
                         break;
                     }
                 }
