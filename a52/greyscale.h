@@ -24,6 +24,7 @@ typedef pair<int,int> XYCoord;
 typedef vector<float> vPixels;
 typedef pair<unsigned int,unsigned int> pa_colorFreq;
 typedef map<greyValue,unsigned int> map_colorFreq;
+typedef map<freQuency,greyValue> map_freqColor;
 // typedef map<unsigned int, unsigned int> map_colorCoding;
 // typedef map<unsigned int, unsigned int> map_codingColor;
 typedef map<greyValue, string> map_colorCoding;
@@ -104,6 +105,7 @@ class GreyScale
         static int Format;
         // save the frequencies of the color ( color is in unsigned int)
         map_colorFreq mapColFreq;
+        // map_freqColor mapFreqCol;
         MyTree TrColFreq;
         map_colorCoding mpColCd;
         map_codingColor mpCdCol;

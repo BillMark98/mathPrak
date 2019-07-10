@@ -587,7 +587,27 @@ istream & operator>>(istream & is, GreyScale & gs)
     // {
     //   if()
     // }
-    getline(is,gs.magicNumber);
+    
+    
+    byte toRead;
+    toRead = is.peek();
+    if(toRead == 'P')
+    {
+        // the first two cases just read in the whole line
+        getline(is,gs.magicNumber);
+    }
+    else if(toRead == 'M')
+    {
+        // read in M
+        is >> toRead;  
+        gs.magicNumber.push_back(toRead);
+        // read in H
+        is >> toRead;
+        gs.magicNumber.push_back(toRead);
+        // read in a/b
+        is >> toRead;
+        gs.magicNumber.push_back(toRead);
+    }
     gs.MagicSetFormat();
     is >> ws;
     char ch = is.peek();
@@ -603,20 +623,29 @@ istream & operator>>(istream & is, GreyScale & gs)
         cout << "The char is " << ch << endl;
         exit(UNEXPECTED_CHAR);
     }
-    is >> width >> height;
-    gs.Resize(width,height);
-    is >> colorstep;
-    // colorstep; // e.g read in 255 then there are 256 steps of colors
-    int sizeBild = width * height;
-    // float colors;
-    gs.vec_gV.clear();
-    gs.vec_gV.resize(sizeBild);
+    // is >> width >> height;
+    // gs.Resize(width,height);
+    // is >> colorstep;
+    // // colorstep; // e.g read in 255 then there are 256 steps of colors
+    // int sizeBild = width * height;
+    // // float colors;
+    // gs.vec_gV.clear();
+    // gs.vec_gV.resize(sizeBild);
+
     switch(GreyScale::Format)
     {
         case 0:
         {
             greyValue colors;
             map_colorFreq::iterator it;
+            is >> width >> height;
+            is >> colorstep;
+            int sizeBild = width * height;
+            gs.Resize(width,height);
+            gs.vec_gV.clear();
+            gs.vec_gV.resize(sizeBild);
+
+            int sizeBild = width * height;
             // cout << "the case 0\n";
             for( int index = 0; index < sizeBild; index++)
             {
@@ -642,6 +671,14 @@ istream & operator>>(istream & is, GreyScale & gs)
         }
         case 1:
         {
+            greyValue colors;
+            map_colorFreq::iterator it;
+            is >> width >> height;
+            is >> colorstep;
+            int sizeBild = width * height;
+            gs.Resize(width,height);
+            gs.vec_gV.clear();
+            gs.vec_gV.resize(sizeBild);
             byte p5_char;
             map_colorFreq::iterator it;
             for( int index = 0; index < sizeBild; index++)
@@ -662,6 +699,35 @@ istream & operator>>(istream & is, GreyScale & gs)
                     // a new color
                     gs.mapColFreq[col] = 1;
                 }
+            }
+            break;
+        }
+        case 2:
+        {
+            byte Highbits;
+            byte Lowbits;
+            // read in width
+            is >> Highbits >> Lowbits;
+            int width = (Highbits << 8) + Lowbits;
+
+            // read in height
+            int height = (Highbits << 8) + Lowbits;
+            int sizeBild = width * height;
+            gs.Resize(width,height);
+            gs.vec_gV.clear();
+            gs.vec_gV.resize(sizeBild);
+
+            byte b1,b2,b3,b4;
+            // read in the histogram
+            for(greyValue grev; grev < 256; grev++)
+            {
+                is >> b1 >> b2 >> b3 >> b4;
+                freQuency freq = (b1 << (24)) + (b2 << 16) + (b3 << 8) + b4;
+                if(freq)
+                {
+                    
+                }
+            
             }
             break;
         }
@@ -688,7 +754,7 @@ ostream & operator<<(ostream & os, const GreyScale & gs)
     GreyScale neu = gs.Clamp();
     // cout << "The Format number is: " << GreyScale::Format<< endl;
     // cout << "Using the local format: " << gs.Format << endl;
-    cout << "The format is now: " << GreyScale::Format << endl;
+    // cout << "The format is now: " << GreyScale::Format << endl;
 
 
     switch(GreyScale::Format)
@@ -741,11 +807,27 @@ ostream & operator<<(ostream & os, const GreyScale & gs)
             os << byteWidthHigh << byteWidthLow << byteHeightHigh << byteHeightLow;
             // now the histogramm
             // cout << "The size of vec_gV is " << gs.vec_gV.size();
-            for(int index = 0; index < sBild; index++)
+            // os << "The histogram\n";
+            // for(int index = 0; index < sBild; index++)
+            // {
+            //     greyValue greV = gs.vec_gV[index];
+            //     os << "cl:"<< greV << endl;
+            //     map_colorFreq::const_iterator iter = gs.mapColFreq.find(greV);
+            //     freQuency freq = (freQuency) 0;
+            //     if(iter != gs.mapColFreq.end())
+            //     {
+            //         freq = (iter -> second);
+            //     }
+            //     gs.outFreq32Bit(os,freq);
+            // }
+            
+            for(greyValue greV = 0; greV < 256; greV++)
             {
-                greyValue greV = gs.vec_gV[index];
+
+                // os << "cl:"<< greV << endl;
+
                 map_colorFreq::const_iterator iter = gs.mapColFreq.find(greV);
-                freQuency freq = 0;
+                freQuency freq = (freQuency) 0;
                 if(iter != gs.mapColFreq.end())
                 {
                     freq = (iter -> second);
@@ -753,6 +835,7 @@ ostream & operator<<(ostream & os, const GreyScale & gs)
                 gs.outFreq32Bit(os,freq);
             }
             // now the huffman code
+            // os << "The huffman\n";
             WriteHuffCode(os,gs);
             break;
         }
@@ -1207,17 +1290,29 @@ byte Codes2Byte(codes & str_code)
 ostream & GreyScale::outFreq32Bit(ostream & os, const freQuency & freq) const
 {
     byte toWrite;
+    // os << "fr:" << freq << endl;
     for(int i = 3; i > 0; i--)
     {
         toWrite =  freq >> 8 * i;
         // cout << "The toWrite is \n";
         // cout << (unsigned short) toWrite << endl;
+        
+        // if(!toWrite)
+        // {
+        //     toWrite = 0b00000000;
+        // }
+        // // os << "toWrite:" << toWrite << endl;
         os << toWrite;
     }
     toWrite = (byte) freq % 256;
     // cout << "The toWrite is \n";
     // cout <<  (unsigned short) toWrite << endl;
+    // if(!toWrite)
+    // {
+    //     toWrite = 0b00000000;
+    // }
     os << toWrite;
+    // os << "toWrite:" << toWrite << endl;
     return os;
 }
 
