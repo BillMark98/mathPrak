@@ -184,3 +184,6 @@ codes Vect2Codes(vec_Codes & veC);
 byte Codes2Byte(codes & str_code);
 // convert the byte to a code, each bit becomes one byte
 codes Byte2Codes(const byte & theByte);
+
+// get the next byte from the istream
+istream &  GetNextByte(istream & is, byte & theByte);

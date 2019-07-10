@@ -588,15 +588,15 @@ istream & operator>>(istream & is, GreyScale & gs)
     //   if()
     // }
 #ifdef OUTDEBUG
-    cout << "*******************************\n";
-    cout << "in the reading The inverse is:\n";
-    map_codingColor::const_iterator iter2;
-    cout << "   code       |  color " << endl;
-    for(iter2 = gs.mpCdCol.begin(); iter2 != gs.mpCdCol.end(); iter2++)
-    {
-        cout.width(8);
-        cout << iter2 -> first << "\t" << iter2 -> second << endl;
-    }
+    // cout << "*******************************\n";
+    // cout << "in the reading The inverse is:\n";
+    // map_codingColor::const_iterator iter2;
+    // cout << "   code       |  color " << endl;
+    // for(iter2 = gs.mpCdCol.begin(); iter2 != gs.mpCdCol.end(); iter2++)
+    // {
+    //     cout.width(8);
+    //     cout << iter2 -> first << "\t" << iter2 -> second << endl;
+    // }
 
 #endif
     gs.magicNumber.clear();
@@ -765,13 +765,27 @@ istream & operator>>(istream & is, GreyScale & gs)
             byte Highbits;
             byte Lowbits;
             // read in width
-            is >> Highbits >> Lowbits;
-            int width = (Highbits << 8) + Lowbits;
 
+            // is >> Highbits >> Lowbits;
+            GetNextByte(is,Highbits);
+            GetNextByte(is,Lowbits);
+            int width = (Highbits << 8) + Lowbits;
+#ifdef OUTDEBUG
+            cout << "the width bytes read: " << (unsigned short) Highbits << " , "<<(unsigned short) Lowbits << endl;
+#endif 
             // read in height
-            is >> Highbits >> Lowbits;
+            // is >> Highbits >> Lowbits;
+
+            GetNextByte(is,Highbits);
+            GetNextByte(is,Lowbits);
             int height = (Highbits << 8) + Lowbits;
+#ifdef OUTDEBUG
+            cout << "the height bytes read: " << (unsigned short) Highbits << " , "<<(unsigned short) Lowbits << endl;
+#endif 
             int sizeBild = width * height;
+#ifdef OUTDEBUG
+            cout << "width: " << width << "  height: " << height << endl;
+#endif     
             gs.Resize(width,height);
             gs.vec_gV.clear();
             gs.vec_gV.resize(sizeBild);
@@ -780,12 +794,26 @@ istream & operator>>(istream & is, GreyScale & gs)
             // read in the histogram
             for(greyValue grev = 0; grev < 256; grev++)
             {
-                is >> b1 >> b2 >> b3 >> b4;
+                // is >> b1 >> b2 >> b3 >> b4;
+                // is will jump 0x0a and 0x0d
+                // char tempChar;
+                // is.get(tempChar);
+                // b1 = (byte) tempChar;
+                // is.get(tempChar);
+                // b2 = (byte) tempChar;
+                // is.get(tempChar);
+                // b3 = (byte) tempChar;
+                // is.get(tempChar);
+                // b4 = (byte) tempChar;
+                GetNextByte(is,b1);
+                GetNextByte(is,b2);
+                GetNextByte(is,b3);
+                GetNextByte(is,b4);
 
                 freQuency freq = (b1 << (24)) + (b2 << 16) + (b3 << 8) + b4;
 #ifdef OUTDEBUG
                 cout << "The grey value " << grev << " The freq is " << freq;
-                cout <<  "the bs are " << (unsigned short) b1 << '\t' <<(unsigned short) b2 << "\t" 
+                cout <<  "  the bs are " << (unsigned short) b1 << '\t' <<(unsigned short) b2 << "\t" 
                     << (unsigned short)b3 << "\t" << (unsigned short) b4 << endl;
 #endif                    
                 if(freq)
@@ -890,6 +918,9 @@ ostream & operator<<(ostream & os, const GreyScale & gs)
             //     gs.outFreq32Bit(os,freq);
             // }
             
+#ifdef OUTDEBUG
+            cout << "in the operator << , output the map_colorFreq\n";
+#endif                    
             for(greyValue greV = 0; greV < 256; greV++)
             {
 
@@ -901,6 +932,9 @@ ostream & operator<<(ostream & os, const GreyScale & gs)
                 {
                     freq = (iter -> second);
                 }
+#ifdef OUTDEBUG                
+                cout << "color : " << greV << " frequency is " << freq << endl;
+#endif                
                 gs.outFreq32Bit(os,freq);
             }
             // now the huffman code
@@ -1395,7 +1429,8 @@ istream & ReadHuffCode(istream & is, GreyScale & gs)
             accumulated = prevSubCode;
             continue; 
         }
-        is >> readIn;
+        // is >> readIn;
+        GetNextByte(is,readIn);
         theCode = Byte2Codes(readIn);
 #ifdef OUTDEBUG
         cout << "the code is " << theCode << endl;
@@ -1478,7 +1513,8 @@ istream & ReadHuffCode(istream & is, GreyScale & gs)
             while(is.good())
             {   
 
-                is >> readIn;
+                // is >> readIn;
+                GetNextByte(is,readIn);
                 theCode = Byte2Codes(readIn);
                 // if(overflow)
                 // {
@@ -1585,30 +1621,45 @@ codes Byte2Codes(const byte & theByte)
     }
     return theCode;
 }
-ostream & GreyScale::outFreq32Bit(ostream & os, const freQuency & freq) const
+
+istream &  GetNextByte(istream & is, byte & theByte)
 {
+    char tempCh;
+    is.get(tempCh);
+    theByte = (byte) tempCh;
+    return is;
+}
+
+ostream & GreyScale::outFreq32Bit(ostream & os, const freQuency & freq) const
+{   
     byte toWrite;
-    // os << "fr:" << freq << endl;
+#ifdef OUTDEBUG
+    cout << "fr:" << freq << endl;
+#endif    
     for(int i = 3; i > 0; i--)
     {
         toWrite =  freq >> 8 * i;
-        // cout << "The toWrite is \n";
-        // cout << (unsigned short) toWrite << endl;
+#ifdef OUTDEBUG        
+        cout << "The toWrite is \n";
+        cout << (unsigned short) toWrite << endl;
         
         // if(!toWrite)
         // {
         //     toWrite = 0b00000000;
         // }
         // // os << "toWrite:" << toWrite << endl;
+#endif        
         os << toWrite;
     }
     toWrite = (byte) freq % 256;
-    // cout << "The toWrite is \n";
-    // cout <<  (unsigned short) toWrite << endl;
+#ifdef OUTDEBUG
+    cout << "The toWrite is \n";
+    cout <<  (unsigned short) toWrite << endl;
     // if(!toWrite)
     // {
     //     toWrite = 0b00000000;
     // }
+#endif
     os << toWrite;
     // os << "toWrite:" << toWrite << endl;
     return os;

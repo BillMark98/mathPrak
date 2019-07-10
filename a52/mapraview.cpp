@@ -23,6 +23,9 @@ bool Show=true;  // Bild anzeigen oder nicht
 #define DEBUG 1
 
 // #define HUF 1
+
+
+
 // Die Funktion "Display" dient als Verbindung zwischen der "Greyscale"-Klasse
 // und der Funktion "ShowImage" aus "unit7". Hier wird der Datentyp "float"
 // in den Datentyp "byte" (inclusive Clamping) umgewandelt. Je nach dem Wert

@@ -12,3 +12,40 @@ or double free or corruption(out) Aborted(core dumped) or segmentation fault
 所会会 出 问题
 4.  一开始 输 frequency 发现 错位， 原因 是 读取 width 之后 忘了读取
 height  所以 错位
+5.~
+
+
+
+The grey value 60 The freq is 24576  the bs are 0	0	96	0
+The grey value 61 The freq is 15728640  the bs are 0	240	0	0
+The grey value 62 The freq is 1140850922  the bs are 68	0	0	234
+The grey value 63 The freq is 65024  the bs are 0	0	254	0
+The grey value 64 The freq is 3670016  the bs are 0	56	0	0
+The grey value 65 The freq is 142344192  the bs are 8	124	0	0
+The grey value 66 The freq is 142606336  the bs are 8	128	0	0
+The grey value 67 The freq is 127401984  the bs are 7	152	0	0
+The grey value 68 The freq is 109445120  the bs are 6	134	0	0
+The grey value 69 The freq is 106823680  the bs are 6	94	0	0
+
+00 00 08 2e  从此处开始grey60   00  00 09 60 00 00 0a f0 00  |..........`.....|
+00000100  00 0b 44 00 00 0a ea 00  00 09 fe 00 00 0a 38 00  |..D...........8.|
+00000110  00 08 7c 00 00 08 80 00  00 07 98 00 00 06 86 00
+
+
+可见 09 60 却读成了 96 
+分析后面的可发现 若出现0a 就会跳过不读
+这因为之前 写的是 is >> b1 >> b2 >> b3 >> b4 而>> 是会跳过白字符的
+所以要用 is.get(char ..) 来写， 但不可以 直接 is.get(b1) 会出现
+
+greyscale.cpp:794:26: error: cannot bind non-const lvalue reference of type ‘std::basic_istream<char>::char_type& {aka char&}’ to an rvalue of type ‘std::basic_istream<char>::char_type {aka char}’
+                 is.get(b1);
+                          ^
+In file included from /usr/include/c++/7/iostream:40:0,
+                 from greyscale.h:1,
+                 from greyscale.cpp:1:
+/usr/include/c++/7/istream:316:7: note:   initializing argument 1 of ‘std::basic_istream<_CharT, _Traits>& std::basic_istream<_CharT, _Traits>::get(std::basic_istream<_CharT, _Traits>::char_type&) [with _CharT = char; _Traits = std::char_traits<char>; std::basic_istream<_CharT, _Traits>::char_type = char]’
+       get(char_type& __c);
+
+可能是因为　is.get() 不支持unsigned char 所以is.get(char &) 没有效果
+因 unsigned 类型转换 导致 引用无效 所以先用一个 temp char 读取下一是输出
+再 typecast 
