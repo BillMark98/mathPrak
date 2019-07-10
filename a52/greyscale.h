@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include <vector>
 #include <deque>
 #include <algorithm>
@@ -46,7 +47,8 @@ typedef string vec_Codes;
 #define DECODE_LEN_MISMATCH 29
 // when read in huffman code and cannot decode fully before we reach EOF
 #define DECODE_ERROR 30
-#define OUTDEBUG 1
+// #define OUTDEBUG 1
+
 // for testing and debug, if set all class member is public
 #define TEST 1
 class MyTree

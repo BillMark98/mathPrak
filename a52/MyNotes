@@ -214,3 +214,39 @@ BuildMap 中:
 
 所以 也是 提醒， 没事不要 看map 的key 对应的value ，否则会引入
 不必要的error
+
+
+9.
+
+/bildtest -a13 result13.pgm 
+Reading image... 'bilder/roentgen.pgm'
+Format: PGM-ASCII
+Setting checking format...
+
+Reading image... 'result13.pgm'
+Format: Huffman
+Comparing...
+Sorry, but your image differs up to 148 grey value(s) from the original!
+
+
+但是 观察 从 result13.pgm 读取 然后以 P2 输入 得到的
+与 原图比较
+(diff)
+1a2
+> # Creator: Mapra
+
+选别的图
+类似
+
+
+1a2
+> # Creator: Mapra
+1902c1903
+<    0   0   0   0   0   0   0   0   0   0
+\ No newline at end of file
+---
+>    0   0   0   0   0   0   0   0   0   0
+
+
+说明 我编的 huffman code decode 没有问题，因为可以闭环
+得到原来的文件， 所以 问题 出在 如何定义 code 的规则上

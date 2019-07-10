@@ -845,7 +845,10 @@ ostream & operator<<(ostream & os, const GreyScale & gs)
     // cout << "*************************************\n";
     // cout << "First the integer version (rounded to 255)\n";
     // int nextline = (gs.width < 10) ? gs.width : 10;
-    int nextline = gs.width;
+
+    // for example roentgen.pgm is 16
+    // int nextline = gs.width;
+    int nextline = 16;
     GreyScale neu = gs.Clamp();
     // cout << "The Format number is: " << GreyScale::Format<< endl;
     // cout << "Using the local format: " << gs.Format << endl;
@@ -857,16 +860,17 @@ ostream & operator<<(ostream & os, const GreyScale & gs)
         case 0:
         {
             os << "P2" << endl;
-            os << gs.width << '\t' << gs.height << endl;
+            os << gs.width << ' ' << gs.height << endl;
             os << 255<< endl;
             // cout << "In the case 0\n";
             for(int index = 0; index < sBild; index++)
             {
                 // colorstep is assumed to be 255
                 short d = 255;
-                os.width(4);
+                
                 float res = std::rint(neu.pixels[index] * d);
-                os << (short) res << '\t';
+                os << ' ';
+                os << std::setw(3) << (short) res ;
                 if(count % nextline == nextline - 1)
                 {
                     os << endl;
@@ -879,7 +883,7 @@ ostream & operator<<(ostream & os, const GreyScale & gs)
         {
             // os << gs.magicNumber << endl;
             os << "P5" << endl;
-            os << gs.width << '\t' << gs.height << endl;
+            os << gs.width << ' ' << gs.height << endl;
             os << 255<< endl;
             // cout << "In the case 1\n";
             for(int index = 0; index < sBild; index++)
