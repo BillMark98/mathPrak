@@ -138,6 +138,33 @@ GreyScale::~GreyScale()
     // }
 }
 
+// clear and initialize the maps, vectors 
+void GreyScale::InitializeAllContainers()
+{
+    if(height <= 0 || width <= 0)
+    {
+        cout << "the size not initialized cant initialize further\n";
+        exit(INITIALIZE_ERROR);
+    }
+    int sizeBild = width * height;
+
+    pixels.clear();
+    pixels.resize(sizeBild);
+
+    vec_gV.clear();
+    vec_gV.resize(sizeBild);
+
+    vtrans_gV.clear();
+    vtrans_gV.resize(sizeBild);
+
+    mapColFreq.clear();
+    mpColCd.clear();
+    mpCdCol.clear();
+    mpTransColFreq.clear();
+    mpTransColCd.clear();
+    mpTransCdCol.clear();
+}
+
 void GreyScale::Resize(int w, int h)
 {
     // if(pixels != nullptr)
@@ -195,19 +222,19 @@ void GreyScale::MagicSetFormat()
 {
     if(magicNumber == "P2")
     {
-        Format = 0;
+        fileFormat = 0;
     }
     else if(magicNumber == "P5")
     {
-        Format = 1;
+        fileFormat = 1;
     }
     else if(magicNumber == "MHa")
     {
-        Format = 2;
+        fileFormat = 2;
     }
     else if(magicNumber == "MHb")
     {
-        Format = 3;
+        fileFormat = 3;
     }
     else
     {
@@ -674,7 +701,7 @@ istream & operator>>(istream & is, GreyScale & gs)
     // gs.vec_gV.clear();
     // gs.vec_gV.resize(sizeBild);
 
-    switch(GreyScale::Format)
+    switch(gs.fileFormat)
     {
         case 0:
         {
@@ -702,8 +729,9 @@ istream & operator>>(istream & is, GreyScale & gs)
             is >> colorstep;
             int sizeBild = width * height;
             gs.Resize(width,height);
-            gs.vec_gV.clear();
-            gs.vec_gV.resize(sizeBild);
+            // gs.vec_gV.clear();
+            // gs.vec_gV.resize(sizeBild);
+            gs.InitializeAllContainers();
 
             // cout << "the case 0\n";
             for( int index = 0; index < sizeBild; index++)
@@ -757,8 +785,11 @@ istream & operator>>(istream & is, GreyScale & gs)
             is >> colorstep;
             int sizeBild = width * height;
             gs.Resize(width,height);
-            gs.vec_gV.clear();
-            gs.vec_gV.resize(sizeBild);
+
+            // gs.vec_gV.clear();
+            // gs.vec_gV.resize(sizeBild);
+            gs.InitializeAllContainers();
+
             byte p5_char;
             map_colorFreq::iterator it;
             for( int index = 0; index < sizeBild; index++)
@@ -816,8 +847,9 @@ istream & operator>>(istream & is, GreyScale & gs)
             cout << "width: " << width << "  height: " << height << endl;
 #endif     
             gs.Resize(width,height);
-            gs.vec_gV.clear();
-            gs.vec_gV.resize(sizeBild);
+            // gs.vec_gV.clear();
+            // gs.vec_gV.resize(sizeBild);
+            gs.InitializeAllContainers();
 
             byte b1,b2,b3,b4;
             // read in the histogram
@@ -889,9 +921,10 @@ istream & operator>>(istream & is, GreyScale & gs)
             cout << "width: " << width << "  height: " << height << endl;
 #endif     
             gs.Resize(width,height);
-            gs.vtrans_gV.clear();
-            gs.vtrans_gV.resize(sizeBild);
+            // gs.vtrans_gV.clear();
+            // gs.vtrans_gV.resize(sizeBild);
 
+            gs.InitializeAllContainers();
             byte b1,b2,b3,b4;
             // read in the histogram
             for(greyValue grev = 0; grev < 256; grev++)
@@ -962,7 +995,8 @@ ostream & operator<<(ostream & os, const GreyScale & gs)
     // cout << "Using the local format: " << gs.Format << endl;
     // cout << "The format is now: " << GreyScale::Format << endl;
 
-
+    // cout << "the format is " << GreyScale::Format << endl;
+    
     switch(GreyScale::Format)
     {
         case 0:

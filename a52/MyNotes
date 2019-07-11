@@ -331,3 +331,51 @@ first test the vtrans_gV
 
 可可见 vtrans_gV 没错 还是 SumNeighbor 的问题
 注意不是 所有地方 都 改成 vtrans_gV 只有 (i,j) 处 是，其余 neighbor 应该取vec_gV的
+
+after correction  OK!
+
+12. 
+run the user friendly version
+one problem
+since in operator >> the format will be set according to the 
+magic number 
+but actually this should just be stored 
+the format should be set by the user but not the magic number of 
+the given file
+13.
+读取 result17.pgm
+display OK
+read result13.pgm
+display strange picture
+read result12.pgm 
+display OK
+
+只要读取 P2 P5 都没问题，
+只要读取同一个picture 不同的file type  都ok
+如  读取 顺序
+result13.pgm
+result14.pgm
+result13.pgm
+result13.pgm
+
+注意 menu 中 r 的 code
+case 'r':     // Read
+cout << "Read image... Enter filename: ";
+cin >> name;
+{
+  ifstream file(name);
+  if (file.rdstate())
+    cerr << "Error: Couldn't open '" << name << "'!\n";
+  else
+  {
+    file >> newpic;
+    Display(newpic,0,name);
+    pic.Resize(0,0);
+    Display(pic,1,"");
+  }
+}
+
+可见 每次 读取 都是 newpic 冲锋陷阵
+而会出现 同个 picture 的 不同 file type 反复读 没问题
+而 不同 picture 一读就有问题，估计 是 mpColCd mpCdCol 读的
+时候 有是上次的残余 ，所以 会有 干扰

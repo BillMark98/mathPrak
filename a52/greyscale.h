@@ -48,10 +48,11 @@ typedef string vec_Codes;
 #define DECODE_LEN_MISMATCH 29
 // when read in huffman code and cannot decode fully before we reach EOF
 #define DECODE_ERROR 30
+#define INITIALIZE_ERROR 31
 // #define OUTDEBUG 1
 
 // for testing and debug, if set all class member is public
-#define TEST 1
+// #define TEST 1
 class MyTree
 {
     public:
@@ -111,10 +112,13 @@ class GreyScale
         //        2 --- MHa
         //        3 --- MHb
         static int Format;
+
+        // indicates which file type read in
+        int fileFormat;
         // save the frequencies of the color ( color is in unsigned int)
         map_colorFreq mapColFreq;
         // map_freqColor mapFreqCol;
-        MyTree TrColFreq;
+        // MyTree TrColFreq;
         map_colorCoding mpColCd;
         map_codingColor mpCdCol;
 
@@ -128,6 +132,9 @@ class GreyScale
         GreyScale(const GreyScale &);
         ~GreyScale();
 
+
+        // clear and initialize the maps, vectors 
+        void InitializeAllContainers();
         void Resize(int w, int h);
         int GetWidth() const {return width;}
         int GetHeight() const { return height;}

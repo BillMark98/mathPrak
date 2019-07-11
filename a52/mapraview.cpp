@@ -20,7 +20,7 @@ int  ZoomFac=1;  // Vergroesserungsfaktor
 bool Show=true;  // Bild anzeigen oder nicht
 
 #define SET_FORMAT 1
-#define DEBUG 1
+// #define DEBUG 1
 
 // #define HUF 1
 
@@ -375,27 +375,27 @@ int main()
 #endif
 
 #ifndef HUF
-  cout << "Test the huff read\n";
-  ifstream inFile2;
-  inFile2.open("result17.pgm");
-  if(!inFile2.is_open())
-  {
-    cout << "Can't open the file\n";
-    exit(1);
-  }
-  inFile2 >> newpic;
-  cout << "The new pic read successfully\n"; 
+  // cout << "Test the huff read\n";
+  // ifstream inFile2;
+  // inFile2.open("result17.pgm");
+  // if(!inFile2.is_open())
+  // {
+  //   cout << "Can't open the file\n";
+  //   exit(1);
+  // }
+  // inFile2 >> newpic;
+  // cout << "The new pic read successfully\n"; 
 
-  ofstream outFile;
-  GreyScale::SetFormat(0);
-  outFile.clear();
-  outFile.open("testHuf2shuttle.pgm");
-  if(!outFile.is_open())
-  {
-    cout << "can't open file\n";
-    exit(1);
-  }
-  outFile<<newpic;
+  // ofstream outFile;
+  // GreyScale::SetFormat(0);
+  // outFile.clear();
+  // outFile.open("testHuf2shuttle.pgm");
+  // if(!outFile.is_open())
+  // {
+  //   cout << "can't open file\n";
+  //   exit(1);
+  // }
+  // outFile<<newpic;
 
 #endif
   // cout << "Testing the string lenth\n";
