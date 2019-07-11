@@ -1460,14 +1460,34 @@ void GreyScale::InverseGreyTransform()
     vec_gV.resize(width * height);
     pixels.clear();
     pixels.resize(width * height);
+#ifdef OUTDEBUG
+    cout << "in the Inverse Grey Trans\n";
+    cout << "first test the vtrans_gV\n";
+    int sizeBild = height * width;
+    for(int testI = 0; testI < sizeBild; testI++)
+    {
+        cout << ' ' << setw(3) << vtrans_gV[testI];
+        if(testI % 16 == 15)
+        {
+            cout << endl;
+        }
+    }
+#endif 
     for(int j = 0; j < height; j++)
     {
         for(int i = 0; i < width; i++)
         {
             greyValue temp = SumNeighbor(i,j);
+
+#ifdef OUTDEBUG
+            cout << "i, j: " << i << ", " << j << " temp: " << temp << endl;
+#endif
             int index = XYCoord2Vec(i,j);
             vec_gV[index] = temp;
             pixels[index] = ((float)temp)/255;
+#ifdef OUTDEBUG
+            cout << "pixels[index]: " << pixels[index] << endl;
+#endif
         }
     }
 }
@@ -1542,14 +1562,14 @@ greyValue GreyScale::SumNeighbor(int i, int j)
             int sum = vec_gV[XYCoord2Vec(i,j-1)] + vec_gV[XYCoord2Vec(i-1,j)] 
                         + vec_gV[XYCoord2Vec(i-1,j-1)];
             sum /= 3;
-            int invdiff = (vec_gV[XYCoord2Vec(i,j)] + sum) % 256;
+            int invdiff = (vtrans_gV[XYCoord2Vec(i,j)] + sum) % 256;
             greyValue result = (greyValue) invdiff;
             return result;
         }
         else
         {
             int sum = vec_gV[XYCoord2Vec(i-1,j)];
-            int invdiff = (vec_gV[XYCoord2Vec(i,j)] + sum) % 256;
+            int invdiff = (vtrans_gV[XYCoord2Vec(i,j)] + sum) % 256;
             greyValue result = (greyValue) invdiff;
             return result;
         }
@@ -1560,21 +1580,21 @@ greyValue GreyScale::SumNeighbor(int i, int j)
         {
             int sum = vec_gV[XYCoord2Vec(i,j-1)] + vec_gV[XYCoord2Vec(i+1,j-1)];
             sum /= 2;
-            int invdiff = (vec_gV[XYCoord2Vec(i,j)] + sum) % 256;
+            int invdiff = (vtrans_gV[XYCoord2Vec(i,j)] + sum) % 256;
             greyValue result = (greyValue) invdiff;
             return result;
         }
         else
         {
             // the (0,0) return itself
-            return (vec_gV[0]);
+            return (vtrans_gV[0]);
         }
     }
     if(j == 0)
     {
         //  1 <= i <= width - 2
             int sum = vec_gV[XYCoord2Vec(i-1,j)];
-            int invdiff = (vec_gV[XYCoord2Vec(i,j)] + sum) % 256;
+            int invdiff = (vtrans_gV[XYCoord2Vec(i,j)] + sum) % 256;
             greyValue result = (greyValue) invdiff;
             return result;
     }
@@ -1582,7 +1602,7 @@ greyValue GreyScale::SumNeighbor(int i, int j)
     int sum = vec_gV[XYCoord2Vec(i,j-1)] + vec_gV[XYCoord2Vec(i+1,j-1)]
                 + vec_gV[XYCoord2Vec(i-1,j)] + vec_gV[XYCoord2Vec(i-1,j-1)];
     sum /= 4;
-    int invdiff = (vec_gV[XYCoord2Vec(i,j)] + sum) % 256;
+    int invdiff = (vtrans_gV[XYCoord2Vec(i,j)] + sum) % 256;
     greyValue result = (greyValue) invdiff;
     return result;
 }
@@ -1613,6 +1633,7 @@ void GreyScale::SetmpTransColFreq()
 void GreyScale::SetmapColFreq()
 {
     InverseGreyTransform();
+
     map_colorFreq::iterator iter;
     int sizeBild = width * height;
     greyValue grey;

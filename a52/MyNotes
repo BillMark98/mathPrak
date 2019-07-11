@@ -314,3 +314,20 @@ case 3:
 但此处 应是 vtrans_gV
 
 make 后 运行 通过 ， 但是输出 greyvalue处处是0
+
+debug 时 发现 InverseTransfrom 的时候 每次输出的temp就均是0
+可能 是 SumNeighbor 的问题
+果然 因为 SumNeighbor  用的是vec_gV 当时还没有值，统统是0
+改了之后， 有 非零值 了 ，但是 和 original 还是有差距
+
+i, j: 0, 0 temp: 138
+pixels[index]: 0.541176
+i, j: 1, 0 temp: 139
+pixels[index]: 0.545098
+
+
+first test the vtrans_gV
+ 138   1   1 255   0 253 254 253   3
+
+可可见 vtrans_gV 没错 还是 SumNeighbor 的问题
+注意不是 所有地方 都 改成 vtrans_gV 只有 (i,j) 处 是，其余 neighbor 应该取vec_gV的
