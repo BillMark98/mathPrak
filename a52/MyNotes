@@ -288,3 +288,6 @@ YEAH!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 gs.GreyTransform() not allowed
 since it will change gs
 GreyTransform make it a friend 
+
+后面想，可以在输入的时候就准备好，
+而这样 要为 format 2，3 分别准备对应的mpCdCol  mpColCd

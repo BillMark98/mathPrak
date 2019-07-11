@@ -117,6 +117,11 @@ class GreyScale
         MyTree TrColFreq;
         map_colorCoding mpColCd;
         map_codingColor mpCdCol;
+
+        // for the transformation another pair of map color coding frequency
+        map_colorFreq mpTransColFreq;
+        map_colorCoding mpTransColCd;
+        map_codingColor mpTransCdCol;
         
     public:
         GreyScale(int w = 0, int h = 0,string name = "P2");
@@ -165,10 +170,13 @@ class GreyScale
         float pixelMedian(int index) const;
 
         // for the huffman
-        void HuffmanCoding();
-        void BuildTree();
-        void BuildMap(MyTree & myT);
-        
+        // void HuffmanCoding();
+        // void BuildTree();
+        // void BuildMap(MyTree & myT);
+        void HuffmanCoding(map_colorFreq & mpcF, map_colorCoding & mpcolCode,map_codingColor & mpcodCol);
+        void BuildTree(map_colorFreq & mpcF, map_colorCoding & mpcolCode,map_codingColor & mpcodCol);
+        void BuildMap(map_colorCoding & mpcolCode,map_codingColor & mpcodCol,MyTree & myT);
+
         // for the compression using transformation
         // transform the greyValue matrix saving the value in vtrans_gV
         void GreyTransform();
@@ -178,10 +186,18 @@ class GreyScale
         greyValue DiffNeighbor(int i, int j);
         // calculate the new sum value given the position i,j
         greyValue SumNeighbor(int i, int j);
+
+    
+        // set the mpTransColFreq
+        void SetmpTransColFreq();
+        // set the mapColFreq
+        void SetmapColFreq();
+
+        
         // write the Huffman coded pixel value into the file
         friend ostream & WriteHuffCode(ostream & os,const GreyScale & gs);
         // read in the Huffman coded pixel value into GreyScale
-        friend istream & ReadHuffCode(istream & is, GreyScale & gs);
+        friend istream & ReadHuffCode(istream & is, GreyScale & gs,int form = 2);
         // IO function
         friend istream & operator>>(istream & is, GreyScale & gs);
         friend ostream & operator<<(ostream & os, const GreyScale & gs);

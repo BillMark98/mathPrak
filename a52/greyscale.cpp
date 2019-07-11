@@ -727,6 +727,11 @@ istream & operator>>(istream & is, GreyScale & gs)
                 }
             }
             is >> ch; // should read in EOF
+
+            // huffman code build mpColCd, mpCdCol
+            gs.HuffmanCoding(gs.mapColFreq,gs.mpColCd,gs.mpCdCol);
+            gs.SetmpTransColFreq();
+            gs.HuffmanCoding(gs.mpTransColFreq,gs.mpTransColCd,gs.mpTransCdCol);
             break;
         }
         case 1:
@@ -776,6 +781,11 @@ istream & operator>>(istream & is, GreyScale & gs)
                 }
             }
             is >> ch; // should read in EOF
+
+            // huffman code build mpColCd, mpCdCol
+            gs.HuffmanCoding(gs.mapColFreq,gs.mpColCd,gs.mpCdCol);
+            gs.SetmpTransColFreq();
+            gs.HuffmanCoding(gs.mpTransColFreq,gs.mpTransColCd,gs.mpTransCdCol);
             break;
         }
         case 2:
@@ -841,8 +851,14 @@ istream & operator>>(istream & is, GreyScale & gs)
                 }
             }
             // build the huffman code
-            gs.HuffmanCoding();
+            gs.HuffmanCoding(gs.mapColFreq,gs.mpColCd,gs.mpCdCol);
+            
+
             ReadHuffCode(is,gs);
+
+            // must after the ReadHuffCode since before that the vec_gV is not initialized
+            gs.SetmpTransColFreq();
+            gs.HuffmanCoding(gs.mpTransColFreq,gs.mpTransColCd,gs.mpTransCdCol);
             break;
         }
     }
@@ -968,7 +984,6 @@ ostream & operator<<(ostream & os, const GreyScale & gs)
         case 3:
         {
             os << "MHb";
-            gs.GreyTransform();
             unsigned int theWidth = gs.width;
             unsigned int theHeight = gs.height;
             byte byteWidthHigh = theWidth >> 8;
@@ -1060,9 +1075,9 @@ ostream & operator<<(ostream & os, const GreyScale & gs)
     return os;
 }
 
-void GreyScale::HuffmanCoding()
+void GreyScale::HuffmanCoding(map_colorFreq & mpcF, map_colorCoding & mpcolCode,map_codingColor & mpcodCol)
 {
-    BuildTree();
+    BuildTree(mpcF, mpcolCode,mpcodCol);
 
 
     // cout << "After the tree building the TrColFreq\n";
@@ -1078,7 +1093,7 @@ void GreyScale::HuffmanCoding()
 
     cout << "   color      |   code " << endl;
 
-    for(iter = mpColCd.begin(); iter != mpColCd.end(); iter++)
+    for(iter = mpcolCode.begin(); iter != mpcolCode.end(); iter++)
     {
         cout.width(8);
         cout << iter -> first << "\t" <<  iter -> second << endl;
@@ -1087,7 +1102,7 @@ void GreyScale::HuffmanCoding()
     cout << "The inverse is:\n";
     map_codingColor::const_iterator iter2;
     cout << "   code       |  color " << endl;
-    for(iter2 = mpCdCol.begin(); iter2 != mpCdCol.end(); iter2++)
+    for(iter2 = mpcodCol.begin(); iter2 != mpcodCol.end(); iter2++)
     {
         cout.width(8);
         cout << iter2 -> first << "\t" << iter2 -> second << endl;
@@ -1097,11 +1112,11 @@ void GreyScale::HuffmanCoding()
 }
 
 
-void GreyScale::BuildTree()
+void GreyScale::BuildTree(map_colorFreq & mpcF, map_colorCoding & mpcolCode,map_codingColor & mpcodCol)
 {
-    if(mapColFreq.empty())
+    if(mpcF.empty())
     {
-        cout << "The mapColFreq is empty! cant build the tree\n";
+        cout << "The mpcF is empty! cant build the tree\n";
         exit(MAP_COL_FREQ_EMPtY);
     }
     
@@ -1112,7 +1127,7 @@ void GreyScale::BuildTree()
 #ifdef OUTDEBUG
     cout << "In the Build Tree, the mapColFreq:\n";
     cout << "color  |  freq\n";
-    for(iter = mapColFreq.begin();iter != mapColFreq.end(); iter++)
+    for(iter = mpcF.begin();iter != mpcF.end(); iter++)
     {
         cout.width(6);
         cout << iter -> first << "\t" <<  iter -> second << endl;
@@ -1120,7 +1135,7 @@ void GreyScale::BuildTree()
 #endif
     // build first the container for the sorted array, each element
     // is a color-frequency pair
-    for(iter = mapColFreq.begin();iter != mapColFreq.end(); iter++)
+    for(iter = mpcF.begin();iter != mpcF.end(); iter++)
     {
         greyValue col = iter -> first;
         freQuency freq = iter -> second;
@@ -1263,15 +1278,22 @@ void GreyScale::BuildTree()
 
 
     // initialize the vec_C
-
+    // don't need to place two such vec_C for the huff code for the format 2 ,3 
+    // 1. reason, it would be a bit more troublesome to implement, the BuildTree, Huffman,BuildMap would need
+    // new parameter, i.e the vec_C so that it can handle which vec_C to deal with
+    // 2. we don't have to, since the only time we access to vec_C is in these three functions,
+    // but these three functions have a tight connection. Once we call HuffmanCoding, we will call
+    // BuildTree BuildMap and it's the only case we will access the vec_C, which means we can deal with
+    // one vec_C, which serves something like a local variable shared between the three functions
+    // and it is invisible outside the three functions, so it will not have effect to the outside
 
     vec_C.clear();
-    BuildMap(*minHeap.top());
+    BuildMap(mpcolCode,mpcodCol,*minHeap.top());
     deleteTree(minHeap.top());
 }
 
 
-void GreyScale::BuildMap(MyTree & myT)
+void GreyScale::BuildMap(map_colorCoding & mpcolCode,map_codingColor & mpcodCol,MyTree & myT)
 {
     // if(TrColFreq.isempty())
     // {
@@ -1306,8 +1328,8 @@ void GreyScale::BuildMap(MyTree & myT)
             cout << "The code is: " << theCode << endl;
             cout << "if code == 11 " << (theCode == "11") << endl;
 #endif            
-            mpColCd[myT.GetGreyValue()] = theCode;
-            mpCdCol[theCode] = myT.GetGreyValue();
+            mpcolCode[myT.GetGreyValue()] = theCode;
+            mpcodCol[theCode] = myT.GetGreyValue();
 #ifdef OUTDEBUG
             // cout << "mpCdCol[theCode] = " << mpCdCol[theCode]<<endl;
             // cout << "mpCdCol[11] = " << mpCdCol["11"] << endl;
@@ -1318,8 +1340,8 @@ void GreyScale::BuildMap(MyTree & myT)
         else
         {
             // the only case is that there is only one color
-            mpColCd[myT.GetGreyValue()] = "0";
-            mpCdCol["0"] = myT.GetGreyValue();
+            mpcolCode[myT.GetGreyValue()] = "0";
+            mpcodCol["0"] = myT.GetGreyValue();
             return;
         }
         
@@ -1336,9 +1358,9 @@ void GreyScale::BuildMap(MyTree & myT)
         
     }
     vec_C.push_back('0');
-    BuildMap(*lTree);
+    BuildMap(mpcolCode,mpcodCol,*lTree);
     vec_C.push_back('1');
-    BuildMap(*rTree);
+    BuildMap(mpcolCode,mpcodCol,*rTree);
     vec_C.pop_back();
     
 }
@@ -1489,6 +1511,50 @@ greyValue GreyScale::SumNeighbor(int i, int j)
     return result;
 }
 
+// set the mpTransColFreq
+void GreyScale::SetmpTransColFreq()
+{
+    // assume the 
+    GreyTransform();
+    map_colorFreq::iterator iter;
+    int sizeBild = width * height;
+    greyValue grey;
+    for(int index = 0; index < sizeBild; index++)
+    {
+        grey = vtrans_gV[index];
+        iter = mpTransColFreq.find(grey);
+        if(iter != mpTransColFreq.end())
+        {
+            (iter -> second)++;
+        }
+        else
+        {
+            mpTransColFreq[grey] = 1;
+        }
+    }
+}
+// set the mapColFreq
+void GreyScale::SetmapColFreq()
+{
+    InverseGreyTransform();
+    map_colorFreq::iterator iter;
+    int sizeBild = width * height;
+    greyValue grey;
+    for(int index = 0; index < sizeBild; index++)
+    {
+        grey = vec_gV[index];
+        iter = mapColFreq.find(grey);
+        if(iter != mapColFreq.end())
+        {
+            (iter -> second)++;
+        }
+        else
+        {
+            mapColFreq[grey] = 1;
+        }
+    }
+}
+
 
 ostream & WriteHuffCode(ostream & os,const GreyScale & gs)
 {
@@ -1613,227 +1679,453 @@ ostream & WriteHuffCode(ostream & os,const GreyScale & gs)
     return os;
 }
 
-istream & ReadHuffCode(istream & is, GreyScale & gs)
+istream & ReadHuffCode(istream & is, GreyScale & gs,int form)
 {
     // idea, read in a bunch of bytes then convert each bit to a byte
     // the slice it to form a string to which a code corresponds 
 
-
-#ifdef OUTDEBUG
-    cout << "*******************************\n";
-    cout << "in the readhuff code The inverse is:\n";
-    map_codingColor::const_iterator iter2;
-    cout << "   code       |  color " << endl;
-    for(iter2 = gs.mpCdCol.begin(); iter2 != gs.mpCdCol.end(); iter2++)
+    if(form == 2)
     {
-        cout.width(8);
-        cout << iter2 -> first << "\t" << iter2 -> second << endl;
-    }
 
-#endif
-
-    byte readIn;
-    codes theCode;
-    theCode.clear();
-    // indicates the bits borrowed from the next complete byte
-    // int overflow = 0;
-    // indicates the code left from the previous one
-    codes prevLeftCode;
-    prevLeftCode.clear();
-    // indicates the accumulated code
-    codes accumulated;
-    accumulated.clear();
-
-    int sizeBild = gs.width * gs.height;
-    map_codingColor::iterator iter;
-    greyValue grey;
-    for(int index = 0; index < sizeBild; index++)
-    {
-        // first test whether the prevLeftCode includes code
-        int prevLClen = prevLeftCode.size();
-#ifdef OUTDEBUG
-        if(prevLClen > 0)
+        
+    #ifdef OUTDEBUG
+        cout << "The form is 2\n";
+        cout << "*******************************\n";
+        cout << "in the readhuff code The inverse is:\n";
+        map_codingColor::const_iterator iter2;
+        cout << "   code       |  color " << endl;
+        for(iter2 = gs.mpCdCol.begin(); iter2 != gs.mpCdCol.end(); iter2++)
         {
-            cout << "the prevLeftCode : " << prevLeftCode << endl;
+            cout.width(8);
+            cout << iter2 -> first << "\t" << iter2 -> second << endl;
         }
-#endif
-        codes prevSubCode;
-        prevSubCode.clear();
-        // flag indicating whether we have read in a greyvalue
-        bool readGrey = false;
-        int plen;
-        for( plen = 1; plen <= prevLClen; plen++)
+
+    #endif
+
+        byte readIn;
+        codes theCode;
+        theCode.clear();
+        // indicates the bits borrowed from the next complete byte
+        // int overflow = 0;
+        // indicates the code left from the previous one
+        codes prevLeftCode;
+        prevLeftCode.clear();
+        // indicates the accumulated code
+        codes accumulated;
+        accumulated.clear();
+
+        int sizeBild = gs.width * gs.height;
+        map_codingColor::iterator iter;
+        greyValue grey;
+        for(int index = 0; index < sizeBild; index++)
         {
-            prevSubCode = prevLeftCode.substr(0,plen);
-            iter = gs.mpCdCol.find(prevSubCode);
-            if(iter != gs.mpCdCol.end())
+            // first test whether the prevLeftCode includes code
+            int prevLClen = prevLeftCode.size();
+    #ifdef OUTDEBUG
+            if(prevLClen > 0)
             {
-                // the subCode is valid code
-                grey = (iter -> second);
-#ifdef OUTDEBUG
-                cout << "The valid preSubCode is " << prevSubCode << endl;
-                cout << "The color is : " << grey << endl;
-#endif
-                
-                gs.vec_gV[index] = grey;
-                gs.pixels[index] = ((float)grey)/255;
-                readGrey = true;
-                break;
+                cout << "the prevLeftCode : " << prevLeftCode << endl;
             }
-        }
-        if(readGrey)
-        {
-            prevLeftCode= prevLeftCode.substr(plen,prevLClen);
-            // do I need this one?
-            accumulated = prevSubCode;
-            continue; 
-        }
-        // is >> readIn;
-        GetNextByte(is,readIn);
-        theCode = Byte2Codes(readIn);
-#ifdef OUTDEBUG
-        cout << "the code is " << theCode << endl;
-#endif
-        if(prevLClen > 0)
-        {
-            theCode = prevLeftCode + theCode;
-        }
-
-
-        // if(overflow)
-        // {
-        //     theCode = theCode.substr(overflow,8);
-        // }
-
-
-        codes subCode;
-        
-        int theCodeBound = theCode.size();
-        
-        // since the prevLeftCode is examined before and
-        // we are sure that the prevLeftCode doesnt include 
-        // the code so we begin the substring length of prevLClen + 1
-        // note this is also true if prevLeftCode is nullstring
-        // in which we case we simply start at the len 1
-
-#ifdef OUTDEBUG
-        cout << "Before theCodeBOund loop the prevLCLen is: " << prevLClen << endl;
-#endif
-        for(int j = (prevLClen + 1); j <= theCodeBound; j++)
-        {
-            subCode = theCode.substr(0,j);
-
-#ifdef OUTDEBUG
-            cout << "In the for loop theCodeBound: subCode\n";
-            cout << subCode << endl;
-
-#endif
-            iter = gs.mpCdCol.find(subCode);
-        
-
-#ifdef OUTDEBUG
-            // if(subCode == "11")
-            // {
-            //     cout << " the 11 code is " << gs.mpCdCol["11"] << endl;
-            //     cout << "the subCode mpCdCol is " <<  gs.mpCdCol[subCode] << endl;
-            // }
-
-#endif
-            if(iter != gs.mpCdCol.end())
+    #endif
+            codes prevSubCode;
+            prevSubCode.clear();
+            // flag indicating whether we have read in a greyvalue
+            bool readGrey = false;
+            int plen;
+            for( plen = 1; plen <= prevLClen; plen++)
             {
-                // the subCode is valid code
-#ifdef OUTDEBUG                
-                cout << "The valid code is: " << subCode << endl;
-#endif                
-                grey = (iter -> second);
-                gs.vec_gV[index] = grey;
-
-#ifdef OUTDEBUG
-                cout << "The color is: " << grey << endl;
-#endif            
-                gs.pixels[index] = ((float)grey)/255;
-                readGrey = true;
-                prevLeftCode = theCode.substr(j,theCodeBound);
-                break;
-            }
-        }
-        if(readGrey)
-        {
-            continue;
-        }
-        else
-        {
-            accumulated = theCode;
-            // codes temp;
-
-            // as long as we can read
-            // read as many bits as possible until we find
-            // the corresponding code
-            while(is.good())
-            {   
-
-                // is >> readIn;
-                GetNextByte(is,readIn);
-                theCode = Byte2Codes(readIn);
-                // if(overflow)
-                // {
-                //     theCode = theCode.substr(overflow,8);
-                // }
-                // codes subCode;
-                theCode = accumulated + theCode;
-
-#ifdef OUTDEBUG
-                cout << "in the while " << endl;
-                cout << "The theCode " << theCode << endl;
-#endif
-                // the len of the string at which the search
-                // for code begin
-                int downBound = accumulated.size();
-                int tcBound = theCode.size();
-                for(int j = (downBound + 1); j <= tcBound; j++)
+                prevSubCode = prevLeftCode.substr(0,plen);
+                iter = gs.mpCdCol.find(prevSubCode);
+                if(iter != gs.mpCdCol.end())
                 {
-                    subCode = theCode.substr(0,j);
-                    iter = gs.mpCdCol.find(subCode);
-                    if(iter != gs.mpCdCol.end())
-                    {
-                        // the subCode is valid code
-#ifdef OUTDEBUG
-                        cout << "the valid subcode: " <<endl;
-                        cout << subCode << endl;
-#endif
-                        grey = (iter -> second);
-                        gs.vec_gV[index] = grey;
-
-#ifdef OUTDEBUG
-                        cout << "color is " << grey << endl;
-#endif
-                        gs.pixels[index] = ((float)grey)/255;
-                        readGrey = true;
-                        prevLeftCode = theCode.substr(j,tcBound);
-
-#ifdef OUTDEBUG
-                        cout << "the prevLeftC is " << prevLeftCode << endl;
-#endif
-                        break;
-                    }
-                }
-                if(readGrey)
-                {
+                    // the subCode is valid code
+                    grey = (iter -> second);
+    #ifdef OUTDEBUG
+                    cout << "The valid preSubCode is " << prevSubCode << endl;
+                    cout << "The color is : " << grey << endl;
+    #endif
+                    
+                    gs.vec_gV[index] = grey;
+                    gs.pixels[index] = ((float)grey)/255;
+                    readGrey = true;
                     break;
                 }
-                else
-                {
-                    accumulated = theCode;
-                }
-                
             }
-            if(!is.good())
+            if(readGrey)
             {
-                cout << "cant decode fully\n";
-                exit(DECODE_ERROR);
+                prevLeftCode= prevLeftCode.substr(plen,prevLClen);
+                // do I need this one?
+                accumulated = prevSubCode;
+                continue; 
+            }
+            // is >> readIn;
+            GetNextByte(is,readIn);
+            theCode = Byte2Codes(readIn);
+    #ifdef OUTDEBUG
+            cout << "the code is " << theCode << endl;
+    #endif
+            if(prevLClen > 0)
+            {
+                theCode = prevLeftCode + theCode;
+            }
+
+
+            // if(overflow)
+            // {
+            //     theCode = theCode.substr(overflow,8);
+            // }
+
+
+            codes subCode;
+            
+            int theCodeBound = theCode.size();
+            
+            // since the prevLeftCode is examined before and
+            // we are sure that the prevLeftCode doesnt include 
+            // the code so we begin the substring length of prevLClen + 1
+            // note this is also true if prevLeftCode is nullstring
+            // in which we case we simply start at the len 1
+
+    #ifdef OUTDEBUG
+            cout << "Before theCodeBOund loop the prevLCLen is: " << prevLClen << endl;
+    #endif
+            for(int j = (prevLClen + 1); j <= theCodeBound; j++)
+            {
+                subCode = theCode.substr(0,j);
+
+    #ifdef OUTDEBUG
+                cout << "In the for loop theCodeBound: subCode\n";
+                cout << subCode << endl;
+
+    #endif
+                iter = gs.mpCdCol.find(subCode);
+            
+
+    #ifdef OUTDEBUG
+                // if(subCode == "11")
+                // {
+                //     cout << " the 11 code is " << gs.mpCdCol["11"] << endl;
+                //     cout << "the subCode mpCdCol is " <<  gs.mpCdCol[subCode] << endl;
+                // }
+
+    #endif
+                if(iter != gs.mpCdCol.end())
+                {
+                    // the subCode is valid code
+    #ifdef OUTDEBUG                
+                    cout << "The valid code is: " << subCode << endl;
+    #endif                
+                    grey = (iter -> second);
+                    gs.vec_gV[index] = grey;
+
+    #ifdef OUTDEBUG
+                    cout << "The color is: " << grey << endl;
+    #endif            
+                    gs.pixels[index] = ((float)grey)/255;
+                    readGrey = true;
+                    prevLeftCode = theCode.substr(j,theCodeBound);
+                    break;
+                }
+            }
+            if(readGrey)
+            {
+                continue;
+            }
+            else
+            {
+                accumulated = theCode;
+                // codes temp;
+
+                // as long as we can read
+                // read as many bits as possible until we find
+                // the corresponding code
+                while(is.good())
+                {   
+
+                    // is >> readIn;
+                    GetNextByte(is,readIn);
+                    theCode = Byte2Codes(readIn);
+                    // if(overflow)
+                    // {
+                    //     theCode = theCode.substr(overflow,8);
+                    // }
+                    // codes subCode;
+                    theCode = accumulated + theCode;
+
+    #ifdef OUTDEBUG
+                    cout << "in the while " << endl;
+                    cout << "The theCode " << theCode << endl;
+    #endif
+                    // the len of the string at which the search
+                    // for code begin
+                    int downBound = accumulated.size();
+                    int tcBound = theCode.size();
+                    for(int j = (downBound + 1); j <= tcBound; j++)
+                    {
+                        subCode = theCode.substr(0,j);
+                        iter = gs.mpCdCol.find(subCode);
+                        if(iter != gs.mpCdCol.end())
+                        {
+                            // the subCode is valid code
+    #ifdef OUTDEBUG
+                            cout << "the valid subcode: " <<endl;
+                            cout << subCode << endl;
+    #endif
+                            grey = (iter -> second);
+                            gs.vec_gV[index] = grey;
+
+    #ifdef OUTDEBUG
+                            cout << "color is " << grey << endl;
+    #endif
+                            gs.pixels[index] = ((float)grey)/255;
+                            readGrey = true;
+                            prevLeftCode = theCode.substr(j,tcBound);
+
+    #ifdef OUTDEBUG
+                            cout << "the prevLeftC is " << prevLeftCode << endl;
+    #endif
+                            break;
+                        }
+                    }
+                    if(readGrey)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        accumulated = theCode;
+                    }
+                    
+                }
+                if(!is.good())
+                {
+                    cout << "cant decode fully\n";
+                    exit(DECODE_ERROR);
+                }
             }
         }
     }
+    else if(form == 3)
+    {
+    #ifdef OUTDEBUG
+        cout << "The form is 3\n";
+        cout << "*******************************\n";
+        cout << "in the readhuff code The inverse is:\n";
+        map_codingColor::const_iterator iter2;
+        cout << "   code       |  color " << endl;
+        for(iter2 = gs.mpCdCol.begin(); iter2 != gs.mpCdCol.end(); iter2++)
+        {
+            cout.width(8);
+            cout << iter2 -> first << "\t" << iter2 -> second << endl;
+        }
+
+    #endif
+
+        byte readIn;
+        codes theCode;
+        theCode.clear();
+        // indicates the bits borrowed from the next complete byte
+        // int overflow = 0;
+        // indicates the code left from the previous one
+        codes prevLeftCode;
+        prevLeftCode.clear();
+        // indicates the accumulated code
+        codes accumulated;
+        accumulated.clear();
+
+        int sizeBild = gs.width * gs.height;
+        map_codingColor::iterator iter;
+        greyValue grey;
+        for(int index = 0; index < sizeBild; index++)
+        {
+            // first test whether the prevLeftCode includes code
+            int prevLClen = prevLeftCode.size();
+    #ifdef OUTDEBUG
+            if(prevLClen > 0)
+            {
+                cout << "the prevLeftCode : " << prevLeftCode << endl;
+            }
+    #endif
+            codes prevSubCode;
+            prevSubCode.clear();
+            // flag indicating whether we have read in a greyvalue
+            bool readGrey = false;
+            int plen;
+            for( plen = 1; plen <= prevLClen; plen++)
+            {
+                prevSubCode = prevLeftCode.substr(0,plen);
+                iter = gs.mpTransCdCol.find(prevSubCode);
+                if(iter != gs.mpTransCdCol.end())
+                {
+                    // the subCode is valid code
+                    grey = (iter -> second);
+    #ifdef OUTDEBUG
+                    cout << "The valid preSubCode is " << prevSubCode << endl;
+                    cout << "The color is : " << grey << endl;
+    #endif
+                    
+                    gs.vtrans_gV[index] = grey;
+                    // have to transform first to get the value
+                    // gs.pixels[index] = ((float)grey)/255;
+                    readGrey = true;
+                    break;
+                }
+            }
+            if(readGrey)
+            {
+                prevLeftCode= prevLeftCode.substr(plen,prevLClen);
+                // do I need this one?
+                accumulated = prevSubCode;
+                continue; 
+            }
+            // is >> readIn;
+            GetNextByte(is,readIn);
+            theCode = Byte2Codes(readIn);
+    #ifdef OUTDEBUG
+            cout << "the code is " << theCode << endl;
+    #endif
+            if(prevLClen > 0)
+            {
+                theCode = prevLeftCode + theCode;
+            }
+
+
+            // if(overflow)
+            // {
+            //     theCode = theCode.substr(overflow,8);
+            // }
+
+
+            codes subCode;
+            
+            int theCodeBound = theCode.size();
+            
+            // since the prevLeftCode is examined before and
+            // we are sure that the prevLeftCode doesnt include 
+            // the code so we begin the substring length of prevLClen + 1
+            // note this is also true if prevLeftCode is nullstring
+            // in which we case we simply start at the len 1
+
+    #ifdef OUTDEBUG
+            cout << "Before theCodeBOund loop the prevLCLen is: " << prevLClen << endl;
+    #endif
+            for(int j = (prevLClen + 1); j <= theCodeBound; j++)
+            {
+                subCode = theCode.substr(0,j);
+
+    #ifdef OUTDEBUG
+                cout << "In the for loop theCodeBound: subCode\n";
+                cout << subCode << endl;
+
+    #endif
+                iter = gs.mpTransCdCol.find(subCode);
+            
+
+    #ifdef OUTDEBUG
+                // if(subCode == "11")
+                // {
+                //     cout << " the 11 code is " << gs.mpCdCol["11"] << endl;
+                //     cout << "the subCode mpCdCol is " <<  gs.mpCdCol[subCode] << endl;
+                // }
+
+    #endif
+                if(iter != gs.mpTransCdCol.end())
+                {
+                    // the subCode is valid code
+    #ifdef OUTDEBUG                
+                    cout << "The valid code is: " << subCode << endl;
+    #endif                
+                    grey = (iter -> second);
+                    gs.vtrans_gV[index] = grey;
+
+    #ifdef OUTDEBUG
+                    cout << "The color is: " << grey << endl;
+    #endif            
+                    // gs.pixels[index] = ((float)grey)/255;
+                    readGrey = true;
+                    prevLeftCode = theCode.substr(j,theCodeBound);
+                    break;
+                }
+            }
+            if(readGrey)
+            {
+                continue;
+            }
+            else
+            {
+                accumulated = theCode;
+                // codes temp;
+
+                // as long as we can read
+                // read as many bits as possible until we find
+                // the corresponding code
+                while(is.good())
+                {   
+
+                    // is >> readIn;
+                    GetNextByte(is,readIn);
+                    theCode = Byte2Codes(readIn);
+                    // if(overflow)
+                    // {
+                    //     theCode = theCode.substr(overflow,8);
+                    // }
+                    // codes subCode;
+                    theCode = accumulated + theCode;
+
+    #ifdef OUTDEBUG
+                    cout << "in the while " << endl;
+                    cout << "The theCode " << theCode << endl;
+    #endif
+                    // the len of the string at which the search
+                    // for code begin
+                    int downBound = accumulated.size();
+                    int tcBound = theCode.size();
+                    for(int j = (downBound + 1); j <= tcBound; j++)
+                    {
+                        subCode = theCode.substr(0,j);
+                        iter = gs.mpTransCdCol.find(subCode);
+                        if(iter != gs.mpTransCdCol.end())
+                        {
+                            // the subCode is valid code
+    #ifdef OUTDEBUG
+                            cout << "the valid subcode: " <<endl;
+                            cout << subCode << endl;
+    #endif
+                            grey = (iter -> second);
+                            gs.vtrans_gV[index] = grey;
+
+    #ifdef OUTDEBUG
+                            cout << "color is " << grey << endl;
+    #endif
+                            // gs.pixels[index] = ((float)grey)/255;
+                            readGrey = true;
+                            prevLeftCode = theCode.substr(j,tcBound);
+
+    #ifdef OUTDEBUG
+                            cout << "the prevLeftC is " << prevLeftCode << endl;
+    #endif
+                            break;
+                        }
+                    }
+                    if(readGrey)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        accumulated = theCode;
+                    }
+                    
+                }
+                if(!is.good())
+                {
+                    cout << "cant decode fully\n";
+                    exit(DECODE_ERROR);
+                }
+            }
+        }
+    }
+
     // eat zero
     char ch;
     is >> ch;
