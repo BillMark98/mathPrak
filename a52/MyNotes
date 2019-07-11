@@ -291,3 +291,26 @@ GreyTransform make it a friend
 
 后面想，可以在输入的时候就准备好，
 而这样 要为 format 2，3 分别准备对应的mpCdCol  mpColCd
+
+
+11.
+加入 format 3 相应的code 之后，
+运行，从format 0 ->  format 3 写入 没问题，说明 write 方面 OK
+而 从format 3 读取 时 Segmentation fault
+猜想肯定是 数组 越界。
+在 operator >> 中有一处
+case 3:
+
+....
+
+
+    gs.Resize(width,height);
+    gs.vec_gV.clear();
+    gs.vec_gV.resize(sizeBild);
+
+....
+
+
+但此处 应是 vtrans_gV
+
+make 后 运行 通过 ， 但是输出 greyvalue处处是0

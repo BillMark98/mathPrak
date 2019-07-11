@@ -861,6 +861,79 @@ istream & operator>>(istream & is, GreyScale & gs)
             gs.HuffmanCoding(gs.mpTransColFreq,gs.mpTransColCd,gs.mpTransCdCol);
             break;
         }
+        case 3:
+        {
+            // cout << "In the case"
+            byte Highbits;
+            byte Lowbits;
+            // read in width
+
+            // is >> Highbits >> Lowbits;
+            GetNextByte(is,Highbits);
+            GetNextByte(is,Lowbits);
+            int width = (Highbits << 8) + Lowbits;
+#ifdef OUTDEBUG
+            cout << "the width bytes read: " << (unsigned short) Highbits << " , "<<(unsigned short) Lowbits << endl;
+#endif 
+            // read in height
+            // is >> Highbits >> Lowbits;
+
+            GetNextByte(is,Highbits);
+            GetNextByte(is,Lowbits);
+            int height = (Highbits << 8) + Lowbits;
+#ifdef OUTDEBUG
+            cout << "the height bytes read: " << (unsigned short) Highbits << " , "<<(unsigned short) Lowbits << endl;
+#endif 
+            int sizeBild = width * height;
+#ifdef OUTDEBUG
+            cout << "width: " << width << "  height: " << height << endl;
+#endif     
+            gs.Resize(width,height);
+            gs.vtrans_gV.clear();
+            gs.vtrans_gV.resize(sizeBild);
+
+            byte b1,b2,b3,b4;
+            // read in the histogram
+            for(greyValue grev = 0; grev < 256; grev++)
+            {
+                // is >> b1 >> b2 >> b3 >> b4;
+                // is will jump 0x0a and 0x0d
+                // char tempChar;
+                // is.get(tempChar);
+                // b1 = (byte) tempChar;
+                // is.get(tempChar);
+                // b2 = (byte) tempChar;
+                // is.get(tempChar);
+                // b3 = (byte) tempChar;
+                // is.get(tempChar);
+                // b4 = (byte) tempChar;
+                GetNextByte(is,b1);
+                GetNextByte(is,b2);
+                GetNextByte(is,b3);
+                GetNextByte(is,b4);
+
+                freQuency freq = (b1 << (24)) + (b2 << 16) + (b3 << 8) + b4;
+#ifdef OUTDEBUG
+                cout << "The grey value " << grev << " The freq is " << freq;
+                cout <<  "  the bs are " << (unsigned short) b1 << '\t' <<(unsigned short) b2 << "\t" 
+                    << (unsigned short)b3 << "\t" << (unsigned short) b4 << endl;
+#endif                    
+                if(freq)
+                {
+                    gs.mpTransColFreq[grev] = freq;
+                }
+            }
+            // build the huffman code
+            gs.HuffmanCoding(gs.mpTransColFreq,gs.mpTransColCd,gs.mpTransCdCol);
+            
+
+            ReadHuffCode(is,gs,3);
+
+            // must after the ReadHuffCode since before that the vec_gV is not initialized
+            gs.SetmapColFreq();
+            gs.HuffmanCoding(gs.mapColFreq,gs.mpColCd,gs.mpCdCol);
+            break;
+        }
     }
     
     
@@ -1016,9 +1089,9 @@ ostream & operator<<(ostream & os, const GreyScale & gs)
 
                 // os << "cl:"<< greV << endl;
 
-                map_colorFreq::const_iterator iter = gs.mapColFreq.find(greV);
+                map_colorFreq::const_iterator iter = gs.mpTransColFreq.find(greV);
                 freQuency freq = (freQuency) 0;
-                if(iter != gs.mapColFreq.end())
+                if(iter != gs.mpTransColFreq.end())
                 {
                     freq = (iter -> second);
                 }
@@ -1029,7 +1102,7 @@ ostream & operator<<(ostream & os, const GreyScale & gs)
             }
             // now the huffman code
             // os << "The huffman\n";
-            WriteHuffCode(os,gs);
+            WriteHuffCode(os,gs,3);
             break;
         }
         default:
@@ -1380,11 +1453,13 @@ void GreyScale::GreyTransform()
         }
     }
 }
-
+// should also set the pixels
 void GreyScale::InverseGreyTransform()
 {
     vec_gV.clear();
     vec_gV.resize(width * height);
+    pixels.clear();
+    pixels.resize(width * height);
     for(int j = 0; j < height; j++)
     {
         for(int i = 0; i < width; i++)
@@ -1392,6 +1467,7 @@ void GreyScale::InverseGreyTransform()
             greyValue temp = SumNeighbor(i,j);
             int index = XYCoord2Vec(i,j);
             vec_gV[index] = temp;
+            pixels[index] = ((float)temp)/255;
         }
     }
 }
@@ -1556,16 +1632,136 @@ void GreyScale::SetmapColFreq()
 }
 
 
-ostream & WriteHuffCode(ostream & os,const GreyScale & gs)
+ostream & WriteHuffCode(ostream & os,const GreyScale & gs,int form )
 {
     int sizeBild = gs.width * gs.height;
     // indicates how many bits have to be 'borrowed' from the next
     // code to be a multiple of 8 bits
     int overflow = 0;
-    for(int index = 0; index < sizeBild ; index++)
+
+    if(form == 2)
     {
-        greyValue greyV = gs.vec_gV[index];
-        codes theCode = gs.mpColCd.at(greyV);
+        for(int index = 0; index < sizeBild ; index++)
+        {
+            greyValue greyV = gs.vec_gV[index];
+            codes theCode = gs.mpColCd.at(greyV);
+    #ifdef OUTDEBUG
+            cout << "The greyV: " << greyV << "  code: " << theCode << endl;
+    #endif
+            if(overflow)
+            {
+                theCode = theCode.substr((size_t)overflow,theCode.size());
+    #ifdef OUTDEBUG
+            cout << "after modification the code : " << theCode << endl;
+    #endif
+            }
+            int len = theCode.size();
+            if(len == 0)
+            {
+                // have to update the overflow
+                overflow = 0;
+                continue;
+            }
+            int segment = len / 8;
+            overflow = len % 8;
+    #ifdef OUTDEBUG
+            cout << "segment: " <<segment << "  overflow: " << overflow << endl;
+    #endif    
+            codes temp;
+            for(int i = 0; i < segment; i++)
+            {
+                // temp is the byte wise slice of the code
+                temp = theCode.substr(i*8,8);
+                byte toWrite = Codes2Byte(temp);
+    #ifdef OUTDEBUG
+                cout << "temp is: " << temp << endl;
+                cout << "the byte toWrite is " << (unsigned short) toWrite << endl;
+    #endif
+                os << toWrite;
+            }
+            if(overflow)
+            {
+                // the index need to be added, until we can fill the gap
+                int up = 1;
+                // the gap to be filled
+                int toBeFillled = 8-overflow;
+                // the rest term
+                codes restTerm = theCode.substr(segment * 8,overflow);
+                codes merged = restTerm;
+
+                codes glued;
+                // indicating whether already written to the file
+                bool written = false;
+                // glue the next code if it exists
+    #ifdef OUTDEBUG
+                cout << "begin while loop\n";
+                cout << "the restTerm is : " << restTerm << endl;
+    #endif
+                while(index + up < sizeBild)
+                {
+                    codes nextCode = gs.mpColCd.at(gs.vec_gV[index + up]);
+
+    #ifdef OUTDEBUG
+                    cout << "the nextCode is : " << nextCode << endl;
+    #endif
+                    int nexLen = nextCode.size();
+                    if(nexLen >= toBeFillled)
+                    {
+                        glued = nextCode.substr(0,toBeFillled);
+                        // this caculates the len remained 
+                        // overflow = nexLen - toBeFillled;
+                        overflow = toBeFillled;
+                        merged = restTerm + glued;
+
+                        byte toWrite = Codes2Byte(merged);
+    #ifdef OUTDEBUG
+                        cout << "nextCode cann fill the gap.\n";
+                        cout << "the glued " << glued << " the merged: " << merged << endl;
+                        cout << "the overflow " << overflow << "  the toWrite:  " << (unsigned short) toWrite << endl;
+    #endif
+                        os << toWrite;
+                        index += up - 1;
+                        written = true;
+                        break;
+                    }
+                    else
+                    {
+                        toBeFillled -= nexLen;
+                        restTerm += nextCode;
+
+    #ifdef OUTDEBUG
+                        cout << " the nextCode fails to fill \n";
+                        cout << "the restTerm now is " << restTerm << "  toBeFilled is " << toBeFillled << endl;
+    #endif
+                        up++;
+                    }
+                }
+                if(written)
+                {
+                    continue;
+                }
+                else
+                {
+                    // have to pad with 0
+                    for(int i = 0; i < toBeFillled; i++)
+                    {
+                        restTerm.push_back('0');
+                    }
+                    byte toWrite = Codes2Byte(restTerm);
+                    os << toWrite;
+                    index += up - 1;
+                    // I think could use break here
+                }
+                
+            }
+        }
+    }
+    else if(form == 3)
+    {
+        for(int index = 0; index < sizeBild ; index++)
+    {
+        greyValue greyV = gs.vtrans_gV[index];
+        codes theCode = gs.mpTransColCd.at(greyV);
 #ifdef OUTDEBUG
         cout << "The greyV: " << greyV << "  code: " << theCode << endl;
 #endif
@@ -1620,7 +1816,7 @@ ostream & WriteHuffCode(ostream & os,const GreyScale & gs)
 #endif
             while(index + up < sizeBild)
             {
-                codes nextCode = gs.mpColCd.at(gs.vec_gV[index + up]);
+                codes nextCode = gs.mpTransColCd.at(gs.vtrans_gV[index + up]);
 
 #ifdef OUTDEBUG
                 cout << "the nextCode is : " << nextCode << endl;
@@ -1676,6 +1872,8 @@ ostream & WriteHuffCode(ostream & os,const GreyScale & gs)
             
         }
     }
+    }
+    
     return os;
 }
 
